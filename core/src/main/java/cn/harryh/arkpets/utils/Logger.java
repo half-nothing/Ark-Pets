@@ -7,10 +7,12 @@ import org.apache.log4j.*;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.varia.LevelRangeFilter;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static cn.harryh.arkpets.Const.charsetDefault;
 
@@ -93,6 +95,13 @@ public class Logger {
                         Layout.LINE_SEP;
             }
         };
+    }
+
+    /** Get log file path
+     * @return log file path
+     */
+    public static String getLogFilePath() {
+        return logFilePath;
     }
 
     /** Sets a new log level.

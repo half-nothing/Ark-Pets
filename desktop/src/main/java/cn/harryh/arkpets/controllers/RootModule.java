@@ -166,7 +166,7 @@ public final class RootModule implements Controller<ArkHomeFX> {
                 if (!future.get().isSuccess()) {
                     int exitCode = future.get().exitValue();
                     Logger.warn("Launcher", "Detected an abnormal finalization of an ArkPets thread (exit code " + exitCode + "). Please check the log file for details.");
-                    lastLaunchFailed = new ProcessPool.UnexpectedExitCodeException(exitCode);
+                    lastLaunchFailed = new ProcessPool.UnexpectedExitCodeException(exitCode, future.get().processId());
                     return false;
                 }
                 Logger.debug("Launcher", "Detected a successful finalization of an ArkPets thread.");

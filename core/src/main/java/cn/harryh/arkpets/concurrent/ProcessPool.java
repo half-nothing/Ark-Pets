@@ -82,14 +82,20 @@ public final class ProcessPool implements Executor {
 
     public static class UnexpectedExitCodeException extends Exception {
         private final int exitCode;
+        private final long processId;
 
-        public UnexpectedExitCodeException(int exitCode) {
+        public UnexpectedExitCodeException(int exitCode, long processId) {
             this.exitCode = exitCode;
+            this.processId = processId;
         }
 
         @Override
         public String getMessage() {
             return "The process exited with a non-zero exit code: " + exitCode;
+        }
+
+        public long getProcessId() {
+            return processId;
         }
     }
 }

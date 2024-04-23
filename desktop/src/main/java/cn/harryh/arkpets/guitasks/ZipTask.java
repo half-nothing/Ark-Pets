@@ -10,7 +10,10 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class ZipTask extends GuiTask {
@@ -21,6 +24,16 @@ public class ZipTask extends GuiTask {
         super(root, style);
         this.zipPath = zipPath;
         this.contents = contents;
+    }
+
+    public ZipTask(StackPane root, GuiTaskStyle style, String zipPath, List<String> contents) {
+        super(root, style);
+        this.zipPath = zipPath;
+        this.contents = contents.stream()
+                .collect(Collectors.toMap(
+                        path -> path,
+                        path -> Paths.get(path).getFileName().toString()
+                ));
     }
 
     @Override

@@ -22,5 +22,8 @@ test*/
 *.jar
 
 # Exclude runtime files
-/ArkPetsConfig.json
-/models_data.json
+ArkPetsConfig.json
+models_data.json
+models*/
+logs*/
+err**

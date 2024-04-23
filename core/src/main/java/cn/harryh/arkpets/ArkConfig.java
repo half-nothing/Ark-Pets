@@ -65,6 +65,7 @@ public class ArkConfig {
     public float      physic_static_friction_acc;
     public float      physic_speed_limit_x;
     public float      physic_speed_limit_y;
+    public String     prefer_language;
 
     private ArkConfig() {
     }

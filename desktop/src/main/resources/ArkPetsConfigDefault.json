@@ -20,5 +20,6 @@
     "physic_gravity_acc":800.0,
     "physic_speed_limit_x":1000.0,
     "physic_speed_limit_y":1000.0,
-    "physic_static_friction_acc":500.0
+    "physic_static_friction_acc":500.0,
+    "prefer_language": "zh_cn"
 }

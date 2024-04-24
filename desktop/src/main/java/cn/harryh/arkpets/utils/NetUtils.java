@@ -4,7 +4,7 @@
 package cn.harryh.arkpets.utils;
 
 import javax.net.ssl.*;
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyManagementException;
@@ -12,7 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 
 public class NetUtils {
@@ -21,26 +22,22 @@ public class NetUtils {
     private static final int delayUpThreshold = 1500;
     private static final DecimalFormat df = new DecimalFormat("0.0");
 
-    public static final ArrayList<Source> ghSources;
-    static {
-        ghSources = new ArrayList<>();
-        ghSources.add(new GitHubSource("GitHub",
-                "https://raw.githubusercontent.com/",
-                "https://github.com/"));
-        ghSources.add(new GitHubSource("GHProxy",
-                "https://ghproxy.harryh.cn/https://raw.githubusercontent.com/",
-                "https://ghproxy.harryh.cn/https://github.com/"));
-    }
+    public static final List<Source> ghSources = List.of(
+            new GitHubSource("GitHub",
+                    "https://raw.githubusercontent.com/",
+                    "https://github.com/"),
+            new GitHubSource("GHProxy",
+                    "https://ghproxy.harryh.cn/https://raw.githubusercontent.com/",
+                    "https://ghproxy.harryh.cn/https://github.com/")
+    );
 
-    public static final Map<Long, String> sizeMap;
-    static {
-        sizeMap = new HashMap<>();
-        sizeMap.put(1L, "B");
-        sizeMap.put((long)k, "KB");
-        sizeMap.put((long)k * k, "MB");
-        sizeMap.put((long)k * k * k, "GB");
-        sizeMap.put((long)k * k * k * k, "TB");
-    }
+    public static final Map<Long, String> sizeMap = Map.of(
+            1L, "B",
+            (long) k, "KB",
+            (long) k * k, "MB",
+            (long) k * k * k, "GB",
+            (long) k * k * k * k, "TB"
+    );
 
     /** Gets a formatted size string, e.g."{@code 114.5 MB}".
      * @param byteSize The size value in Byte.
@@ -86,7 +83,7 @@ public class NetUtils {
                 long start = System.currentTimeMillis();
                 socket.connect(address, timeoutMillis);
                 long stop = System.currentTimeMillis();
-                delayMillis = (int)(stop - start);
+                delayMillis = (int) (stop - start);
             } catch (IOException ignored) {
             }
             try {
@@ -108,7 +105,7 @@ public class NetUtils {
                 throws IOException {
             HttpsURLConnection connection = null;
             try {
-                connection = (HttpsURLConnection)url.openConnection();
+                connection = (HttpsURLConnection) url.openConnection();
                 if (trustAll) {
                     connection.setSSLSocketFactory(getTrustAnySSLSocketFactory());
                     connection.setHostnameVerifier(getTrustAnyHostnameVerifier());
@@ -245,20 +242,27 @@ public class NetUtils {
         public HttpResponseCode(int code, String message) {
             this.code = code;
             this.message = message;
-            NetUtils.HttpResponseCodeType type;
-            if (100 <= code && code < 200)
-                type = NetUtils.HttpResponseCodeType.INFORMATION;
-            else if (200 <= code && code < 300)
-                type = NetUtils.HttpResponseCodeType.SUCCESS;
-            else if (300 <= code && code < 400)
-                type = NetUtils.HttpResponseCodeType.REDIRECTION;
-            else if (400 <= code && code < 500)
-                type = NetUtils.HttpResponseCodeType.CLIENT_ERROR;
-            else if (500 <= code && code < 600)
-                type = NetUtils.HttpResponseCodeType.SERVER_ERROR;
-            else
-                type = NetUtils.HttpResponseCodeType.UNKNOWN;
-            this.type = type;
+            // 100 <= code <= 599
+            switch (code / 100) {
+                case 1: // 100 - 199
+                    this.type = HttpResponseCodeType.INFORMATION;
+                    break;
+                case 2: // 200 - 299
+                    this.type = HttpResponseCodeType.SUCCESS;
+                    break;
+                case 3: // 300 - 399
+                    this.type = HttpResponseCodeType.REDIRECTION;
+                    break;
+                case 4: // 400 - 499
+                    this.type = HttpResponseCodeType.CLIENT_ERROR;
+                    break;
+                case 5: // 500 - 599
+                    this.type = HttpResponseCodeType.SERVER_ERROR;
+                    break;
+                default: // other
+                    this.type = HttpResponseCodeType.UNKNOWN;
+                    break;
+            }
         }
 
         public HttpResponseCode(HttpURLConnection connection)
@@ -297,7 +301,7 @@ public class NetUtils {
         public long lastErrorTime = -1;
 
         public Source(String tag, String preUrl) {
-            this.tag= tag;
+            this.tag = tag;
             this.preUrl = preUrl;
         }
 

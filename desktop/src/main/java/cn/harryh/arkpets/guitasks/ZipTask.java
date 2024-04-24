@@ -51,10 +51,10 @@ public class ZipTask extends GuiTask {
         return new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                Logger.info("Zip", "Zipping " + contents.size() + " entries into " + zipPath);
+                Logger.info("Zip", "Zipping %d entries into %s", contents.size(), zipPath);
                 IOUtils.FileUtil.delete(new File(zipPath), false);
                 IOUtils.ZipUtil.zip(zipPath, contents, false);
-                Logger.info("Zip", "Zipped into " + zipPath + " , finished");
+                Logger.info("Zip", "Zipped into %s, finished");
                 return this.isDone() && !this.isCancelled();
             }
         };

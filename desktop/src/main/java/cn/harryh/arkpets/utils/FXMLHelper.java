@@ -4,6 +4,7 @@
 package cn.harryh.arkpets.utils;
 
 import cn.harryh.arkpets.controllers.Controller;
+import cn.harryh.arkpets.i18n.I18n;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,7 +29,7 @@ public class FXMLHelper {
      */
     public static <T extends Application> LoadFXMLResult<T> loadFXML( URL location)
             throws IOException {
-        FXMLLoader fxml = new FXMLLoader(location);
+        FXMLLoader fxml = new FXMLLoader(location, I18n.getResourceBundle());
         Node content = Objects.requireNonNull(fxml.load());
         Controller<T> controller = Objects.requireNonNull(fxml.getController());
         return new LoadFXMLResult<>(controller, content);

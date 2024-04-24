@@ -38,7 +38,7 @@ public class CheckAppUpdateTask extends FetchRemoteTask {
 
     @Override
     protected String getHeader() {
-        return i18n("task.version.download");
+        return i18n("task.version");
     }
 
     @Override

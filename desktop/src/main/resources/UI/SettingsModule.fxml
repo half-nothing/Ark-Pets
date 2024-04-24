@@ -17,46 +17,46 @@
                     prefWidth="425.0" styleClass="config-field">
             <VBox>
                 <VBox fx:id="noticeBox"/>
-                <Label styleClass="config-group-title" text="显示设置"/>
+                <Label styleClass="config-group-title" text="%app.settings.display"/>
                 <HBox>
-                    <Label text="图像缩放"/>
+                    <Label text="%app.settings.display.zoom"/>
                     <JFXComboBox fx:id="configDisplayScale" prefWidth="100.0"/>
                 </HBox>
                 <HBox>
-                    <Label text="最大帧率"/>
+                    <Label text="%app.settings.display.fps"/>
                     <JFXComboBox fx:id="configDisplayFps" prefWidth="100.0"/>
                 </HBox>
                 <HBox>
-                    <Label text="窗口边界"/>
+                    <Label text="%app.settings.display.border"/>
                     <JFXComboBox fx:id="configCanvasSize" prefWidth="100.0"/>
                 </HBox>
                 <Separator/>
-                <Label styleClass="config-group-title" text="高级设置"/>
+                <Label styleClass="config-group-title" text="%app.settings.config"/>
                 <HBox>
-                    <JFXCheckBox fx:id="configAutoStartup" mnemonicParsing="false" text="开机自动生成桌宠"/>
+                    <JFXCheckBox fx:id="configAutoStartup" mnemonicParsing="false" text="%app.settings.config.startup"/>
                 </HBox>
                 <HBox>
-                    <JFXCheckBox fx:id="configSolidExit" mnemonicParsing="false" text="退出程序时也退出桌宠"/>
+                    <JFXCheckBox fx:id="configSolidExit" mnemonicParsing="false" text="%app.settings.config.exit"/>
                 </HBox>
                 <HBox>
-                    <Label text="日志级别"/>
+                    <Label text="%app.settings.log.level"/>
                     <JFXComboBox fx:id="configLoggingLevel" prefWidth="100.0"/>
-                    <Label fx:id="exploreLogDir" styleClass="config-hyper-link" text="浏览日志"/>
+                    <Label fx:id="exploreLogDir" styleClass="config-hyper-link" text="%app.settings.log.view"/>
                 </HBox>
                 <HBox>
-                    <Label text="网络代理（仅本次有效）"/>
+                    <Label text="%app.settings.proxy"/>
                     <JFXTextField fx:id="configNetworkAgent" prefHeight="23.0" prefWidth="100.0"/>
                     <Label fx:id="configNetworkAgentStatus" alignment="TOP_CENTER" text="-"/>
                 </HBox>
                 <Separator/>
-                <Label styleClass="config-group-title" text="关于软件"/>
+                <Label styleClass="config-group-title" text="%app.settings.about"/>
                 <HBox spacing="22.5">
-                    <Label fx:id="aboutQueryUpdate" styleClass="config-hyper-link" text="检查软件更新"/>
-                    <Label fx:id="aboutVisitWebsite" styleClass="config-hyper-link" text="ArkPets 官网"/>
+                    <Label fx:id="aboutQueryUpdate" styleClass="config-hyper-link" text="%app.settings.check"/>
+                    <Label fx:id="aboutVisitWebsite" styleClass="config-hyper-link" text="%app.settings.homepage"/>
                 </HBox>
                 <HBox spacing="22.5">
-                    <Label fx:id="aboutReadme" styleClass="config-hyper-link" text="使用指南"/>
-                    <Label fx:id="aboutGitHub" styleClass="config-hyper-link" text="GitHub 项目仓库"/>
+                    <Label fx:id="aboutReadme" styleClass="config-hyper-link" text="%app.settings.docs"/>
+                    <Label fx:id="aboutGitHub" styleClass="config-hyper-link" text="%app.settings.github"/>
                 </HBox>
                 <Separator/>
             </VBox>

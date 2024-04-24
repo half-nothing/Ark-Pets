@@ -16,64 +16,64 @@
         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
                     prefWidth="425.0" styleClass="config-field">
             <VBox>
-                <Label styleClass="config-group-title" text="动作"/>
+                <Label styleClass="config-group-title" text="%app.behavior.action"/>
                 <HBox>
-                    <JFXCheckBox fx:id="configBehaviorAllowWalk" mnemonicParsing="false" text="允许行走"/>
-                    <JFXCheckBox fx:id="configBehaviorAllowSit" mnemonicParsing="false" text="允许坐下"/>
+                    <JFXCheckBox fx:id="configBehaviorAllowWalk" mnemonicParsing="false" text="%app.behavior.action.walk"/>
+                    <JFXCheckBox fx:id="configBehaviorAllowSit" mnemonicParsing="false" text="%app.behavior.action.sit"/>
                 </HBox>
                 <HBox>
-                    <Label text="动作活跃度"/>
+                    <Label text="%app.behavior.action.activity"/>
                     <JFXSlider fx:id="configBehaviorAiActivation"/>
                     <Label fx:id="configBehaviorAiActivationValue" text="0"/>
                 </HBox>
                 <Separator/>
-                <Label styleClass="config-group-title" text="交互"/>
+                <Label styleClass="config-group-title" text="%app.behavior.mutual"/>
                 <HBox>
-                    <JFXCheckBox fx:id="configBehaviorAllowInteract" mnemonicParsing="false" text="允许触发交互动画"/>
+                    <JFXCheckBox fx:id="configBehaviorAllowInteract" mnemonicParsing="false" text="%app.behavior.mutual.allow"/>
                     <JFXCheckBox fx:id="configBehaviorDoPeerRepulsion" mnemonicParsing="false"
-                                 text="允许被其他桌宠排斥"/>
+                                 text="%app.behavior.mutual.repel"/>
                 </HBox>
                 <Separator/>
-                <Label styleClass="config-group-title" text="位置"/>
+                <Label styleClass="config-group-title" text="%app.behavior.location"/>
                 <HBox>
-                    <JFXCheckBox fx:id="configDeployMultiMonitors" mnemonicParsing="false" text="启用多显示屏"/>
+                    <JFXCheckBox fx:id="configDeployMultiMonitors" mnemonicParsing="false" text="%app.behavior.location.multiple"/>
                     <Label fx:id="configDeployMultiMonitorsStatus" text="-"/>
                 </HBox>
                 <HBox>
-                    <Label text="任务栏高度（下边界距离）"/>
+                    <Label text="%app.behavior.location.height"/>
                     <JFXSlider fx:id="configDeployMarginBottom"/>
                     <Label fx:id="configDeployMarginBottomValue" text="0"/>
                 </HBox>
                 <Separator/>
-                <Label styleClass="config-group-title" text="物理"/>
+                <Label styleClass="config-group-title" text="%app.behavior.physics"/>
                 <HBox>
-                    <Label text="重力加速度"/>
+                    <Label text="%app.behavior.physics.gravity"/>
                     <JFXSlider fx:id="configPhysicGravity"/>
                     <Label fx:id="configPhysicGravityValue" text="0"/>
                 </HBox>
                 <HBox>
-                    <Label text="空气阻力系加速度"/>
+                    <Label text="%app.behavior.physics.air"/>
                     <JFXSlider fx:id="configPhysicAirFriction"/>
                     <Label fx:id="configPhysicAirFrictionValue" text="0"/>
                 </HBox>
                 <HBox>
-                    <Label text="地面摩擦系加速度"/>
+                    <Label text="%app.behavior.physics.friction"/>
                     <JFXSlider fx:id="configPhysicStaticFriction"/>
                     <Label fx:id="configPhysicStaticFrictionValue" text="0"/>
                 </HBox>
                 <HBox>
-                    <Label text="最大水平运动速率"/>
+                    <Label text="%app.behavior.physics.horizontal"/>
                     <JFXSlider fx:id="configPhysicSpeedLimitX"/>
                     <Label fx:id="configPhysicSpeedLimitXValue" text="0"/>
                 </HBox>
                 <HBox>
-                    <Label text="最大垂直运动速率"/>
+                    <Label text="%app.behavior.physics.vertical"/>
                     <JFXSlider fx:id="configPhysicSpeedLimitY"/>
                     <Label fx:id="configPhysicSpeedLimitYValue" text="0"/>
                 </HBox>
                 <Separator/>
                 <HBox spacing="22.5">
-                    <Label fx:id="configPhysicRestore" styleClass="config-hyper-link" text="恢复默认物理设置"/>
+                    <Label fx:id="configPhysicRestore" styleClass="config-hyper-link" text="%app.behavior.physics.reset"/>
                 </HBox>
                 <Separator/>
             </VBox>

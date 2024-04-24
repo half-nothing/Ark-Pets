@@ -21,7 +21,7 @@
     <HBox layoutX="15.0" layoutY="15.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.5" prefWidth="430.0"
           spacing="5.5" styleClass="major-tool-bar-upper">
         <JFXButton fx:id="searchModelReload" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                   prefHeight="28.0" prefWidth="60.0" text="重载">
+                   prefHeight="28.0" prefWidth="60.0" text="%app.model.reload">
             <graphic>
                 <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
                     <SVGPath
@@ -35,7 +35,7 @@
             </styleClass>
         </JFXButton>
         <JFXButton fx:id="searchModelRandom" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                   prefHeight="28.0" prefWidth="60.0" text="随机">
+                   prefHeight="28.0" prefWidth="60.0" text="%app.model.random">
             <graphic>
                 <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
                     <SVGPath
@@ -65,7 +65,7 @@
             </HBox.margin>
         </JFXTextField>
         <JFXButton fx:id="searchModelConfirm" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                   prefHeight="28.0" prefWidth="60.0" text="搜索">
+                   prefHeight="28.0" prefWidth="60.0" text="%app.model.search">
             <graphic>
                 <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
                     <SVGPath
@@ -81,7 +81,7 @@
     <HBox layoutX="15.0" layoutY="52.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.5" prefWidth="175.0"
           spacing="5.5" styleClass="major-tool-bar-lower">
         <JFXButton fx:id="toggleFilterPane" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                   prefHeight="28.0" prefWidth="60.0" text="筛选">
+                   prefHeight="28.0" prefWidth="60.0" text="%app.model.sift">
             <graphic>
                 <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
                     <SVGPath content="m1 0h22l-9 15.094v8.906l-4-3v-5.906z" scaleX="0.9" scaleY="0.9"/>
@@ -93,7 +93,7 @@
             </styleClass>
         </JFXButton>
         <JFXButton fx:id="toggleManagePane" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                   prefHeight="28.0" prefWidth="92.5" text="模型库管理">
+                   prefHeight="28.0" prefWidth="92.5" text="%app.model.manager">
             <graphic>
                 <AnchorPane prefHeight="25.0" prefWidth="16.0" scaleX="0.0" styleClass="btn-icon">
                     <SVGPath
@@ -140,7 +140,7 @@
                 <FlowPane fx:id="filterPaneTagFlow" styleClass="tag-flow"/>
             </ScrollPane>
             <HBox spacing="8" alignment="CENTER_RIGHT">
-                <Label fx:id="filterPaneTagClear" styleClass="config-hyper-link" text="清除筛选"/>
+                <Label fx:id="filterPaneTagClear" styleClass="config-hyper-link" text="%app.model.sift.clear"/>
             </HBox>
         </VBox>
     </AnchorPane>
@@ -158,7 +158,7 @@
                     <Double fx:id="_smallBtnW" fx:value="77.5"/>
                 </fx:define>
                 <JFXButton fx:id="modelUpdate" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_largeBtnW}"
-                           text="检查更新">
+                           text="%app.model.check">
                     <graphic>
                         <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
                             <SVGPath
@@ -172,7 +172,7 @@
                     </styleClass>
                 </JFXButton>
                 <JFXButton fx:id="modelFetch" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_largeBtnW}"
-                           text="下载模型">
+                           text="%app.model.download">
                     <graphic>
                         <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
                             <SVGPath content="M16 11h5l-9 10-9-10h5v-11h8v11zm3 8v3h-14v-3h-2v5h18v-5h-2z"
@@ -185,15 +185,15 @@
                     </styleClass>
                 </JFXButton>
                 <JFXButton fx:id="modelVerify" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
-                           styleClass="btn-secondary" text="验证模型"/>
+                           styleClass="btn-secondary" text="%app.model.verify"/>
                 <JFXButton fx:id="modelReFetch" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
-                           styleClass="btn-secondary" text="重新下载"/>
+                           styleClass="btn-secondary" text="%app.model.redownload"/>
                 <JFXButton fx:id="modelImport" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
-                           styleClass="btn-secondary" text="导入压缩包"/>
+                           styleClass="btn-secondary" text="%app.model.import"/>
                 <JFXButton fx:id="modelExport" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
-                           styleClass="btn-secondary" text="导出压缩包"/>
+                           styleClass="btn-secondary" text="%app.model.export"/>
                 <Separator prefWidth="${_largeBtnW}"/>
-                <Label fx:id="modelHelp" styleClass="config-hyper-link" text="下载时遇到问题？"/>
+                <Label fx:id="modelHelp" styleClass="config-hyper-link" text="%app.model.problem"/>
             </FlowPane>
         </VBox>
     </AnchorPane>
@@ -212,13 +212,13 @@
         <SVGPath
                 content="M11.5 23l-8.5-4.535v-3.953l5.4 3.122 3.1-3.406v8.772zm1-.001v-8.806l3.162 3.343 5.338-2.958v3.887l-8.5 4.534zm-10.339-10.125l-2.161-1.244 3-3.302-3-2.823 8.718-4.505 3.215 2.385 3.325-2.385 8.742 4.561-2.995 2.771 2.995 3.443-2.242 1.241v-.001l-5.903 3.27-3.348-3.541 7.416-3.962-7.922-4.372-7.923 4.372 7.422 3.937v.024l-3.297 3.622-5.203-3.008-.16-.092-.679-.393v.002z"
                 scaleX="1.5" scaleY="1.5" translateY="-10.0"/>
-        <Text id="Loading-failure-tip-text" strokeType="OUTSIDE" strokeWidth="0.0" text="未能载入模型"
+        <Text id="Loading-failure-tip-text" strokeType="OUTSIDE" strokeWidth="0.0" text="%app.model.load.fail"
               textAlignment="CENTER" translateY="-5.0" wrappingWidth="200.0">
             <font>
                 <Font size="16.0"/>
             </font>
         </Text>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="使用前请先在 [模型库管理] 中下载模型"/>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="如您已下载模型，请尝试点击 [重载] 按钮"/>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%app.model.tip"/>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%app.model.tip.finish"/>
     </VBox>
 </Pane>

@@ -1,6 +1,5 @@
 package cn.harryh.arkpets.i18n;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -33,18 +32,6 @@ public final class Locales {
         };
     }
 
-    public static List<String> getSupportedLanguages() {
-        return List.of("en", "zh_tw", "zh_cn");
-    }
-
-    public static String getNameByLocale(SupportedLocale locale) {
-        if (locale == EN) return "en";
-        if (locale == ZH_TW) return "zh_tw";
-        if (locale == ZH_CN) return "zh_cn";
-        if (locale == DEFAULT) return "def";
-        throw new IllegalArgumentException("Unknown locale: " + locale);
-    }
-
     public static class SupportedLocale {
         private final Locale locale;
         private final String name;
@@ -72,6 +59,5 @@ public final class Locales {
             if (name == null) return resourceBundle.getString("lang");
             else return newResourceBundle.getString(name);
         }
-
     }
 }

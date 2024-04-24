@@ -17,6 +17,7 @@ import java.nio.file.Files;
 
 import static cn.harryh.arkpets.Const.httpBufferSizeDefault;
 import static cn.harryh.arkpets.Const.httpTimeoutDefault;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 abstract public class FetchGitHubRemoteTask extends GuiTask {
@@ -39,7 +40,7 @@ abstract public class FetchGitHubRemoteTask extends GuiTask {
         return new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                this.updateMessage("正在选择最佳线路");
+                this.updateMessage(i18n("task.network.fetch.github"));
                 Logger.info("Network", "Testing real delay");
                 GitHubSource.sortByOverallAvailability(NetUtils.ghSources);
                 selectedSource = (GitHubSource)NetUtils.ghSources.get(0);
@@ -49,7 +50,7 @@ abstract public class FetchGitHubRemoteTask extends GuiTask {
                 String remotePath = remotePathPrefix + remotePathSuffix;
 
                 Logger.info("Network", "Fetching " + remotePath + " to " + destPath);
-                this.updateMessage("正在尝试与 " + selectedSource.tag + " 建立连接");
+                this.updateMessage(i18n("task.network.fetch.github.detail", selectedSource.tag));
 
                 NetUtils.BufferLog log = new NetUtils.BufferLog(httpBufferSizeDefault);
                 HttpsURLConnection connection = NetUtils.ConnectionUtil.createHttpsConnection(new URL(remotePath),
@@ -71,11 +72,11 @@ abstract public class FetchGitHubRemoteTask extends GuiTask {
                         sum += len;
                         log.receive();
                         long speed = log.getSpeedPerSecond(500);
-                        this.updateMessage("当前已下载：" + NetUtils.getFormattedSizeString(sum) +
+                        this.updateMessage(i18n("task.network.fetch.download") + NetUtils.getFormattedSizeString(sum) +
                                 (speed != 0 ? " (" + NetUtils.getFormattedSizeString(speed) + "/s)" : ""));
                         this.updateProgress(sum, max);
                         if (this.isCancelled()) {
-                            this.updateMessage("下载进程已被取消");
+                            this.updateMessage(i18n("task.network.fetch.cancel"));
                             selectedSource.receiveError();
                             break;
                         }

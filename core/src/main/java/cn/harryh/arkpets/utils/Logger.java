@@ -28,8 +28,8 @@ public class Logger {
     protected static String logFilePath = null;
 
     public static final int ERROR = 40000;
-    public static final int WARN = 30000;
-    public static final int INFO = 20000;
+    public static final int WARN  = 30000;
+    public static final int INFO  = 20000;
     public static final int DEBUG = 10000;
 
     protected static final LevelRangeFilter sysOutFilter = new LevelRangeFilter();
@@ -138,38 +138,38 @@ public class Logger {
 
     /** Logs a message with the level {@code DEBUG}.
      */
-    public static void debug(String tag, String message, Object... args) {
+    public static void debug(String tag, String message) {
         if (isFileLoggerAvailable)
-            currentLogger.debug(combine(tag, message.formatted(args)));
+            currentLogger.debug(combine(tag, message));
     }
 
     /** Logs a message with the level {@code INFO}.
      */
-    public static void info(String tag, String message,  Object... args) {
+    public static void info(String tag, String message) {
         if (isFileLoggerAvailable)
-            currentLogger.info(combine(tag, message.formatted(args)));
+            currentLogger.info(combine(tag, message));
     }
 
     /** Logs a message with the level {@code WARN}.
      */
-    public static void warn(String tag, String message, Object... args) {
+    public static void warn(String tag, String message) {
         if (isFileLoggerAvailable)
-            currentLogger.warn(combine(tag, message.formatted(args)));
+            currentLogger.warn(combine(tag, message));
     }
 
     /** Logs a message with the level {@code ERROR}.
      */
-    public static void error(String tag, String message, Object... args) {
+    public static void error(String tag, String message) {
         if (isFileLoggerAvailable)
-            currentLogger.error(combine(tag, message.formatted(args)));
+            currentLogger.error(combine(tag, message));
     }
 
     /** Logs a message with the level {@code ERROR},
      * together with the detailed information (such as stacktrace).
      */
-    public static void error(String tag, String message, Throwable error, Object... args) {
+    public static void error(String tag, String message, Throwable error) {
         if (isFileLoggerAvailable)
-            currentLogger.error(combine(tag, message.formatted(args)), error);
+            currentLogger.error(combine(tag, message), error);
     }
 
     protected static String combine(String tag, String message) {

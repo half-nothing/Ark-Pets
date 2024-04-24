@@ -16,6 +16,7 @@ import java.nio.file.Files;
 
 import static cn.harryh.arkpets.Const.PathConfig;
 import static cn.harryh.arkpets.Const.charsetDefault;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 public class CheckModelUpdateTask extends FetchGitHubRemoteTask {
@@ -38,7 +39,7 @@ public class CheckModelUpdateTask extends FetchGitHubRemoteTask {
 
     @Override
     protected String getHeader() {
-        return "正在下载模型版本信息...";
+        return i18n("task.model.check");
     }
 
     @Override
@@ -56,9 +57,9 @@ public class CheckModelUpdateTask extends FetchGitHubRemoteTask {
                 Logger.error("Checker", "Unable to parse remote model repo version, details see below.", e);
                 GuiPrefabs.DialogUtil.createCommonDialog(root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                        "检查模型更新",
-                        "无法判断模型仓库版本。",
-                        "因发生错误，无法解析远程模型仓库的版本。",
+                        i18n("task.model.check.title"),
+                        i18n("task.model.check.error"),
+                        i18n("task.model.check.error.remote"),
                         null).show();
             }
             // When finished parsing the remote models info:
@@ -69,10 +70,10 @@ public class CheckModelUpdateTask extends FetchGitHubRemoteTask {
                 Logger.info("Checker", "Model repo version check finished (up-to-dated)");
                 GuiPrefabs.DialogUtil.createCommonDialog(root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_SUCCESS_ALT, GuiPrefabs.Colors.COLOR_SUCCESS),
-                        "检查模型更新",
-                        "无需进行模型库更新。",
-                        "本地模型库的版本与远程模型库的一致。",
-                        "提示：远程模型库的版本不一定和游戏官方同步更新。\n模型库版本描述：\n" + versionDescription).show();
+                        i18n("task.model.check.title"),
+                        i18n("task.model.check.nochange"),
+                        i18n("task.model.check.nochange.content"),
+                        i18n("task.model.check.nochange.detail", versionDescription)).show();
             } else {
                 // If the result of comparison is "not the same"
                 String oldVersionDescription;
@@ -86,17 +87,17 @@ public class CheckModelUpdateTask extends FetchGitHubRemoteTask {
                     Logger.error("Checker", "Unable to parse local model repo version, details see below.", e);
                     GuiPrefabs.DialogUtil.createCommonDialog(root,
                             GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                            "检查模型更新",
-                            "无法判断模型库版本。",
-                            "因发生错误，无法解析本地模型库的版本。",
+                            i18n("task.model.check.title"),
+                            i18n("task.model.check.error"),
+                            i18n("task.model.check.error.local"),
                             null).show();
                 }
                 GuiPrefabs.DialogUtil.createCommonDialog(root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_INFO_ALT, GuiPrefabs.Colors.COLOR_INFO),
-                        "检查模型更新",
-                        "模型库似乎有更新！",
-                        "您可以 [重新下载] 模型，以更新模型库版本。",
-                        "远程模型库版本描述：\n" + versionDescription + "\n\n本地模型库版本描述：\n" + oldVersionDescription).show();
+                        i18n("task.model.check.title"),
+                        i18n("task.model.check.change"),
+                        i18n("task.model.check.change.content"),
+                        i18n("task.model.check.change.detail", versionDescription, oldVersionDescription)).show();
                 Logger.info("Checker", "Model repo version check finished (not up-to-dated)");
             }
         } catch (IOException e) {

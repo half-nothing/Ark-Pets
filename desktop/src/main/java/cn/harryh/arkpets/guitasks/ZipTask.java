@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static cn.harryh.arkpets.i18n.I18n.i18n;
+
 
 public class ZipTask extends GuiTask {
     protected final String zipPath;
@@ -38,12 +40,12 @@ public class ZipTask extends GuiTask {
 
     @Override
     protected String getHeader() {
-        return "正在创建压缩文件...";
+        return i18n("task.zip.create");
     }
 
     @Override
     protected String getInitialContent() {
-        return "这可能需要一些时间";
+        return i18n("task.zip.create.detail");
     }
 
     @Override
@@ -51,10 +53,10 @@ public class ZipTask extends GuiTask {
         return new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                Logger.info("Zip", "Zipping %d entries into %s", contents.size(), zipPath);
+                Logger.info("Zip", "Zipping " + contents.size() + " entries into" + zipPath);
                 IOUtils.FileUtil.delete(new File(zipPath), false);
                 IOUtils.ZipUtil.zip(zipPath, contents, false);
-                Logger.info("Zip", "Zipped into %s, finished");
+                Logger.info("Zip", "Zipped into " + zipPath + ", finished");
                 return this.isDone() && !this.isCancelled();
             }
         };

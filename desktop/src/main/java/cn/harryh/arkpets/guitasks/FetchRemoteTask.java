@@ -16,6 +16,7 @@ import java.nio.file.Files;
 
 import static cn.harryh.arkpets.Const.httpBufferSizeDefault;
 import static cn.harryh.arkpets.Const.httpTimeoutDefault;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 abstract public class FetchRemoteTask extends GuiTask {
@@ -36,7 +37,7 @@ abstract public class FetchRemoteTask extends GuiTask {
             @Override
             protected Boolean call() throws Exception {
                 Logger.info("Network", "Fetching " + remotePath + " to " + destPath);
-                this.updateMessage("正在尝试建立连接");
+                this.updateMessage(i18n("task.network.fetch"));
 
                 NetUtils.BufferLog log = new NetUtils.BufferLog(httpBufferSizeDefault);
                 HttpsURLConnection connection = NetUtils.ConnectionUtil.createHttpsConnection(new URL(remotePath),
@@ -58,11 +59,11 @@ abstract public class FetchRemoteTask extends GuiTask {
                         sum += len;
                         log.receive();
                         long speed = log.getSpeedPerSecond(500);
-                        this.updateMessage("当前已下载：" + NetUtils.getFormattedSizeString(sum) +
+                        this.updateMessage(i18n("task.network.fetch.download") + NetUtils.getFormattedSizeString(sum) +
                                 (speed != 0 ? " (" + NetUtils.getFormattedSizeString(speed) + "/s)" : ""));
                         this.updateProgress(sum, max);
                         if (this.isCancelled()) {
-                            this.updateMessage("下载进程已被取消");
+                            this.updateMessage(i18n("task.network.fetch.cancel"));
                             break;
                         }
                     }

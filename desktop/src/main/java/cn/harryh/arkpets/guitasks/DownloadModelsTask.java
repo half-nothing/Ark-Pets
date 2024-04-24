@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.file.Files;
 
 import static cn.harryh.arkpets.Const.PathConfig;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 public class DownloadModelsTask extends FetchGitHubRemoteTask {
@@ -33,6 +34,6 @@ public class DownloadModelsTask extends FetchGitHubRemoteTask {
 
     @Override
     protected String getHeader() {
-        return "正在下载模型资源文件...";
+        return i18n("task.model.download");
     }
 }

@@ -6,6 +6,7 @@ package cn.harryh.arkpets;
 import cn.harryh.arkpets.animations.AnimData;
 import cn.harryh.arkpets.animations.GeneralBehavior;
 import cn.harryh.arkpets.concurrent.SocketClient;
+import cn.harryh.arkpets.i18n.I18n;
 import cn.harryh.arkpets.transitions.TernaryFunction;
 import cn.harryh.arkpets.transitions.TransitionFloat;
 import cn.harryh.arkpets.transitions.TransitionVector2;
@@ -60,6 +61,7 @@ public class ArkPets extends ApplicationAdapter implements InputProcessor {
 		Logger.info("App", "Create");
 		Gdx.input.setInputProcessor(this);
 		config = Objects.requireNonNull(ArkConfig.getConfig());
+		I18n.setLanguage(config.prefer_language);
 		APP_FPS = config.display_fps;
 		Gdx.graphics.setForegroundFPS(APP_FPS);
 		getHWndLoopCtrl = new LoopCtrl(1f / APP_FPS * 4);

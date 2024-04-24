@@ -1,27 +1,30 @@
 package cn.harryh.arkpets.i18n;
 
 
-import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.utils.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 
 public final class I18n {
+    static private Locales.SupportedLocale supportedLocale = Locales.DEFAULT;
 
     private I18n() {
     }
 
-    public static Locales.SupportedLocale getCurrentLocale() {
+    public static void setLanguage(String language) {
         try {
-            return Locales.getLocaleByName(Objects.requireNonNull(ArkConfig.getConfig()).prefer_language);
+            supportedLocale = Locales.getLocaleByName(language);
         } catch (IllegalStateException e) {
-            return Locales.DEFAULT;
+            supportedLocale = Locales.DEFAULT;
         }
     }
 
     public static ResourceBundle getResourceBundle() {
-        return getCurrentLocale().getResourceBundle();
+        return supportedLocale.getResourceBundle();
     }
 
     public static String i18n(String key, Object... formatArgs) {
@@ -43,9 +46,5 @@ public final class I18n {
             Logger.error("I18n", "Cannot find key " + key + " in resource bundle", e);
             return key;
         }
-    }
-
-    public static boolean hasKey(String key) {
-        return getResourceBundle().containsKey(key);
     }
 }

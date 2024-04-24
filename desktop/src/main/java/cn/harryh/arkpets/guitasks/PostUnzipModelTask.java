@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import static cn.harryh.arkpets.i18n.I18n.i18n;
+
 
 public class PostUnzipModelTask extends GuiTask {
     private final String rootPath;
@@ -29,12 +31,12 @@ public class PostUnzipModelTask extends GuiTask {
 
     @Override
     protected String getHeader() {
-        return "正在应用模型更新...";
+        return i18n("task.model.apply");
     }
 
     @Override
     protected String getInitialContent() {
-        return "即将完成";
+        return i18n("task.model.apply.detail");
     }
 
     @Override

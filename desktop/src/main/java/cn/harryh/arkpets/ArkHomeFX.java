@@ -9,6 +9,7 @@ import cn.harryh.arkpets.controllers.BehaviorModule;
 import cn.harryh.arkpets.controllers.ModelsModule;
 import cn.harryh.arkpets.controllers.RootModule;
 import cn.harryh.arkpets.controllers.SettingsModule;
+import cn.harryh.arkpets.i18n.I18n;
 import cn.harryh.arkpets.tray.HostTray;
 import cn.harryh.arkpets.utils.FXMLHelper;
 import cn.harryh.arkpets.utils.FXMLHelper.LoadFXMLResult;
@@ -52,6 +53,9 @@ public class ArkHomeFX extends Application {
         Logger.info("Launcher", "Starting");
         this.stage = stage;
         Platform.setImplicitExit(false);
+        // check config at begin for i18n
+        config = Objects.requireNonNull(ArkConfig.getConfig(), "ArkConfig returns a null instance, please check the config file.");
+        I18n.setLanguage(config.prefer_language);
 
         // Load FXML for root node.
         LoadFXMLResult<ArkHomeFX> fxml0 = FXMLHelper.loadFXML(getClass().getResource("/UI/RootModule.fxml"));

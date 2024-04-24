@@ -6,6 +6,7 @@ package cn.harryh.arkpets.guitasks;
 import javafx.scene.layout.StackPane;
 
 import static cn.harryh.arkpets.Const.PathConfig;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 public class UnzipModelsTask extends UnzipTask {
@@ -15,11 +16,11 @@ public class UnzipModelsTask extends UnzipTask {
 
     @Override
     protected String getHeader() {
-        return "正在解压模型资源文件...";
+        return i18n("task.unzip.create");
     }
 
     @Override
     protected String getInitialContent() {
-        return "这可能需要十几秒";
+        return i18n("task.unzip.create.detail");
     }
 }

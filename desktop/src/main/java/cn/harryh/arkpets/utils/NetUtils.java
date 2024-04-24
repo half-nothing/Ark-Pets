@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,16 +22,7 @@ public class NetUtils {
     private static final int delayTestPort = 443;
     private static final int delayUpThreshold = 1500;
     private static final DecimalFormat df = new DecimalFormat("0.0");
-
-    public static final List<Source> ghSources = List.of(
-            new GitHubSource("GitHub",
-                    "https://raw.githubusercontent.com/",
-                    "https://github.com/"),
-            new GitHubSource("GHProxy",
-                    "https://ghproxy.harryh.cn/https://raw.githubusercontent.com/",
-                    "https://ghproxy.harryh.cn/https://github.com/")
-    );
-
+    public static final List<Source> ghSources;
     public static final Map<Long, String> sizeMap = Map.of(
             1L, "B",
             (long) k, "KB",
@@ -38,6 +30,16 @@ public class NetUtils {
             (long) k * k * k, "GB",
             (long) k * k * k * k, "TB"
     );
+
+    static {
+        ghSources = new ArrayList<>();
+        ghSources.add(new GitHubSource("GitHub",
+                "https://raw.githubusercontent.com/",
+                "https://github.com/"));
+        ghSources.add(new GitHubSource("GHProxy",
+                "https://ghproxy.harryh.cn/https://raw.githubusercontent.com/",
+                "https://ghproxy.harryh.cn/https://github.com/"));
+    }
 
     /** Gets a formatted size string, e.g."{@code 114.5 MB}".
      * @param byteSize The size value in Byte.

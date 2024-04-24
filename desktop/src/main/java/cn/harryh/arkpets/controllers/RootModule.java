@@ -3,7 +3,6 @@
  */
 package cn.harryh.arkpets.controllers;
 
-import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.EmbeddedLauncher;
 import cn.harryh.arkpets.concurrent.ProcessPool;
@@ -31,7 +30,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -101,7 +99,6 @@ public final class RootModule implements Controller<ArkHomeFX> {
         app.stage.setOnHidden(e -> Logger.debug("Launcher", "Window on hidden"));
 
         // Load config file.
-        app.config = Objects.requireNonNull(ArkConfig.getConfig(), "ArkConfig returns a null instance, please check the config file.");
         isNewcomer = app.config.isNewcomer();
         app.config.saveConfig();
     }

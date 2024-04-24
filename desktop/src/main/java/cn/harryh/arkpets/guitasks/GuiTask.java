@@ -3,6 +3,7 @@
  */
 package cn.harryh.arkpets.guitasks;
 
+import cn.harryh.arkpets.concurrent.ProcessPool;
 import cn.harryh.arkpets.utils.GuiPrefabs;
 import cn.harryh.arkpets.utils.Logger;
 import com.jfoenix.controls.JFXButton;
@@ -78,7 +79,7 @@ abstract public class GuiTask {
             throw new IllegalStateException("The task was already running.");
         if (dialog != null && style != GuiTaskStyle.HIDDEN)
             dialog.show();
-        new Thread(task, "GuiTask-" + threadNumber++).start();
+        ProcessPool.getInstance().execute(new Thread(task, "GuiTask-" + threadNumber++));
     }
 
     /** Generates a JavaFX {@code Task} instance which will be controlled by this {@code GuiTask} instance.

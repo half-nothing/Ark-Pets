@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import static cn.harryh.arkpets.Const.PathConfig;
 import static cn.harryh.arkpets.Const.appVersion;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 public class CheckAppUpdateTask extends FetchRemoteTask {
@@ -37,7 +38,7 @@ public class CheckAppUpdateTask extends FetchRemoteTask {
 
     @Override
     protected String getHeader() {
-        return "正在下载软件版本信息...";
+        return i18n("task.version.download");
     }
 
     @Override
@@ -57,9 +58,9 @@ public class CheckAppUpdateTask extends FetchRemoteTask {
                     if (style != GuiTaskStyle.HIDDEN)
                         GuiPrefabs.DialogUtil.createCommonDialog(root,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_INFO_ALT, GuiPrefabs.Colors.COLOR_INFO),
-                                "检查软件更新",
-                                "检测到软件有新的版本！",
-                                "当前版本 " + appVersion + " 可更新到 " + stableVersion + "\n请访问ArkPets官网或GitHub下载新的安装包。",
+                                i18n("task.version.title"),
+                                i18n("task.version.new"),
+                                i18n("task.version.new.content", appVersion, stableVersion),
                                 null).show();
                 } else {
                     // On up-to-dated:
@@ -67,9 +68,9 @@ public class CheckAppUpdateTask extends FetchRemoteTask {
                     if (style != GuiTaskStyle.HIDDEN)
                         GuiPrefabs.DialogUtil.createCommonDialog(root,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_SUCCESS_ALT, GuiPrefabs.Colors.COLOR_SUCCESS),
-                                "检查软件更新",
-                                "尚未发现新的正式版本。",
-                                "当前版本 " + appVersion + " 已是最新",
+                                i18n("task.version.title"),
+                                i18n("task.version.old"),
+                                i18n("task.version.old.content", appVersion),
                                 null).show();
                 }
                 Logger.info("Checker", "Application version check finished, newest: " + stableVersion);
@@ -79,9 +80,9 @@ public class CheckAppUpdateTask extends FetchRemoteTask {
                 if (style != GuiTaskStyle.HIDDEN)
                     GuiPrefabs.DialogUtil.createCommonDialog(root,
                             GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER_ALT, GuiPrefabs.Colors.COLOR_DANGER),
-                            "检查软件更新",
-                            "服务器返回了无效的消息。",
-                            "可能是兼容性问题或服务器不可用。\n您可以访问ArkPets官网或GitHub仓库以查看是否有新版本。",
+                            i18n("task.version.title"),
+                            i18n("task.version.fail"),
+                            i18n("task.version.fail.detail"),
                             null).show();
             }
         } catch (Exception e) {

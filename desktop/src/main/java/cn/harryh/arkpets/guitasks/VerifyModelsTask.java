@@ -12,12 +12,14 @@ import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 import static cn.harryh.arkpets.utils.GuiPrefabs.Colors;
 import static cn.harryh.arkpets.utils.GuiPrefabs.Icons;
 
 
 public class VerifyModelsTask extends GuiTask {
     protected final ModelsDataset modelsDataset;
+    // TODO: Why they are arrays?
     private final Node[] dialogGraphic = new Node[1];
     private final String[] dialogHeader = new String[1];
     private final String[] dialogContent = new String[1];
@@ -29,12 +31,12 @@ public class VerifyModelsTask extends GuiTask {
 
     @Override
     protected String getHeader() {
-        return "正在验证模型资源完整性...";
+        return i18n("task.model.verify");
     }
 
     @Override
     protected String getInitialContent() {
-        return "这可能需要数秒钟";
+        return i18n("task.model.verify.detail");
     }
 
     @Override
@@ -58,14 +60,14 @@ public class VerifyModelsTask extends GuiTask {
                             // Dir missing:
                             Logger.info("Checker", "Model repo check finished (dir not integral)");
                             dialogGraphic[0] = Icons.getIcon(Icons.ICON_WARNING_ALT, Colors.COLOR_WARNING);
-                            dialogHeader[0] = "已发现问题，模型资源可能不完整";
-                            dialogContent[0] = "资源 " + item.assetDir + " 不存在。重新下载模型文件可能解决此问题。";
+                            dialogHeader[0] = i18n("task.model.verify.result.fail");
+                            dialogContent[0] = i18n("task.model.verify.result.notfound", item.assetDir);
                         } else {
                             // Dir existing but file missing
                             Logger.info("Checker", "Model repo check finished (file not integral)");
                             dialogGraphic[0] = Icons.getIcon(Icons.ICON_WARNING_ALT, Colors.COLOR_WARNING);
-                            dialogHeader[0] = "已发现问题，模型资源可能不完整";
-                            dialogContent[0] = "资源 " + item.assetDir + " 缺少部分文件。重新下载模型文件可能解决此问题。";
+                            dialogHeader[0] = i18n("task.model.verify.result.fail");
+                            dialogContent[0] = i18n("task.model.verify.result.illegal", item.assetDir);
                         }
                         flag = true;
                         break;
@@ -75,8 +77,8 @@ public class VerifyModelsTask extends GuiTask {
                 if (!flag) {
                     Logger.info("Checker", "Model repo check finished (okay)");
                     dialogGraphic[0] = Icons.getIcon(Icons.ICON_SUCCESS_ALT, Colors.COLOR_SUCCESS);
-                    dialogHeader[0] = "模型资源是完整的。";
-                    dialogContent[0] = "这只能说明本地的模型资源是完整的，但不一定是最新的。";
+                    dialogHeader[0] = i18n("task.model.verify.result.success");
+                    dialogContent[0] = i18n("task.model.verify.result.detail");
                 }
                 return true;
             }
@@ -94,7 +96,7 @@ public class VerifyModelsTask extends GuiTask {
         if (style != GuiTaskStyle.HIDDEN)
             GuiPrefabs.DialogUtil.createCommonDialog(root,
                     dialogGraphic[0],
-                    "验证资源完整性",
+                    i18n("task.model.verify.result"),
                     dialogHeader[0],
                     dialogContent[0],
                     null).show();

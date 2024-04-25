@@ -138,6 +138,10 @@ public class ArkHomeFX extends Application {
         Logger.debug("Launcher", "Finished stopping");
     }
 
+    public void exit() {
+        rootModule.exit();
+    }
+
     public void popLoading(EventHandler<ActionEvent> handler) {
         rootModule.popLoading(handler);
     }

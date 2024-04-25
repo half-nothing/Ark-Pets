@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cn.harryh.arkpets.Const.serverPorts;
 
@@ -24,12 +25,15 @@ public final class SocketServer {
     private ServerSocket serverSocket = null;
     private final Set<SocketSession> sessionList = new CopyOnWriteArraySet<>();
     private Thread listener;
+    private final AtomicBoolean running = new AtomicBoolean(false);
+    private static volatile SocketServer instance = null;
 
-    private static SocketServer instance = null;
-
-    public static synchronized SocketServer getInstance() {
+    public static SocketServer getInstance() {
         if (instance == null)
-            instance = new SocketServer();
+            synchronized (SocketServer.class) {
+                if (instance == null)
+                    instance = new SocketServer();
+            }
         return instance;
     }
 
@@ -43,6 +47,8 @@ public final class SocketServer {
      */
     public synchronized void startServer(HostTray hostTray)
             throws PortUtils.NoPortAvailableException, PortUtils.ServerCollisionException {
+        if (running.get())
+            return;
         Logger.info("SocketServer", "Request to start server");
         this.port = PortUtils.getAvailablePort(serverPorts);
         listener = new Thread(() -> {
@@ -65,15 +71,19 @@ public final class SocketServer {
             }
         });
         ProcessPool.getInstance().execute(listener);
+        running.set(true);
     }
 
     /** Stops the server and close all the sessions.
      */
     public synchronized void stopServer() {
+        if (!running.get())
+            return;
         Logger.info("SocketServer", "Request to stop server");
         if (listener != null)
             listener.interrupt();
         sessionList.forEach(SocketSession::close);
+        running.set(false);
     }
 
     @Override

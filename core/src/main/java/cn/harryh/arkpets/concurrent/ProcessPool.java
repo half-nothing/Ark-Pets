@@ -22,11 +22,14 @@ public final class ProcessPool implements Executor {
                         return thread;
                     });
 
-    private static ProcessPool instance = null;
+    private static volatile ProcessPool instance = null;
 
-    public static synchronized ProcessPool getInstance() {
+    public static ProcessPool getInstance() {
         if (instance == null)
-            instance = new ProcessPool();
+            synchronized (ProcessPool.class) {
+                if (instance == null)
+                    instance = new ProcessPool();
+            }
         return instance;
     }
 

@@ -6,6 +6,7 @@ package cn.harryh.arkpets.controllers;
 import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.Const;
+import cn.harryh.arkpets.concurrent.SocketServer;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
 import cn.harryh.arkpets.i18n.I18n;
@@ -132,7 +133,16 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                         i18n("app.settings.language.change.header"),
                         i18n("app.settings.language.change.content"),
                         () -> {
-                            // TODO: Need to reboot app
+                            // Stop the internal server of this instance from sending the new instance out of the port
+                            SocketServer.getInstance().stopServer();
+                            // Start new instance
+                            // TODO:
+                            //  How to restart new instance?
+                            //  If write dead with the command line
+                            //  It must be adapted to both the exe and the jar and IDE
+                            //  Otherwise it will be useless
+                            // Stop this instance
+                            app.exit();
                         }).show();
             }
         });

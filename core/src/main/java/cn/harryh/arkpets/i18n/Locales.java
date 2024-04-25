@@ -1,5 +1,8 @@
 package cn.harryh.arkpets.i18n;
 
+
+import cn.harryh.arkpets.Const;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -30,13 +33,13 @@ public final class Locales {
      * @param name code name
      * @return see {@link SupportedLocale}
      */
-    public static SupportedLocale getLocaleByName(String name) {
+    public static SupportedLocale getLocaleByName(Const.Languages.Language name) {
         if (name == null) return DEFAULT;
-        return switch (name.toLowerCase(Locale.ROOT)) {
-            case "en" -> EN;
-            case "zh_tw" -> ZH_TW;
-            case "zh_cn" -> ZH_CN;
-            default -> DEFAULT;
+        return switch (name) {
+            case EN -> EN;
+            case ZH_TW -> ZH_TW;
+            case ZH_CN -> ZH_CN;
+            case DEFAULT -> DEFAULT;
         };
     }
 

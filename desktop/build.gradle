@@ -56,7 +56,7 @@ ext {
     jlinkRuntimeDir = "${buildDir}/jlink"
     jlinkRuntimeImg = "${jlinkRuntimeDir}/runtime"
     jlinkModuleList = "java.base,java.desktop,java.logging,java.management,java.scripting,jdk.crypto.ec,jdk.localedata,jdk.unsupported"
-    jlinkLocalesList = "en-US,zh-CN"
+    jlinkLocalesList = "en-US,zh-CN,zh-TW"
     jpackageDir = "${buildDir}/jpackage"
     issFileRel = "docs/scripts/ExePacking.iss"
     distDir = "${buildDir}/dist"

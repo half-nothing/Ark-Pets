@@ -8,6 +8,7 @@ import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
+import cn.harryh.arkpets.i18n.I18n;
 import cn.harryh.arkpets.utils.*;
 import cn.harryh.arkpets.utils.GuiComponents.NamedItem;
 import com.jfoenix.controls.*;
@@ -38,6 +39,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXComboBox<NamedItem<Integer>> configDisplayFps;
     @FXML
     public JFXComboBox<NamedItem<Integer>> configCanvasSize;
+    @FXML
+    public JFXComboBox<Languages.Language> preferLanguage;
     @FXML
     private JFXComboBox<String> configLoggingLevel;
     @FXML
@@ -116,6 +119,24 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     }
 
     private void initConfigAdvanced() {
+        preferLanguage.getItems().setAll(Languages.supportLanguages);
+        preferLanguage.setValue(Languages.Language.of(app.config.prefer_language));
+        preferLanguage.valueProperty().addListener(observable -> {
+            if (preferLanguage.getValue() != null) {
+                app.config.prefer_language = Languages.Language.getName(preferLanguage.getValue());
+                app.config.saveConfig();
+                I18n.setLanguage(app.config.prefer_language);
+                GuiPrefabs.DialogUtil.createConfirmDialog(app.root,
+                        GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO),
+                        i18n("app.settings.language.change.title"),
+                        i18n("app.settings.language.change.header"),
+                        i18n("app.settings.language.change.content"),
+                        () -> {
+                            // TODO: Need to reboot app
+                        }).show();
+            }
+        });
+
         configLoggingLevel.getItems().setAll(Const.LogConfig.debug, Const.LogConfig.info, Const.LogConfig.warn, Const.LogConfig.error);
         configLoggingLevel.valueProperty().addListener(observable -> {
             if (configLoggingLevel.getValue() != null) {

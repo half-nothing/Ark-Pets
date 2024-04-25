@@ -39,6 +39,10 @@
                     <JFXCheckBox fx:id="configSolidExit" mnemonicParsing="false" text="%app.settings.config.exit"/>
                 </HBox>
                 <HBox>
+                    <Label text="%app.settings.language"/>
+                    <JFXComboBox fx:id="preferLanguage" prefWidth="100.0"/>
+                </HBox>
+                <HBox>
                     <Label text="%app.settings.log.level"/>
                     <JFXComboBox fx:id="configLoggingLevel" prefWidth="100.0"/>
                     <Label fx:id="exploreLogDir" styleClass="config-hyper-link" text="%app.settings.log.view"/>

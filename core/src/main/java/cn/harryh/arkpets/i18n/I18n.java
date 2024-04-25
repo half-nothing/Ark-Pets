@@ -1,12 +1,10 @@
 package cn.harryh.arkpets.i18n;
 
 
+import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.utils.Logger;
 
-import java.util.Arrays;
-import java.util.IllegalFormatException;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -21,11 +19,11 @@ public final class I18n {
 
     /**
      * set i18n use language, default see {@link Locales#DEFAULT}
-     * @param language country code of i18n, detail see {@link Locales#getLocaleByName}
+     * @param language country code of i18n, detail see {@link Const.Languages.Language}
      */
     public static void setLanguage(String language) {
         try {
-            supportedLocale = Locales.getLocaleByName(language);
+            supportedLocale = Locales.getLocaleByName(Const.Languages.Language.of(language));
         } catch (IllegalStateException e) {
             supportedLocale = Locales.DEFAULT;
         }

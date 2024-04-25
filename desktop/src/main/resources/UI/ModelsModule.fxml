@@ -133,7 +133,7 @@
                 prefWidth="${_infoPaneW}"
                 styleClass="info-pane-light" visible="false">
         <VBox AnchorPane.topAnchor="0.0" prefWidth="${_infoPaneW}">
-            <Label text="筛选" styleClass="info-type-badge"/>
+            <Label text="%app.model.sift" styleClass="info-type-badge"/>
         </VBox>
         <VBox AnchorPane.bottomAnchor="0.0" prefWidth="${_infoPaneW}">
             <ScrollPane prefHeight="180.0" styleClass="flow-wrapper">
@@ -148,7 +148,7 @@
                 prefWidth="${_infoPaneW}"
                 styleClass="info-pane-light" visible="false">
         <VBox AnchorPane.topAnchor="0.0" prefWidth="${_infoPaneW}">
-            <Label text="模型" styleClass="info-type-badge"/>
+            <Label text="%app.model.model" styleClass="info-type-badge"/>
         </VBox>
         <VBox AnchorPane.topAnchor="35.0" prefWidth="${_infoPaneW}">
             <VBox fx:id="noticeBox"/>
@@ -187,7 +187,7 @@
                 <JFXButton fx:id="modelVerify" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
                            styleClass="btn-secondary" text="%app.model.verify"/>
                 <JFXButton fx:id="modelReFetch" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
-                           styleClass="btn-secondary" text="%app.model.redownload"/>
+                           styleClass="btn-secondary" text="%app.model.download.retry"/>
                 <JFXButton fx:id="modelImport" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"
                            styleClass="btn-secondary" text="%app.model.import"/>
                 <JFXButton fx:id="modelExport" minHeight="-Infinity" mnemonicParsing="false" prefWidth="${_smallBtnW}"

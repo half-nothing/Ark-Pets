@@ -40,6 +40,7 @@ import java.util.function.Predicate;
 
 import static cn.harryh.arkpets.Const.*;
 import static cn.harryh.arkpets.Const.PathConfig.*;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 import static cn.harryh.arkpets.utils.GuiPrefabs.tooltipStyle;
 
 
@@ -182,9 +183,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             if (doPopNotice) {
                 JFXDialog dialog = GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                        "模型载入失败",
-                        "模型未成功载入：未找到数据集。",
-                        "模型数据集文件 " + PathConfig.fileModelsDataPath + " 可能不在工作目录下。\n请先前往 [选项] 进行模型下载。",
+                        i18n("app.model.load.fail.title"),
+                        i18n("app.model.load.fail.notfound.header"),
+                        i18n("app.model.load.fail.notfound.content", fileModelsDataPath),
                         null);
                 dialog.show();
             }
@@ -193,18 +194,18 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             if (doPopNotice)
                 GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                        "模型载入失败",
-                        "模型未成功载入：数据集解析失败。",
-                        "模型数据集可能不完整，或无法被启动器正确识别。请尝试更新模型或更新软件。",
+                        i18n("app.model.load.fail.title"),
+                        i18n("app.model.load.fail.parse.header"),
+                        i18n("app.model.load.fail.parse.content"),
                         null).show();
         } catch (IOException e) {
             Logger.error("ModelManager", "Failed to initialize model dataset due to unknown reasons, details see below.", e);
             if (doPopNotice)
                 GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                        "模型载入失败",
-                        "模型未成功载入：发生意外错误。",
-                        "失败原因概要：" + e.getLocalizedMessage(),
+                        i18n("app.model.load.fail.title"),
+                        i18n("app.model.load.fail.exception.header"),
+                        i18n("app.model.load.fail.exception.content", e.getMessage()),
                         null).show();
         }
         if (mngBtnComposer.getActivatedId() != 0)
@@ -218,7 +219,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     }
 
     private void initModelSearch() {
-        searchModelInput.setPromptText("输入关键字");
+        searchModelInput.setPromptText(i18n("app.model.search.key"));
         searchModelInput.setOnKeyPressed(e -> {
             if (e.getCode().getName().equals(KeyCode.ENTER.getName()))
                 modelSearch(searchModelInput.getText());
@@ -261,7 +262,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
 
             @Override
             protected String getText() {
-                return "模型库版本太旧，可能不被软件兼容，请您重新下载模型。";
+                return i18n("app.model.outdated.model");
             }
         };
         datasetTooHighVerNotice = new GuiComponents.NoticeBar(noticeBox) {
@@ -277,7 +278,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
 
             @Override
             protected String getText() {
-                return "软件版本太旧，可能不被模型库兼容，建议您更新软件。";
+                return i18n("app.model.outdated.launcher");
             }
 
             @Override
@@ -286,12 +287,13 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             }
         };
 
+        // TODO: It's a really bad callback hell that needs to be refactored
         EventHandler<ActionEvent> modelFetchEventHandler = e -> {
             /* Foreground fetch models */
             // Go to [Step 1/3]:
             new DownloadModelsTask(app.root, GuiTask.GuiTaskStyle.COMMON) {
                 @Override
-                protected void onSucceeded(boolean result){
+                protected void onSucceeded(boolean result) {
                     // Go to [Step 2/3]:
                     new UnzipModelsTask(root, GuiTaskStyle.STRICT, PathConfig.tempModelsZipCachePath) {
                         @Override
@@ -390,7 +392,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                     assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
             AssetItemGroup searched = filtered.searchByKeyWords(keyWords);
             int curSize = searched.size();
-            searchModelStatus.setText((rawSize == curSize ? rawSize : curSize + " / " + rawSize) + " 个模型");
+            searchModelStatus.setText(i18n("app.model.number", rawSize == curSize ? rawSize : curSize + " / " + rawSize));
             // Add cells
             for (JFXListCell<AssetItem> cell : modelCellList)
                 if (searched.contains(cell.getItem()))
@@ -403,7 +405,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     public void modelRandom() {
         if (!assertModelLoaded(true))
             return;
-        int idx = (int)(Math.random() * (searchModelView.getItems().size() - 1));
+        int idx = (int) (Math.random() * (searchModelView.getItems().size() - 1));
         searchModelView.scrollTo(idx);
         searchModelView.getSelectionModel().select(idx);
         searchModelView.requestFocus();
@@ -441,9 +443,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                     if (doPopNotice)
                         GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                                "模型载入失败",
-                                "模型未成功载入：读取模型列表失败。",
-                                "失败原因概要：" + ex.getLocalizedMessage(),
+                                i18n("app.model.load.fail.title"),
+                                i18n("app.model.load.fail.load.header"),
+                                i18n("app.model.load.fail.load.content", ex.getLocalizedMessage()),
                                 null).show();
                 }
 
@@ -584,14 +586,13 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             if (doPopNotice)
                 GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                         GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                        "未能加载模型",
-                        "请确保模型加载成功后再进行此操作。",
-                        "请先在[选项]中进行模型下载。\n如您已下载模型，请尝试点击[重载]按钮。",
+                        i18n("app.model.load.fail"),
+                        i18n("app.model.load.fail.header"),
+                        i18n("app.model.load.fail.content"),
                         null).show();
             return false;
-        } else {
-            // Loaded:
-            return true;
         }
+        // Loaded:
+        return true;
     }
 }

@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static cn.harryh.arkpets.Const.*;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 
 
 public final class SettingsModule implements Controller<ArkHomeFX> {
@@ -75,7 +76,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     }
 
     private void initConfigDisplay() {
-        new GuiComponents.ComboBoxSetup<>(configDisplayScale).setItems(new NamedItem<>("x0.5", 0.5f),
+        new GuiComponents.ComboBoxSetup<>(configDisplayScale).setItems(
+                new NamedItem<>("x0.5", 0.5f),
                 new NamedItem<>("x0.75", 0.75f),
                 new NamedItem<>("x1.0", 1f),
                 new NamedItem<>("x1.25", 1.25f),
@@ -83,28 +85,30 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 new NamedItem<>("x2.0", 2f),
                 new NamedItem<>("x2.5", 2.5f),
                 new NamedItem<>("x3.0", 3.0f))
-                .selectValue(app.config.display_scale, "x" + app.config.display_scale + "（自定义）")
+                .selectValue(app.config.display_scale, i18n("app.settings.display.zoom.tip", app.config.display_scale))
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.display_scale = newValue.value();
                     app.config.saveConfig();
                 });
-        new GuiComponents.ComboBoxSetup<>(configDisplayFps).setItems(new NamedItem<>("25", 25),
+        new GuiComponents.ComboBoxSetup<>(configDisplayFps).setItems(
+                new NamedItem<>("25", 25),
                 new NamedItem<>("30", 30),
                 new NamedItem<>("45", 45),
                 new NamedItem<>("60", 60),
                 new NamedItem<>("120", 120))
-                .selectValue(app.config.display_fps, app.config.display_fps + "（自定义）")
+                .selectValue(app.config.display_fps, i18n("app.settings.display.fps.tip", app.config.display_fps))
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.display_fps = newValue.value();
                     app.config.saveConfig();
                     fpsUnreachableNotice.refresh();
                 });
-        new GuiComponents.ComboBoxSetup<>(configCanvasSize).setItems(new NamedItem<>("最宽", 4),
-                new NamedItem<>("较宽", 8),
-                new NamedItem<>("标准", 16),
-                new NamedItem<>("较窄", 32),
-                new NamedItem<>("最窄", 0))
-                .selectValue(app.config.canvas_fitting_samples, "每" + app.config.canvas_fitting_samples + "帧采样（自定义）")
+        new GuiComponents.ComboBoxSetup<>(configCanvasSize).setItems(
+                new NamedItem<>(i18n("app.settings.display.border.tip.lv1"), 4),
+                new NamedItem<>(i18n("app.settings.display.border.tip.lv2"), 8),
+                new NamedItem<>(i18n("app.settings.display.border.tip.lv3"), 16),
+                new NamedItem<>(i18n("app.settings.display.border.tip.lv4"), 32),
+                new NamedItem<>(i18n("app.settings.display.border.tip.lv5"), 0))
+                .selectValue(app.config.canvas_fitting_samples, i18n("app.settings.display.border.tip", app.config.canvas_fitting_samples))
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.canvas_fitting_samples = newValue.value();
                     app.config.saveConfig();
@@ -142,10 +146,10 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             }
         });
 
-        configNetworkAgent.setPromptText("示例：0.0.0.0:0");
+        configNetworkAgent.setPromptText(i18n("app.settings.proxy.example"));
         configNetworkAgent.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
-                configNetworkAgentStatus.setText("未使用代理");
+                configNetworkAgentStatus.setText(i18n("app.settings.proxy.unused"));
                 configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
                 Logger.info("Network", "Set proxy to none");
                 System.setProperty("http.proxyHost", "");
@@ -159,16 +163,16 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                     System.setProperty("http.proxyPort", ipPort[1]);
                     System.setProperty("https.proxyHost", ipPort[0]);
                     System.setProperty("https.proxyPort", ipPort[1]);
-                    configNetworkAgentStatus.setText("代理生效中");
+                    configNetworkAgentStatus.setText(i18n("app.settings.proxy.used"));
                     configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_SUCCESS);
                     Logger.info("Network", "Set proxy to host " + ipPort[0] + ", port " + ipPort[1]);
                 } else {
-                    configNetworkAgentStatus.setText("输入不合法");
+                    configNetworkAgentStatus.setText(i18n("app.settings.proxy.illegal"));
                     configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_DANGER);
                 }
             }
         });
-        configNetworkAgentStatus.setText("未使用代理");
+        configNetworkAgentStatus.setText(i18n("app.settings.proxy.unused"));
         configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
 
         configAutoStartup.setSelected(ArkConfig.StartupConfig.isSetStartup());
@@ -177,25 +181,25 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 if (ArkConfig.StartupConfig.addStartup()) {
                     GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                             GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_SUCCESS_ALT, GuiPrefabs.Colors.COLOR_SUCCESS),
-                            "开机自启动",
-                            "开机自启动设置成功。",
-                            "下次开机时将会自动生成您最后一次启动的桌宠。",
+                            i18n("app.settings.config.startup.title"),
+                            i18n("app.settings.config.startup.success.header"),
+                            i18n("app.settings.config.startup.success.content"),
                             null).show();
                 } else {
                     if (ArkConfig.StartupConfig.generateScript() == null)
                         GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                                "开机自启动",
-                                "开机自启动设置失败。",
-                                "无法确认目标程序的位置，其原因和相关解决方案如下：",
-                                "为确保自启动服务的稳定性，直接打开的ArkPets的\".jar\"版启动器，是不支持配置自启动的。请使用exe版的安装包安装ArkPets后运行，或使用zip版的压缩包解压程序文件后运行。另外，当您使用错误的工作目录运行启动器时也可能出现此情况。").show();
+                                i18n("app.settings.config.startup.title"),
+                                i18n("app.settings.config.startup.fail.header"),
+                                i18n("app.settings.config.startup.fail.program.content"),
+                                i18n("app.settings.config.startup.fail.program.detail")).show();
                     else
                         GuiPrefabs.DialogUtil.createCommonDialog(app.root,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                                "开机自启动",
-                                "开机自启动设置失败。",
-                                "无法写入系统的启动目录，其原因可参见日志文件。",
-                                "这有可能是由于权限不足导致的。请尝试关闭反病毒软件，并以管理员权限运行启动器。").show();
+                                i18n("app.settings.config.startup.title"),
+                                i18n("app.settings.config.startup.fail.header"),
+                                i18n("app.settings.config.startup.fail.permission.content"),
+                                i18n("app.settings.config.startup.fail.permission.detail")).show();
                     configAutoStartup.setSelected(false);
                 }
             } else {
@@ -239,7 +243,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
 
             @Override
             protected String getText() {
-                return "ArkPets 有新版本可用！点击此处前往下载~";
+                return i18n("app.settings.check.update");
             }
 
             @Override
@@ -266,7 +270,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
 
             @Override
             protected String getText() {
-                return "当前磁盘存储空间不足，可能影响使用体验。";
+                return i18n("app.settings.disk");
             }
         };
         fpsUnreachableNotice = new GuiComponents.NoticeBar(noticeBox) {
@@ -290,7 +294,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
 
             @Override
             protected String getText() {
-                return "当前设置的帧率超过了当前显示器的刷新率。";
+                return i18n("app.settings.display.fps.over");
             }
         };
     }

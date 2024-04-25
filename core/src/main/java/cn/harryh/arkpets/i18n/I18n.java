@@ -9,12 +9,20 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 
+/**
+ * I18n implementation class
+ * @since ArkPets 3.1
+ */
 public final class I18n {
     static private Locales.SupportedLocale supportedLocale = Locales.DEFAULT;
 
     private I18n() {
     }
 
+    /**
+     * set i18n use language, default see {@link Locales#DEFAULT}
+     * @param language country code of i18n, detail see {@link Locales#getLocaleByName}
+     */
     public static void setLanguage(String language) {
         try {
             supportedLocale = Locales.getLocaleByName(language);
@@ -35,7 +43,6 @@ public final class I18n {
         } catch (IllegalFormatException e) {
             Logger.error("I18n", "Illegal format string, key=" + key + ", args=" + Arrays.toString(formatArgs) + e);
         }
-
         return key + Arrays.toString(formatArgs);
     }
 

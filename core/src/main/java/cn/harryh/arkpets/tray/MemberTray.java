@@ -9,14 +9,16 @@ import cn.harryh.arkpets.concurrent.SocketData;
 import javax.swing.*;
 import java.util.UUID;
 
+import static cn.harryh.arkpets.i18n.I18n.i18n;
+
 
 public abstract class MemberTray {
-    protected JMenuItem optKeepAnimEn       = new JMenuItem("保持动作");
-    protected JMenuItem optKeepAnimDis      = new JMenuItem("取消保持");
-    protected JMenuItem optTransparentEn    = new JMenuItem("透明模式");
-    protected JMenuItem optTransparentDis   = new JMenuItem("取消透明");
-    protected JMenuItem optChangeStage      = new JMenuItem("切换形态");
-    protected JMenuItem optExit             = new JMenuItem("退出");
+    protected JMenuItem optKeepAnimEn       = new JMenuItem(i18n("tray.core.keep.enable"));
+    protected JMenuItem optKeepAnimDis      = new JMenuItem(i18n("tray.core.keep.disable"));
+    protected JMenuItem optTransparentEn    = new JMenuItem(i18n("tray.core.transparent.enable"));
+    protected JMenuItem optTransparentDis   = new JMenuItem(i18n("tray.core.transparent.disable"));
+    protected JMenuItem optChangeStage      = new JMenuItem(i18n("tray.core.stage"));
+    protected JMenuItem optExit             = new JMenuItem(i18n("tray.core.exit"));
     protected final UUID uuid;
     protected final String name;
 

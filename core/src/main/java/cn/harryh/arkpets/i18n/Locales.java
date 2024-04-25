@@ -5,6 +5,9 @@ import java.util.ResourceBundle;
 
 
 public final class Locales {
+    /**
+     * Jvm default language source
+     */
     public static final SupportedLocale DEFAULT = new SupportedLocale(Locale.getDefault(), "lang.default");
     /**
      * English
@@ -22,6 +25,11 @@ public final class Locales {
     private Locales() {
     }
 
+    /**
+     * Support code: en, zh_tw, zh_cn
+     * @param name code name
+     * @return see {@link SupportedLocale}
+     */
     public static SupportedLocale getLocaleByName(String name) {
         if (name == null) return DEFAULT;
         return switch (name.toLowerCase(Locale.ROOT)) {

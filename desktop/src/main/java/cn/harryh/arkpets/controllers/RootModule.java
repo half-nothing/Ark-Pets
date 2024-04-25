@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static cn.harryh.arkpets.Const.*;
+import static cn.harryh.arkpets.i18n.I18n.i18n;
 import static cn.harryh.arkpets.utils.GuiComponents.Handbook;
 
 
@@ -215,12 +216,12 @@ public final class RootModule implements Controller<ArkHomeFX> {
     @FXML
     public void windowClose(MouseEvent event) {
         String solidExitTip = (app.config != null && app.config.launcher_solid_exit) ?
-            "退出程序将会同时退出已启动的桌宠。" : "退出程序后已启动的桌宠将会保留。";
+            i18n("app.exit.arkpets.exit") : i18n("app.exit.arkpets.retain");
         GuiPrefabs.DialogUtil.createConfirmDialog(root,
                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO),
-                "确认退出",
-                "现在退出 " + appName + " 吗？",
-                "根据您的设置，" + solidExitTip + "\n使用最小化 [-] 按钮可以隐藏窗口到系统托盘。",
+                i18n("app.exit.confirm"),
+                i18n("app.exit.confirm.header", appName),
+                i18n("app.exit.confirm.content", solidExitTip),
                 this::exit).show();
     }
 
@@ -302,17 +303,17 @@ public final class RootModule implements Controller<ArkHomeFX> {
     private static class TrayExitHandBook extends Handbook {
         @Override
         public String getTitle() {
-            return "使用提示";
+            return i18n("app.tip.title");
         }
 
         @Override
         public String getHeader() {
-            return "可以通过右键系统托盘图标来管理已启动的桌宠。";
+            return i18n("app.tip.header");
         }
 
         @Override
         public String getContent() {
-            return "看来你已经启动了你的第一个 ArkPets 桌宠！尽情享受 ArkPets 吧！";
+            return i18n("app.tip.content");
         }
     }
 }

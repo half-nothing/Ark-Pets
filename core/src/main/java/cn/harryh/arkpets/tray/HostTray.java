@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import static cn.harryh.arkpets.i18n.I18n.i18n;
+
 
 public class HostTray {
     protected TrayIcon trayIcon;
@@ -50,8 +52,8 @@ public class HostTray {
             JLabel innerLabel = new JLabel(" ArkPets ");
             innerLabel.setAlignmentX(0.5f);
 
-            playerMenu = new JMenu("角色管理");
-            JMenuItem optExit = new JMenuItem("退出程序");
+            playerMenu = new JMenu(i18n("tray.launcher.manager"));
+            JMenuItem optExit = new JMenuItem(i18n("tray.launcher.exit"));
             optExit.addActionListener(e -> {
                 Logger.info("HostTray", "Request to exit");
                 if (onCloseStage != null)

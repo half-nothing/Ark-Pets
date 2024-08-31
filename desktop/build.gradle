@@ -14,7 +14,9 @@ processResources {
             "**/models_enemies/**",
             "**/models/**",
             "**/logs/**",
-            "models_data.json"
+            "models_data.json",
+            "ArkPetsConfig.json",
+            "error_logs_**.zip"
     ]
 }
 
@@ -41,6 +43,16 @@ task debug(dependsOn: classes, type: JavaExec, group: 'execute') {
     debug = true
 }
 
+task cleanBuildTempFile(type: Delete, group: 'other') {
+    delete {
+        delete jarLibDir
+        delete jpackageDir
+        fileTree(file("${buildDir}/tmp")).matching {
+            include '**'
+            exclude '.cache/**'
+        }.each { file -> delete file }
+    }
+}
 
 /* DISTRIBUTION TASKS */
 
@@ -65,6 +77,7 @@ ext {
 
 // Generates a distributable JAR file for the app.
 task distJar(dependsOn: classes, type: Jar, group: 'dist') {
+    finalizedBy(cleanBuildTempFile)
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
         attributes 'Main-Class': project.mainClassName
@@ -146,6 +159,7 @@ task jpackage(dependsOn: jlink, type: Exec, group: 'dist') {
 
 // Generates a distributable ZIP file for the app.
 task distZip(dependsOn: jpackage, type: Zip, group: 'dist') {
+    finalizedBy(cleanBuildTempFile)
     from(jpackageDir) { include("**") }
     from(project.rootDir) { include("README.md") }
     archiveFileName = "${distName}.zip"
@@ -155,6 +169,7 @@ task distZip(dependsOn: jpackage, type: Zip, group: 'dist') {
 // Generates a distributable EXE file for the app, using Inno Setup.
 // Note that you must install Inno Setup in your environment and add it to PATH before running this task.
 task distExe(dependsOn: jpackage, type: Exec, group: 'dist') {
+    finalizedBy(cleanBuildTempFile)
     workingDir project.rootDir
     def commands = [
             "iscc",
@@ -166,14 +181,8 @@ task distExe(dependsOn: jpackage, type: Exec, group: 'dist') {
 
 // Generates ALL kinds of distributing files.
 task distAll(dependsOn: [distJar, distZip, distExe], group: 'dist') {
+    finalizedBy(cleanBuildTempFile)
     doLast() {
         println("All files were successfully generated, see: ${new File(distDir as String).absolutePath}")
-        try {
-            delete "${buildDir}/tmp"
-            delete jpackageDir
-            delete jarLibDir
-        } catch (Exception ignored) {
-            println("Unable to delete temp files.")
-        }
     }
 }

@@ -1,0 +1,14 @@
+#!C:/Program\ Files/Git/usr/bin/sh.exe
+
+./gradlew spotlessCheck
+result=$?
+printf "the spotlessCheck result code is $result"
+if [[ "$result" = 0 ]] ; then
+    echo "SpotlessCheck Pass!!"
+    exit 0
+else
+    echo "SpotlessCheck Failed!!"
+    echo "Auto apply spotless style"
+    ./gradlew spotlessApply
+    exit 1
+fi

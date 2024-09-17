@@ -51,4 +51,8 @@ dependencies {
             }
         }
     }
+    // TiniPinyin
+    api("com.github.promeg:tinypinyin:2.0.3")
+    // OpenCC4j
+    api("com.github.houbb:opencc4j:1.8.1")
 }

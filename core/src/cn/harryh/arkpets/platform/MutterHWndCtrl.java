@@ -23,7 +23,7 @@ public class MutterHWndCtrl extends HWndCtrl {
     private static ArkPetsInterface dBusInterface;
 
     protected MutterHWndCtrl(DetailsStruct details) {
-        super(details.title, new WindowRect(details.y, details.y + details.h.intValue(), details.x + details.w.intValue(), details.x));
+        super(details.title, new WindowRect(details.y, details.y + details.h.intValue(),  details.x, details.x + details.w.intValue()));
         this.hWnd = details.id;
         this.details = details;
     }
@@ -54,23 +54,18 @@ public class MutterHWndCtrl extends HWndCtrl {
     }
 
     @Override
-    public void setWindowAlpha(float alpha) {
-        dBusInterface.Alpha(hWnd, new UInt32((long) (alpha * 255L)));
-    }
-
-    @Override
     public void setWindowPosition(HWndCtrl insertAfter, int x, int y, int w, int h) {
-        dBusInterface.MoveResize(hWnd,x,y,new UInt32(w),new UInt32(h));
+        dBusInterface.MoveResize(hWnd, x, y, new UInt32(w), new UInt32(h));
     }
 
     @Override
-    public void setWindowTransparent(boolean enable) {
+    public void setTransparent(boolean enable) {
 
     }
 
     @Override
-    public void setToolWindow(boolean enable) {
-
+    public void setTaskbar(boolean enable) {
+        dBusInterface.Stick(hWnd,!enable);
     }
 
     @Override
@@ -80,11 +75,7 @@ public class MutterHWndCtrl extends HWndCtrl {
 
     @Override
     public void setTopmost(boolean enable) {
-        if (enable) {
-            dBusInterface.Above(hWnd);
-        } else {
-            dBusInterface.Unabove(hWnd);
-        }
+        dBusInterface.Above(hWnd,enable);
     }
 
     @Override
@@ -153,19 +144,17 @@ public class MutterHWndCtrl extends HWndCtrl {
 
         void Activate(UInt32 winid);
 
-        void Above(UInt32 winid);
+        void Above(UInt32 winid,boolean above);
 
-        void Unabove(UInt32 winid);
+        void Stick(UInt32 winid,boolean stick);
 
         List<DetailsStruct> List();
 
         DetailsStruct Details(UInt32 winid);
 
-        void Alpha(UInt32 winid, UInt32 alpha);
-
         boolean IsActive(UInt32 winid);
 
-        UInt32 Version();
+        String Version();
     }
 
     public static class DetailsStruct extends Struct {

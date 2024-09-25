@@ -19,12 +19,15 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.apache.log4j.Level;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -264,13 +267,14 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         configLoggingLevel.getSelectionModel().select(level);
 
         exploreLogDir.setOnMouseClicked(e -> {
-            // Only available in Windows OS
-            try {
-                Logger.debug("Config", "Request to explore the log dir");
-                Runtime.getRuntime().exec("explorer logs");
-            } catch (IOException ex) {
-                Logger.warn("Config", "Exploring log dir failed");
-            }
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Logger.debug("Config", "Request to explore the log dir");
+                    Desktop.getDesktop().open(new File("logs"));
+                } catch (IOException ex) {
+                    Logger.warn("Config", "Exploring log dir failed");
+                }
+            });
         });
 
         configNetworkAgent.setPromptText("示例：0.0.0.0:0");

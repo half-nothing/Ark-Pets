@@ -8,6 +8,7 @@ import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
+import cn.harryh.arkpets.platform.StartupConfig;
 import cn.harryh.arkpets.utils.*;
 import cn.harryh.arkpets.utils.GuiComponents.*;
 import com.badlogic.gdx.graphics.Color;
@@ -287,10 +288,11 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         configNetworkAgentStatus.setText("未使用代理");
         configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
 
-        configAutoStartup.setSelected(ArkConfig.StartupConfig.isSetStartup());
+        StartupConfig startup = StartupConfig.getInstance();
+        configAutoStartup.setSelected(startup.isSetStartup());
         configAutoStartup.setOnAction(e -> {
             if (configAutoStartup.isSelected()) {
-                if (ArkConfig.StartupConfig.addStartup()) {
+                if (startup.addStartup()) {
                     GuiPrefabs.Dialogs.createCommonDialog(app.body,
                             GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_SUCCESS_ALT, GuiPrefabs.Colors.COLOR_SUCCESS),
                             "开机自启动",
@@ -298,7 +300,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                             "下次开机时将会自动生成您最后一次启动的桌宠。",
                             null).show();
                 } else {
-                    if (ArkConfig.StartupConfig.generateScript() == null)
+                    if (!startup.isStartupAvailable())
                         GuiPrefabs.Dialogs.createCommonDialog(app.body,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
                                 "开机自启动",
@@ -315,7 +317,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                     configAutoStartup.setSelected(false);
                 }
             } else {
-                ArkConfig.StartupConfig.removeStartup();
+                startup.removeStartup();
             }
         });
 

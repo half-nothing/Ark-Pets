@@ -36,7 +36,6 @@ public class AnimComposer {
         if (animData != null && !animData.isEmpty()) {
             if (playing == null || playing.isEmpty() || (!playing.isStrict() && !playing.equals(animData))) {
                 playing = animData;
-                state.clearTrack(coreTrackId);
                 state.setAnimation(coreTrackId, playing.name(), playing.isLoop());
                 onApply(playing);
                 return true;
@@ -51,7 +50,7 @@ public class AnimComposer {
 
     public void reset() {
         playing = null;
-        state.clearTrack(coreTrackId);
+        state.setEmptyAnimation(coreTrackId, 0f);
     }
 
     protected void onApply(AnimData playing) {

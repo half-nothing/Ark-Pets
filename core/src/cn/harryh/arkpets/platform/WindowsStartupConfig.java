@@ -24,20 +24,31 @@ public class WindowsStartupConfig extends StartupConfig {
     private File startupDir;
     private File startupFile;
 
+    private static final String startupTarget    = "ArkPets.exe";
+    private static final String startupShortcut  = "ArkPetsStartup.lnk";
+    private static final String oldStartupScript = "ArkPetsStartupService.vbs";
+
     public WindowsStartupConfig() {
         try {
             this.startupDir = new File(System.getProperty("user.home") + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup");
             if (!this.startupDir.isDirectory())
                 throw new FileNotFoundException("No such directory " + startupDir.getAbsolutePath());
-            if (!new File("ArkPets.exe").exists())
+            if (!new File(startupTarget).exists())
                 throw new FileNotFoundException("Executable not found.");
-            this.startupFile = new File(startupDir.getAbsolutePath(), "ArkPetsStartup.lnk");
+            this.startupFile = new File(startupDir.getAbsolutePath(), startupShortcut);
             this.available = true;
         } catch (Exception e) {
             this.startupDir = null;
             this.startupFile = null;
             this.available = false;
             Logger.error("Config", "Auto-startup config may be unavailable, details see below.", e);
+        }
+        File oldStartup = new File(startupDir.getAbsolutePath(), oldStartupScript);
+        if (oldStartup.exists()) {
+            Logger.debug("Config", "Found old startup script,migrate to shortcut.");
+            if(oldStartup.delete()){
+                addStartup();
+            }
         }
     }
 
@@ -49,7 +60,7 @@ public class WindowsStartupConfig extends StartupConfig {
             IPersistFile pf = lnk.getPF();
             String cd = System.getProperty("user.dir");
             cd = cd.replaceAll("\"", "\"\"");
-            lnk.SetPath(cd + "\\" + "ArkPets.exe");
+            lnk.SetPath(cd + "\\" + startupTarget);
             lnk.SetArguments("--direct-start");
             lnk.SetWorkingDirectory(cd);
             pf.Save(startupFile.getAbsolutePath().replaceAll("\"", "\"\""));

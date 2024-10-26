@@ -55,7 +55,6 @@ public final class Const {
 
     // Encoding presets
     public static final String charsetDefault   = "UTF-8";
-    public static final String charsetVBS       = "GBK";
 
     // Paths of static files and internal files
     public static final String configExternal   = "ArkPetsConfig.json";
@@ -65,8 +64,6 @@ public final class Const {
     public static final String pass1FShader     = "shaders/TCPBFragment.glsl";
     public static final String pass2VShader     = "shaders/TCPBVertex.glsl";
     public static final String pass2FShader     = "shaders/OutlineFragment.glsl";
-    public static final String startupTarget    = "ArkPets.exe";
-    public static final String startUpScript    = "ArkPetsStartupService.vbs";
 
     // Changeable constants
     public static boolean isHttpsTrustAll       = false;

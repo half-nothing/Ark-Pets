@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 
 public class WindowsStartupConfig extends StartupConfig {
     private boolean available;
-    private File startupDir;
     private File startupFile;
 
     private static final String startupTarget    = "ArkPets.exe";
@@ -30,25 +29,28 @@ public class WindowsStartupConfig extends StartupConfig {
 
     public WindowsStartupConfig() {
         try {
-            this.startupDir = new File(System.getProperty("user.home") + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup");
-            if (!this.startupDir.isDirectory())
-                throw new FileNotFoundException("No such directory " + startupDir.getAbsolutePath());
+            File startupDir = new File(System.getProperty("user.home") + "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup");
+            if (!startupDir.isDirectory())
+                throw new FileNotFoundException("Startup dir not found: " + startupDir.getAbsolutePath());
             if (!new File(startupTarget).exists())
                 throw new FileNotFoundException("Executable not found.");
             this.startupFile = new File(startupDir.getAbsolutePath(), startupShortcut);
             this.available = true;
+
+            File oldStartup = new File(startupDir.getAbsolutePath(), oldStartupScript);
+            try {
+                if (oldStartup.exists()) {
+                    Logger.info("Config", "Found old version startup, migrate to new approach.");
+                    if (oldStartup.delete())
+                        addStartup();
+                }
+            } catch (Exception e) {
+                Logger.error("Config", "Cannot migrate startup, details see below.", e);
+            }
         } catch (Exception e) {
-            this.startupDir = null;
             this.startupFile = null;
             this.available = false;
-            Logger.error("Config", "Auto-startup config may be unavailable, details see below.", e);
-        }
-        File oldStartup = new File(startupDir.getAbsolutePath(), oldStartupScript);
-        if (oldStartup.exists()) {
-            Logger.debug("Config", "Found old startup script,migrate to shortcut.");
-            if(oldStartup.delete()){
-                addStartup();
-            }
+            Logger.debug("Config", "Auto-startup is unavailable.");
         }
     }
 

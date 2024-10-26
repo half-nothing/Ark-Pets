@@ -17,20 +17,20 @@ public abstract class StartupConfig {
         return new NullStartupConfig();
     }
 
-    /** Enable autostart.
+    /** Enables auto-startup.
      * @return true=success, false=failure.
      */
     public abstract boolean addStartup();
 
-    /** Disable autostart.
+    /** Disables auto-startup.
      */
     public abstract void removeStartup();
 
-    /** Returns true if autostart is enabled.
+    /** Returns true if auto-startup is enabled.
      */
     public abstract boolean isSetStartup();
 
-    /** Returns true if autostart is available.
+    /** Returns true if auto-startup is available.
      */
     public abstract boolean isStartupAvailable();
 }

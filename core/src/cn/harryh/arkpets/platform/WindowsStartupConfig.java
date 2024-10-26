@@ -34,6 +34,7 @@ public class WindowsStartupConfig extends StartupConfig {
                 throw new FileNotFoundException("Startup dir not found: " + startupDir.getAbsolutePath());
             if (!new File(startupTarget).exists())
                 throw new FileNotFoundException("Executable not found.");
+
             this.startupFile = new File(startupDir.getAbsolutePath(), startupShortcut);
             this.available = true;
 
@@ -68,6 +69,7 @@ public class WindowsStartupConfig extends StartupConfig {
             pf.Save(startupFile.getAbsolutePath().replaceAll("\"", "\"\""));
             pf.Release();
             lnk.Release();
+            Logger.info("Config", "Auto-startup added.");
             return true;
         } catch (Exception e) {
             Logger.error("Config", "Auto-startup adding failed, details see below.", e);
@@ -79,7 +81,7 @@ public class WindowsStartupConfig extends StartupConfig {
     public void removeStartup() {
         try {
             IOUtils.FileUtil.delete(startupFile.toPath(), false);
-            Logger.info("Config", "Auto-startup was removed: " + startupFile.getAbsolutePath());
+            Logger.info("Config", "Auto-startup removed.");
         } catch (Exception e) {
             Logger.error("Config", "Auto-startup removing failed, details see below.", e);
         }
@@ -87,8 +89,7 @@ public class WindowsStartupConfig extends StartupConfig {
 
     @Override
     public boolean isSetStartup() {
-        if (!this.available) return false;
-        return startupFile.exists();
+        return this.available && startupFile.exists();
     }
 
     @Override
@@ -106,6 +107,7 @@ public class WindowsStartupConfig extends StartupConfig {
             COMUtils.checkRC(new WinNT.HRESULT(res));
         }
     }
+
 
     private static class IShellLink extends Unknown {
         private static final Guid.GUID CLSID_ShellLink = new Guid.GUID("{00021401-0000-0000-c000-000000000046}");

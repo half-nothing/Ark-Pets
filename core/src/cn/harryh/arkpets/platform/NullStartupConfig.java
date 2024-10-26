@@ -11,7 +11,6 @@ public class NullStartupConfig extends StartupConfig {
 
     @Override
     public void removeStartup() {
-
     }
 
     @Override

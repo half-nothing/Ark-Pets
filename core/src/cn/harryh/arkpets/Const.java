@@ -39,9 +39,8 @@ public final class Const {
     public static final int coreWidthDefault    = 150;
     public static final int coreHeightDefault   = 150;
     public static final int canvasReserveLength = 20;
-    public static final int canvasMaxSize       = 1080;
+    public static final int canvasMaxSize       = 4320;
     public static final float skelBaseScale     = 0.3f;
-    public static final float outlineWidthMax   = 2f;
 
     // Behavior presets
     public static final int behaviorBaseWeight      = 320;

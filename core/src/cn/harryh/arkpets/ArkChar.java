@@ -38,7 +38,7 @@ public class ArkChar {
 
     private final TwoColorPolygonBatch batch;
     private Texture bgTexture;
-    private Color outlineColor;
+    private final Color outlineColor;
     private final TransitionFloat offsetY;
     private final TransitionFloat outlineWidth;
     private final TransitionFloat alpha;
@@ -134,8 +134,8 @@ public class ArkChar {
                 stageInsertMap.put(stage, camera.getInsert().clone());
                 Logger.info("Character", stage + " using " + camera);
             } else {
-                stageInsertMap.put(stage, new Insert((canvasReserveLength << 1) - (canvasMaxSize >> 1)));
-                Logger.warn("Character", stage + " using naive camera since the auto fitting has failed");
+                Logger.error("Character", stage + " canvas size exceeded limit.");
+                throw new RuntimeException("Launch ArkPets failed, canvas setup failsafe triggered.");
             }
         }
         camera.setInsertMaxed();

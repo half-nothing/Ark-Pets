@@ -38,7 +38,11 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     @FXML
     private JFXComboBox<NamedItem<Float>> configDisplayScale;
     @FXML
+    private JFXButton configDisplayScaleHelp;
+    @FXML
     private JFXComboBox<NamedItem<Integer>> configDisplayFps;
+    @FXML
+    private JFXButton configDisplayFpsHelp;
     @FXML
     private JFXComboBox<NamedItem<Integer>> configCanvasSize;
 
@@ -99,6 +103,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
 
     private NoticeBar appVersionNotice;
     private NoticeBar diskFreeSpaceNotice;
+    private WarningHandbookEntrance displayScaleHelpEntrance;
+    private DangerHandbookEntrance displayFpsHelpEntrance;
 
     private ArkHomeFX app;
 
@@ -106,6 +112,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     public void initializeWith(ArkHomeFX app) {
         this.app = app;
         initNoticeBox();
+        initHandbookEntrance();
         initConfigDisplay();
         initConfigAdvanced();
         initAbout();
@@ -125,14 +132,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.display_scale = newValue.value();
                     app.config.save();
-                    if (app.config.display_scale > 2f) {
-                        GuiPrefabs.Dialogs.createCommonDialog(app.body,
-                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                                "临界警告",
-                                "当前设置的缩放倍率过高",
-                                "过高的缩放倍率可能导致桌宠尺寸过大，从而阻碍您的正常使用，请您谨慎选择。",
-                                "").show();
-                    }
+                    displayScaleHelpEntrance.refreshAndEnsureDisplayed();
                 });
         new ComboBoxSetup<>(configDisplayFps).setItems(new NamedItem<>("25", 25),
                 new NamedItem<>("30", 30),
@@ -143,17 +143,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.display_fps = newValue.value();
                     app.config.save();
-                    int maxHz = -1;
-                    for (ArkConfig.Monitor i : ArkConfig.Monitor.getMonitors())
-                        if (i.hz > maxHz)
-                            maxHz = i.hz;
-                    if (configDisplayFps.getValue().value() > maxHz)
-                        GuiPrefabs.Dialogs.createCommonDialog(app.body,
-                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
-                                "临界警告",
-                                "当前设置的最大帧率较高",
-                                "您设置的最大帧率超过了您的显示器的最大刷新率（" + maxHz + " Hz），因此实际帧率并不会得到提高。",
-                                "").show();
+                    displayFpsHelpEntrance.refreshAndEnsureDisplayed();
                 });
         new ComboBoxSetup<>(configCanvasSize).setItems(new NamedItem<>("最宽", 4),
                 new NamedItem<>("较宽", 8),
@@ -165,10 +155,10 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                     app.config.canvas_fitting_samples = newValue.value();
                     app.config.save();
                 });
-        new HandbookEntrance(app.body, configCanvasSizeHelp) {
+        new HelpHandbookEntrance(app.body, configCanvasSizeHelp) {
             @Override
             public Handbook getHandbook() {
-                return new ControlHandbook((Labeled)configCanvasSize.getParent().getChildrenUnmodifiable().get(0)) {
+                return new ControlHelpHandbook((Labeled)configCanvasSize.getParent().getChildrenUnmodifiable().get(0)) {
                     @Override
                     public String getContent() {
                         return "设置桌宠窗口边界的相对大小。更宽的边界能够防止动画溢出；更窄的边界能够防止鼠标误触。";
@@ -355,10 +345,10 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             app.config.window_style_toolwindow = configWindowToolwindow.isSelected();
             app.config.save();
         });
-        new HandbookEntrance(app.body, configWindowToolwindowHelp) {
+        new HelpHandbookEntrance(app.body, configWindowToolwindowHelp) {
             @Override
             public Handbook getHandbook() {
-                return new ControlHandbook(configWindowToolwindow) {
+                return new ControlHelpHandbook(configWindowToolwindow) {
                     @Override
                     public String getContent() {
                         return "启用时，桌宠将以后台工具程序的样式启动，不会在任务栏中显示程序图标。禁用时，作为普通程序启动的桌宠可以被直播流软件捕获。";
@@ -429,6 +419,63 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         };
     }
 
+    private void initHandbookEntrance() {
+        displayScaleHelpEntrance = new WarningHandbookEntrance(app.body, configDisplayScaleHelp) {
+            @Override
+            protected Handbook getHandbook() {
+                return new ControlWarningHandbook() {
+                    @Override
+                    protected String getHeader() {
+                        return "当前设置的缩放倍率过高";
+                    }
+
+                    @Override
+                    protected String getContent() {
+                        return "过高的缩放倍率可能导致桌宠尺寸过大，从而阻碍您的正常使用，请您谨慎选择。";
+                    }
+                };
+            }
+
+            @Override
+            protected boolean getEntranceVisibleCondition() {
+                float configScale = configDisplayScale.getValue() == null ?
+                        app.config.display_scale : configDisplayScale.getValue().value();
+                return configScale > 2f;
+            }
+        };
+        displayFpsHelpEntrance = new DangerHandbookEntrance(app.body, configDisplayFpsHelp) {
+            @Override
+            public Handbook getHandbook() {
+                return new ControlDangerHandbook() {
+                    @Override
+                    protected String getHeader() {
+                        return "当前设置的最大帧率过高";
+                    }
+
+                    @Override
+                    protected String getContent() {
+                        int maxHz = -1;
+                        for (ArkConfig.Monitor i : ArkConfig.Monitor.getMonitors())
+                            if (i.hz > maxHz)
+                                maxHz = i.hz;
+                        return "您设置的最大帧率超过了您的显示器的最大刷新率（" + maxHz + " Hz），因此实际帧率并不会得到提高。";
+                    }
+                };
+            }
+
+            @Override
+            protected boolean getEntranceVisibleCondition() {
+                int configHz = configDisplayFps.getValue() == null ?
+                        app.config.display_fps : configDisplayFps.getValue().value();
+                int maxHz = -1;
+                for (ArkConfig.Monitor i : ArkConfig.Monitor.getMonitors())
+                    if (i.hz > maxHz)
+                        maxHz = i.hz;
+                return configHz > maxHz;
+            }
+        };
+    }
+
     private void initScheduledListener() {
         ScheduledService<Boolean> ss = new ScheduledService<>() {
             @Override
@@ -442,6 +489,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 task.setOnSucceeded(e -> {
                     appVersionNotice.refresh();
                     diskFreeSpaceNotice.refresh();
+                    displayScaleHelpEntrance.refresh();
+                    displayFpsHelpEntrance.refresh();
                 });
                 return task;
             }
@@ -450,25 +499,5 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         ss.setPeriod(new Duration(5000));
         ss.setRestartOnFailure(true);
         ss.start();
-    }
-
-
-    abstract private static class ControlHandbook extends Handbook {
-        private final Labeled control;
-
-        public ControlHandbook(Labeled control) {
-            super();
-            this.control = control;
-        }
-
-        @Override
-        public String getTitle() {
-            return "选项说明";
-        }
-
-        @Override
-        public String getHeader() {
-            return control.getText();
-        }
     }
 }

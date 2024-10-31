@@ -23,10 +23,12 @@
                 <HBox>
                     <Label text="图像缩放"/>
                     <JFXComboBox fx:id="configDisplayScale" prefWidth="120.0"/>
+                    <JFXButton fx:id="configDisplayScaleHelp"/>
                 </HBox>
                 <HBox>
                     <Label text="最大帧率"/>
                     <JFXComboBox fx:id="configDisplayFps" prefWidth="120.0"/>
+                    <JFXButton fx:id="configDisplayFpsHelp"/>
                 </HBox>
                 <HBox>
                     <Label text="窗口边界"/>

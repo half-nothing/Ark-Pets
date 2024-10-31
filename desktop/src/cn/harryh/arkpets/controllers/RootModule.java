@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -240,8 +241,8 @@ public final class RootModule implements Controller<ArkHomeFX> {
                         startArkPetsCore();
                         Thread.sleep(1200);
                         // Show handbook in the first-run.
-                        if (isNewcomer && !trayExitHandbook.hasShown())
-                            trayExitHandbook.show(app.body);
+                        if (isNewcomer)
+                            trayExitHandbook.showIfNotShownBefore(app.body);
                     } catch (InterruptedException ignored) {
                     } finally {
                         launchBtn.setDisable(false);
@@ -308,6 +309,11 @@ public final class RootModule implements Controller<ArkHomeFX> {
         @Override
         public String getContent() {
             return "看来你已经启动了你的第一个 ArkPets 桌宠！尽情享受 ArkPets 吧！";
+        }
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO);
         }
     }
 }

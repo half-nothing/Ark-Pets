@@ -432,15 +432,13 @@ public class GuiComponents {
 
         abstract protected String getContent();
 
-        protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO);
-        }
+        abstract protected SVGPath getIcon();
 
-        public boolean hasShown() {
+        protected boolean hasShown() {
             return hasShown;
         }
 
-        public void setShown() {
+        protected void setShown() {
             hasShown = true;
         }
 
@@ -454,14 +452,85 @@ public class GuiComponents {
             ).show();
             setShown();
         }
+
+        public void showIfNotShownBefore(StackPane root) {
+            if (!hasShown())
+                show(root);
+        }
+    }
+
+
+    abstract public static class ControlDangerHandbook extends Handbook {
+        public ControlDangerHandbook() {
+            super();
+        }
+
+        @Override
+        public String getTitle() {
+            return "无效配置";
+        }
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER, GuiPrefabs.Colors.COLOR_DANGER);
+        }
+    }
+
+
+    abstract public static class ControlWarningHandbook extends Handbook {
+        public ControlWarningHandbook() {
+            super();
+        }
+
+        @Override
+        public String getTitle() {
+            return "临界警告";
+        }
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING);
+        }
+    }
+
+
+    abstract public static class ControlHelpHandbook extends Handbook {
+        private final Labeled control;
+
+        public ControlHelpHandbook(Labeled control) {
+            super();
+            this.control = control;
+        }
+
+        @Override
+        public String getTitle() {
+            return "选项说明";
+        }
+
+        @Override
+        public String getHeader() {
+            return control.getText();
+        }
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO);
+        }
     }
 
 
     abstract public static class HandbookEntrance {
         private static final double scale = 2.0 / 3;
+        protected final StackPane root;
+        protected final JFXButton target;
+        protected final Handbook handbook;
 
         public HandbookEntrance(StackPane root, JFXButton target) {
-            SVGPath graphic = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP, GuiPrefabs.Colors.COLOR_INFO);
+            this.root = root;
+            this.target = target;
+            handbook = getHandbook();
+
+            SVGPath graphic = getIcon();
             graphic.setScaleX(scale);
             graphic.setScaleY(scale);
             target.setText("");
@@ -470,6 +539,70 @@ public class GuiComponents {
             target.setOnAction(e -> getHandbook().show(root));
         }
 
+        abstract protected SVGPath getIcon();
+
         abstract protected Handbook getHandbook();
+    }
+
+
+    abstract public static class DangerHandbookEntrance extends HandbookEntrance {
+        public DangerHandbookEntrance(StackPane root, JFXButton target) {
+            super(root, target);
+            refresh();
+        }
+
+        public void refresh() {
+            target.setVisible(getEntranceVisibleCondition());
+        }
+
+        public void refreshAndEnsureDisplayed() {
+            if (getEntranceVisibleCondition())
+                handbook.showIfNotShownBefore(root);
+            target.setVisible(getEntranceVisibleCondition());
+        }
+
+        abstract protected boolean getEntranceVisibleCondition();
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER, GuiPrefabs.Colors.COLOR_DANGER);
+        }
+    }
+
+
+    abstract public static class WarningHandbookEntrance extends HandbookEntrance {
+        public WarningHandbookEntrance(StackPane root, JFXButton target) {
+            super(root, target);
+            refresh();
+        }
+
+        public void refresh() {
+            target.setVisible(getEntranceVisibleCondition());
+        }
+
+        public void refreshAndEnsureDisplayed() {
+            if (getEntranceVisibleCondition())
+                handbook.showIfNotShownBefore(root);
+            target.setVisible(getEntranceVisibleCondition());
+        }
+
+        abstract protected boolean getEntranceVisibleCondition();
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING, GuiPrefabs.Colors.COLOR_WARNING);
+        }
+    }
+
+
+    abstract public static class HelpHandbookEntrance extends HandbookEntrance {
+        public HelpHandbookEntrance(StackPane root, JFXButton target) {
+            super(root, target);
+        }
+
+        @Override
+        protected SVGPath getIcon() {
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP, GuiPrefabs.Colors.COLOR_INFO);
+        }
     }
 }

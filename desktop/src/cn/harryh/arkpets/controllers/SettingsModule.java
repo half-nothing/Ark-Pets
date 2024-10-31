@@ -99,7 +99,6 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
 
     private NoticeBar appVersionNotice;
     private NoticeBar diskFreeSpaceNotice;
-    private NoticeBar fpsUnreachableNotice;
 
     private ArkHomeFX app;
 
@@ -126,6 +125,14 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.display_scale = newValue.value();
                     app.config.save();
+                    if (app.config.display_scale > 2f) {
+                        GuiPrefabs.Dialogs.createCommonDialog(app.body,
+                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
+                                "临界警告",
+                                "当前设置的缩放倍率过高",
+                                "过高的缩放倍率可能导致桌宠尺寸过大，从而阻碍您的正常使用，请您谨慎选择。",
+                                "").show();
+                    }
                 });
         new ComboBoxSetup<>(configDisplayFps).setItems(new NamedItem<>("25", 25),
                 new NamedItem<>("30", 30),
@@ -136,7 +143,17 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.display_fps = newValue.value();
                     app.config.save();
-                    fpsUnreachableNotice.refresh();
+                    int maxHz = -1;
+                    for (ArkConfig.Monitor i : ArkConfig.Monitor.getMonitors())
+                        if (i.hz > maxHz)
+                            maxHz = i.hz;
+                    if (configDisplayFps.getValue().value() > maxHz)
+                        GuiPrefabs.Dialogs.createCommonDialog(app.body,
+                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
+                                "临界警告",
+                                "当前设置的最大帧率较高",
+                                "您设置的最大帧率超过了您的显示器的最大刷新率（" + maxHz + " Hz），因此实际帧率并不会得到提高。",
+                                "").show();
                 });
         new ComboBoxSetup<>(configCanvasSize).setItems(new NamedItem<>("最宽", 4),
                 new NamedItem<>("较宽", 8),
@@ -408,30 +425,6 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             @Override
             protected String getText() {
                 return "当前磁盘存储空间不足，可能影响使用体验。";
-            }
-        };
-        fpsUnreachableNotice = new NoticeBar(noticeBox) {
-            @Override
-            protected boolean isToActivate() {
-                for (ArkConfig.Monitor i : ArkConfig.Monitor.getMonitors())
-                    if (i.hz >= configDisplayFps.getValue().value())
-                        return false;
-                return true;
-            }
-
-            @Override
-            protected String getColorString() {
-                return GuiPrefabs.Colors.COLOR_WARNING;
-            }
-
-            @Override
-            protected String getIconSVGPath() {
-                return GuiPrefabs.Icons.ICON_WARNING_ALT;
-            }
-
-            @Override
-            protected String getText() {
-                return "当前设置的帧率超过了当前显示器的刷新率。";
             }
         };
     }

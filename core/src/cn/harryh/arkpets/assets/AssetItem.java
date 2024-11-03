@@ -207,6 +207,7 @@ public class AssetItem implements Serializable {
         @Override
         Set<T> apply(AssetItem assetItem);
 
+        PropertyExtractor<String> ASSET_ITEM_DIR             = item -> item.assetDir      == null ? Set.of() : Set.of(item.assetDir.toString());
         PropertyExtractor<String> ASSET_ITEM_TYPE            = item -> item.type          == null ? Set.of() : Set.of(item.type);
         PropertyExtractor<String> ASSET_ITEM_STYLE           = item -> item.style         == null ? Set.of() : Set.of(item.style);
         PropertyExtractor<String> ASSET_ITEM_SKIN_GROUP_NAME = item -> item.skinGroupName == null ? Set.of() : Set.of(item.skinGroupName);

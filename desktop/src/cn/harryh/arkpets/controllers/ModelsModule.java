@@ -27,6 +27,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -68,6 +70,10 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     private Label selectedModelSkinGroupName;
     @FXML
     private Label selectedModelType;
+    @FXML
+    private JFXButton modelFavourite;
+    @FXML
+    private JFXButton topFavourite;
 
     @FXML
     private AnchorPane infoPane;
@@ -111,6 +117,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     private GuiPrefabs.PeerNodeComposer mngBtnComposer;
     private GuiComponents.NoticeBar datasetTooLowVerNotice;
     private GuiComponents.NoticeBar datasetTooHighVerNotice;
+    private final SVGPath favIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR, GuiPrefabs.Colors.COLOR_GRAY);
+    private final SVGPath favFillIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL, GuiPrefabs.Colors.COLOR_WARNING);
+    private boolean filterFavourite;
 
     private ArkHomeFX app;
 
@@ -135,6 +144,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         initModelSearch();
         initModelFilter();
         initModelManage();
+        initModelFavourite();
         modelReload(false);
     }
 
@@ -380,14 +390,49 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         modelHelp.setOnMouseClicked(e -> NetUtils.browseWebpage(urlHelp));
     }
 
+    private void initModelFavourite() {
+        modelFavourite.setGraphic(favIcon);
+        modelFavourite.setRipplerFill(Color.GRAY);
+        modelFavourite.setOnAction(e -> {
+            if(app.config.favourite_character.contains(app.config.character_asset)) {
+                app.config.favourite_character.remove(app.config.character_asset);
+                modelFavourite.setGraphic(favIcon);
+            } else {
+                app.config.favourite_character.add(app.config.character_asset);
+                modelFavourite.setGraphic(favFillIcon);
+            }
+            app.config.save();
+        });
+
+        topFavourite.setOnAction(e -> {
+            searchModelView.scrollTo(0);
+            if (filterFavourite) {
+                GuiPrefabs.replaceStyleClass(topFavourite, "btn-primary", "btn-secondary");
+            } else {
+                GuiPrefabs.replaceStyleClass(topFavourite, "btn-secondary", "btn-primary");
+            }
+            filterFavourite = !filterFavourite;
+            modelSearch(searchModelInput.getText());
+            AssetItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
+            if (recentSelected != null)
+                for (JFXListCell<AssetItem> cell : searchModelView.getItems())
+                    if (recentSelected.equals(cell.getItem())) {
+                        searchModelView.scrollTo(cell);
+                        searchModelView.getSelectionModel().select(cell);
+                    }
+        });
+    }
+
     public void modelSearch(String keyWords) {
         searchModelView.getItems().clear();
         searchModelStatus.setText("");
         if (assertModelLoaded(false)) {
             // Filter and search assets
             int rawSize = assetItemList.size();
-            AssetItemGroup filtered = filterTagSet.isEmpty() ? assetItemList :
-                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
+            AssetItemGroup favoured = !filterFavourite ? assetItemList :
+                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_DIR, app.config.favourite_character, AssetItemGroup.FilterMode.MATCH_ANY);
+            AssetItemGroup filtered = filterTagSet.isEmpty() ? favoured :
+                    favoured.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
             AssetItemGroup searched = filtered.searchByKeyWords(keyWords);
             int curSize = searched.size();
             searchModelStatus.setText((rawSize == curSize ? rawSize : curSize + " / " + rawSize) + " 个模型");
@@ -496,6 +541,11 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                                 searchModelView.getSelectionModel().select(cell);
                             }
                 }
+
+                // 4. Check model favourite:
+                if (app.config.favourite_character.contains(app.config.character_asset)) {
+                    modelFavourite.setGraphic(favFillIcon);
+                }
             }
 
             // Post process:
@@ -572,6 +622,12 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         // Switch info pane
         if (infoPaneComposer.getActivatedId() != 0)
             infoPaneComposer.activate(0);
+        // Check favourite
+        if (app.config.favourite_character.contains(asset.getLocation())) {
+            modelFavourite.setGraphic(favFillIcon);
+        } else {
+            modelFavourite.setGraphic(favIcon);
+        }
         // Apply to app.config, but not to save
         app.config.character_asset = asset.getLocation();
         app.config.character_files = asset.assetList;

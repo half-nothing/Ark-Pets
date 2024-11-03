@@ -128,6 +128,8 @@
                 <FlowPane fx:id="infoPaneTagFlow" styleClass="tag-flow"/>
             </ScrollPane>
         </VBox>
+        <JFXButton fx:id="modelFavourite" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                   prefHeight="40.0" prefWidth="40.0"  AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
     </AnchorPane>
     <AnchorPane fx:id="filterPane" layoutX="${_infoPaneX}" layoutY="${_infoPaneY}" prefHeight="${_infoPaneH}"
                 prefWidth="${_infoPaneW}"
@@ -204,6 +206,18 @@
     </fx:define>
     <Label id="Search-models-status" fx:id="searchModelStatus" alignment="CENTER_RIGHT" layoutX="${_modelViewX}"
            layoutY="80.0" prefWidth="${_modelViewW}" textAlignment="RIGHT"/>
+    <JFXButton fx:id="topFavourite" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+           layoutX="${_modelViewX}" layoutY="60.0" prefWidth="92.5" text="只显示收藏">
+        <graphic>
+            <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">
+                <SVGPath content="m12 17.275l-4.15 2.5q-.275.175-.575.15t-.525-.2t-.35-.437t-.05-.588l1.1-4.725L3.775 10.8q-.25-.225-.312-.513t.037-.562t.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15t.537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45t.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437t-.525.2t-.575-.15z" scaleX="1.15" scaleY="1.15" AnchorPane.leftAnchor="-43.0"/>
+            </AnchorPane>
+        </graphic>
+        <styleClass>
+            <String fx:value="btn-secondary"/>
+            <String fx:value="btn-with-icon"/>
+        </styleClass>
+    </JFXButton>
     <JFXListView id="Search-models-list" fx:id="searchModelView" layoutX="${_modelViewX}" layoutY="100.0"
                  prefHeight="260.0" prefWidth="${_modelViewW}"/>
 

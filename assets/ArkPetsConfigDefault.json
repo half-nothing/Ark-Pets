@@ -13,6 +13,7 @@
     "display_margin_bottom":0,
     "display_multi_monitors":true,
     "display_scale":1.0,
+    "favourite_character":[],
     "initial_relative_position":[0.2,0.2],
     "launcher_solid_exit":true,
     "logging_level":"INFO",

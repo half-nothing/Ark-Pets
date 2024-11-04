@@ -45,6 +45,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXButton configDisplayFpsHelp;
     @FXML
     private JFXComboBox<NamedItem<Integer>> configCanvasSize;
+    @FXML
+    private JFXButton configCanvasSizeHelp;
 
     @FXML
     private JFXComboBox<NamedItem<Integer>> configCanvasColor;
@@ -85,8 +87,6 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXCheckBox configAutoStartup;
     @FXML
     private JFXCheckBox configSolidExit;
-    @FXML
-    private JFXButton configCanvasSizeHelp;
     @FXML
     private JFXCheckBox configWindowToolwindow;
     @FXML
@@ -272,17 +272,11 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 configNetworkAgentStatus.setText("未使用代理");
                 configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
                 Logger.info("Network", "Set proxy to none");
-                System.setProperty("http.proxyHost", "");
-                System.setProperty("http.proxyPort", "");
-                System.setProperty("https.proxyHost", "");
-                System.setProperty("https.proxyPort", "");
+                NetUtils.setProxy("", "");
             } else {
                 if (ipPortRegex.matcher(newValue).matches()) {
                     String[] ipPort = newValue.split(":");
-                    System.setProperty("http.proxyHost", ipPort[0]);
-                    System.setProperty("http.proxyPort", ipPort[1]);
-                    System.setProperty("https.proxyHost", ipPort[0]);
-                    System.setProperty("https.proxyPort", ipPort[1]);
+                    NetUtils.setProxy(ipPort[0], ipPort[1]);
                     configNetworkAgentStatus.setText("代理生效中");
                     configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_SUCCESS);
                     Logger.info("Network", "Set proxy to host " + ipPort[0] + ", port " + ipPort[1]);

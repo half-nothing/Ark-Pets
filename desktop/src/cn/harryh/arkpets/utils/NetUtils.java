@@ -56,9 +56,7 @@ public class NetUtils {
         return "Unknown size";
     }
 
-    /**
-     * Opens the given URL in the browser.
-     *
+    /** Opens the given URL in the user's browser.
      * @param url The URL to browse.
      */
     public static void browseWebpage(String url) {
@@ -68,6 +66,17 @@ public class NetUtils {
         } catch (IOException e) {
             Logger.error("Network", "Failed to open the URL in the browser, details see below.", e);
         }
+    }
+
+    /** Sets the system's proxy property, applying on both HTTP and HTTPS.
+     * @param host The proxy host, pass empty string to disable proxy.
+     * @param port The proxy port, pass empty string to disable proxy.
+     */
+    public static void setProxy(String host, String port) {
+        System.setProperty("http.proxyHost", host);
+        System.setProperty("http.proxyPort", port);
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("https.proxyPort", port);
     }
 
 

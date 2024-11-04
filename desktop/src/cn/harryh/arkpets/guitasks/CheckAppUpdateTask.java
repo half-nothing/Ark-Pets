@@ -78,7 +78,7 @@ public class CheckAppUpdateTask extends FetchRemoteTask {
                 Logger.warn("Checker", "Application version check failed (api failed)");
                 if (style != GuiTaskStyle.HIDDEN)
                     GuiPrefabs.Dialogs.createCommonDialog(parent,
-                            GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER_ALT, GuiPrefabs.Colors.COLOR_DANGER),
+                            GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER, GuiPrefabs.Colors.COLOR_DANGER),
                             "检查软件更新",
                             "服务器返回了无效的消息。",
                             "可能是兼容性问题或服务器不可用。\n您可以访问ArkPets官网或GitHub仓库以查看是否有新版本。",

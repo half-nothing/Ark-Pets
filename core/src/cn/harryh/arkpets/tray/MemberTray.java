@@ -21,6 +21,9 @@ public abstract class MemberTray {
     protected final String name;
 
     static {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
         Const.FontsConfig.loadFontsToSwing();
     }
 

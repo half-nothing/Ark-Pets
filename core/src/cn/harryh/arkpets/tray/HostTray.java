@@ -32,6 +32,9 @@ public class HostTray {
     private static HostTray instance;
 
     static {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
         Const.FontsConfig.loadFontsToSwing();
     }
 

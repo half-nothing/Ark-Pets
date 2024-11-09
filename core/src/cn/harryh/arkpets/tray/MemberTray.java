@@ -7,6 +7,7 @@ import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.concurrent.SocketData;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.UUID;
 
 
@@ -21,9 +22,17 @@ public abstract class MemberTray {
     protected final String name;
 
     static {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
+        // Avoid AWT Thread problem.
+        SwingUtilities.invokeLater(() -> {
+            try {
+                String laf = UIManager.getSystemLookAndFeelClassName();
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                if (laf.contains("WindowsLookAndFeel")) {
+                    UIManager.put("MenuItem.margin",new Insets(2,-15,2,2));
+                    UIManager.put("Menu.margin",new Insets(2,-15,2,2));
+                }
+            } catch (Exception ignored) {}
+        });
         Const.FontsConfig.loadFontsToSwing();
     }
 
@@ -47,6 +56,13 @@ public abstract class MemberTray {
         optTransparentDis   .addActionListener(e -> sendOperation(SocketData.Operation.NO_TRANSPARENT_MODE));
         optChangeStage      .addActionListener(e -> sendOperation(SocketData.Operation.CHANGE_STAGE));
         optExit             .addActionListener(e -> sendOperation(SocketData.Operation.LOGOUT));
+
+        optKeepAnimEn       .setIcon(null);
+        optKeepAnimDis      .setIcon(null);
+        optTransparentEn    .setIcon(null);
+        optTransparentDis   .setIcon(null);
+        optChangeStage      .setIcon(null);
+        optExit             .setIcon(null);
     }
 
     abstract public void onExit();

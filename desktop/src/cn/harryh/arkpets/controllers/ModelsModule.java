@@ -24,10 +24,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
@@ -398,9 +395,11 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             String key = (String) modelFavourite.getUserData();
             if (app.config.character_favorites.containsKey(key)) {
                 app.config.character_favorites.remove(key);
+                selectedModelCell.getStyleClass().remove("Search-models-item-favourite");
                 modelFavourite.setGraphic(favIcon);
             } else {
                 app.config.character_favorites.put(key, new ArkConfig.AssetPrefab());
+                selectedModelCell.getStyleClass().add("Search-models-item-favourite");
                 modelFavourite.setGraphic(favFillIcon);
             }
             app.config.save();
@@ -568,23 +567,32 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         Label name = new Label(assetItem.toString());
         name.getStyleClass().addAll("Search-models-label", "Search-models-label-primary");
         name.setPrefSize(assetItem.skinGroupName == null ? width : width * divide, height);
-        name.setLayoutX(0);
+        name.setLayoutX(15);
         Label alias1 = new Label(assetItem.skinGroupName);
         alias1.getStyleClass().addAll("Search-models-label", "Search-models-label-secondary");
         alias1.setPrefSize(width * (1 - divide), height);
         alias1.setLayoutX(assetItem.skinGroupName == null ? 0 : width * divide);
-
+        SVGPath fav = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL,GuiPrefabs.Colors.COLOR_WARNING);
+        fav.getStyleClass().add("Search-models-star");
+        fav.setLayoutX(0);
+        fav.setScaleX(0.75);
+        fav.setScaleY(0.75);
         item.setPrefSize(width, height);
-        item.setGraphic(new Group(name, alias1));
+        item.setGraphic(new Group(fav, name, alias1));
         item.setItem(assetItem);
         item.setId(assetItem.getLocation());
+        if (app.config.character_favorites.containsKey(assetItem.key))
+            item.getStyleClass().add("Search-models-item-favourite");
         return item;
     }
 
     private void selectModel(AssetItem asset, JFXListCell<AssetItem> item) {
         // Reset
-        if (selectedModelCell != null)
+        if (selectedModelCell != null) {
             selectedModelCell.getStyleClass().setAll("Search-models-item");
+            if (app.config.character_favorites.containsKey(selectedModelCell.getItem().key))
+                selectedModelCell.getStyleClass().add("Search-models-item-favourite");
+        }
         selectedModelCell = item;
         selectedModelCell.getStyleClass().add("Search-models-item-active");
         // Display details

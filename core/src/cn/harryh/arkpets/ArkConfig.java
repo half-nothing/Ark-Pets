@@ -16,8 +16,8 @@ import com.badlogic.gdx.graphics.Color;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import static cn.harryh.arkpets.Const.*;
 
@@ -44,6 +44,8 @@ public class ArkConfig implements Serializable {
     public int          canvas_fitting_samples;
     /** @since ArkPets 2.0 */ @JSONField()
     public String       character_asset;
+    /** @since ArkPets 3.5 */ @JSONField()
+    public Map<String, AssetPrefab> character_favorites;
     /** @since ArkPets 2.2 */ @JSONField()
     public JSONObject   character_files;
     /** @since ArkPets 2.0 */ @JSONField()
@@ -62,8 +64,6 @@ public class ArkConfig implements Serializable {
     public float        render_outline_width;
     /** @since ArkPets 1.0 */ @JSONField(defaultValue = "1.0")
     public float        display_scale;
-    /** @since ArkPets 3.4 */ @JSONField()
-    public Set<String>  favourite_character;
     /** @since ArkPets 3.2 */ @JSONField(defaultValue = "0.2")
     public float        initial_position_x;
     /** @since ArkPets 3.2 */ @JSONField(defaultValue = "0.2")
@@ -239,6 +239,24 @@ public class ArkConfig implements Serializable {
             for (Monitor m : monitors)
                 array.add(toJSONObject(m));
             return array;
+        }
+    }
+
+
+    public static class AssetPrefab {
+        @JSONField(defaultValue = "0.2")
+        public float   initial_position_x;
+        @JSONField(defaultValue = "0.2")
+        public float   initial_position_y;
+        @JSONField(defaultValue = "false")
+        public boolean transparent_mode;
+
+        public AssetPrefab() {}
+
+        public AssetPrefab(float x, float y, boolean transparent) {
+            this.initial_position_x = x;
+            this.initial_position_y = y;
+            this.transparent_mode = transparent;
         }
     }
 }

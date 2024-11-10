@@ -3,6 +3,7 @@
  */
 package cn.harryh.arkpets.controllers;
 
+import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.assets.AssetItem;
 import cn.harryh.arkpets.assets.AssetItemGroup;
@@ -394,11 +395,12 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         modelFavourite.setGraphic(favIcon);
         modelFavourite.setRipplerFill(Color.GRAY);
         modelFavourite.setOnAction(e -> {
-            if(app.config.favourite_character.contains(app.config.character_asset)) {
-                app.config.favourite_character.remove(app.config.character_asset);
+            String key = (String) modelFavourite.getUserData();
+            if (app.config.character_favorites.containsKey(key)) {
+                app.config.character_favorites.remove(key);
                 modelFavourite.setGraphic(favIcon);
             } else {
-                app.config.favourite_character.add(app.config.character_asset);
+                app.config.character_favorites.put(key, new ArkConfig.AssetPrefab());
                 modelFavourite.setGraphic(favFillIcon);
             }
             app.config.save();
@@ -430,7 +432,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             // Filter and search assets
             int rawSize = assetItemList.size();
             AssetItemGroup favoured = !filterFavourite ? assetItemList :
-                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_DIR, app.config.favourite_character, AssetItemGroup.FilterMode.MATCH_ANY);
+                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_KEY, app.config.character_favorites.keySet(), AssetItemGroup.FilterMode.MATCH_ANY);
             AssetItemGroup filtered = filterTagSet.isEmpty() ? favoured :
                     favoured.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
             AssetItemGroup searched = filtered.searchByKeyWords(keyWords);
@@ -534,17 +536,17 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                         app.config.character_asset != null && !app.config.character_asset.isEmpty()) {
                     // Scroll to recent selected model and then select it.
                     AssetItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
-                    if (recentSelected != null)
+                    if (recentSelected != null) {
                         for (JFXListCell<AssetItem> cell : searchModelView.getItems())
                             if (recentSelected.equals(cell.getItem())) {
                                 searchModelView.scrollTo(cell);
                                 searchModelView.getSelectionModel().select(cell);
                             }
-                }
-
-                // 4. Check model favourite:
-                if (app.config.favourite_character.contains(app.config.character_asset)) {
-                    modelFavourite.setGraphic(favFillIcon);
+                        // Check model favourite:
+                        if (app.config.character_favorites.containsKey(recentSelected.key)) {
+                            modelFavourite.setGraphic(favFillIcon);
+                        }
+                    }
                 }
             }
 
@@ -623,11 +625,12 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         if (infoPaneComposer.getActivatedId() != 0)
             infoPaneComposer.activate(0);
         // Check favourite
-        if (app.config.favourite_character.contains(asset.getLocation())) {
+        if (app.config.character_favorites.containsKey(asset.key)) {
             modelFavourite.setGraphic(favFillIcon);
         } else {
             modelFavourite.setGraphic(favIcon);
         }
+        modelFavourite.setUserData(asset.key);
         // Apply to app.config, but not to save
         app.config.character_asset = asset.getLocation();
         app.config.character_files = asset.assetList;

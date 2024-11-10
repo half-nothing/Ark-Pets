@@ -48,6 +48,7 @@ public class ModelsDataset {
             // Make up for `assetDir` field
             if (assetItem == null || !storageDirectory.containsKey(assetItem.type))
                 throw new DatasetKeyException("type");
+            assetItem.key = key;
             assetItem.assetDir = Path.of(storageDirectory.get(assetItem.type).toString(), key).toFile();
             // Compatible to lower version dataset
             if (assetItem.assetList == null && assetItem.assetId != null && assetItem.checksum != null) {

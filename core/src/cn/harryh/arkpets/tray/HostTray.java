@@ -36,11 +36,11 @@ public class HostTray {
         SwingUtilities.invokeLater(() -> {
             try {
                 String laf = UIManager.getSystemLookAndFeelClassName();
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 if (laf.contains("WindowsLookAndFeel")) {
                     UIManager.put("MenuItem.margin",new Insets(2,-15,2,2));
                     UIManager.put("Menu.margin",new Insets(2,-15,2,2));
                 }
+                UIManager.setLookAndFeel(laf);
             } catch (Exception ignored) {}
         });
         Const.FontsConfig.loadFontsToSwing();

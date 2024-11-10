@@ -69,8 +69,6 @@ public class MemberTrayImpl extends MemberTray {
             onDisconnected();
             client.connectWithRetry(onConnected, session);
         }
-        SwingUtilities.updateComponentTreeUI(popMenu);
-        popMenu.pack();
     }
 
     private static String getName(ArkPets boundArkPets) {

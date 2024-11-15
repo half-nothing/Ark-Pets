@@ -392,15 +392,17 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         modelFavourite.setGraphic(favIcon);
         modelFavourite.setRipplerFill(Color.GRAY);
         modelFavourite.setOnAction(e -> {
-            String key = (String) modelFavourite.getUserData();
+            String key = selectedModelCell.getItem().key;
             if (app.config.character_favorites.containsKey(key)) {
                 app.config.character_favorites.remove(key);
                 selectedModelCell.getStyleClass().remove("Search-models-item-favourite");
                 modelFavourite.setGraphic(favIcon);
+                Logger.debug("ModelManager", "Remove favourite model " + key);
             } else {
                 app.config.character_favorites.put(key, new ArkConfig.AssetPrefab());
                 selectedModelCell.getStyleClass().add("Search-models-item-favourite");
                 modelFavourite.setGraphic(favFillIcon);
+                Logger.debug("ModelManager", "Add favourite model " + key);
             }
             app.config.save();
         });
@@ -575,6 +577,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         SVGPath fav = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL,GuiPrefabs.Colors.COLOR_WARNING);
         fav.getStyleClass().add("Search-models-star");
         fav.setLayoutX(0);
+        fav.setLayoutY(3);
         fav.setScaleX(0.75);
         fav.setScaleY(0.75);
         item.setPrefSize(width, height);
@@ -638,7 +641,6 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         } else {
             modelFavourite.setGraphic(favIcon);
         }
-        modelFavourite.setUserData(asset.key);
         // Apply to app.config, but not to save
         app.config.character_asset = asset.getLocation();
         app.config.character_files = asset.assetList;

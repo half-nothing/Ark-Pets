@@ -17,8 +17,9 @@ const float c_alphaLv0 = 0.1;
 const float c_alphaLv1 = 0.5;
 const float c_alphaLv2 = 0.9;
 const float c_seamCoef = 0.5;
+const float c_outlineOverstate = 10.0;
 
-vec4[8] getNeighbors(vec2 unitLength) {
+vec4[8] getSimpleNeighbors(vec2 unitLength) {
     vec4[8] result;
     result[0] = texture2D(u_texture, v_texCoords + vec2(unitLength.x, 0.0));
     result[1] = texture2D(u_texture, v_texCoords - vec2(unitLength.x, 0.0));
@@ -31,18 +32,42 @@ vec4[8] getNeighbors(vec2 unitLength) {
     return result;
 }
 
+vec4[25] getGaussianNeighbors(vec2 unitLength) {
+    float kernel[25] = float[25] (
+        0.0035434, 0.0158805, 0.0261825, 0.0158805, 0.0035434,
+        0.0158805, 0.0711714, 0.1173418, 0.0711714, 0.0158805,
+        0.0261825, 0.1173418, 0.0      , 0.1173418, 0.0261825,
+        0.0158805, 0.0711714, 0.1173418, 0.0711714, 0.0158805,
+        0.0035434, 0.0158805, 0.0261825, 0.0158805, 0.0035434
+    );
+    vec4 neighbors[25];
+    int i = 0;
+    for (int y = -2; y <= 2; y++) {
+        for (int x = -2; x <= 2; x++) {
+            vec2 offset = vec2(x, y) * unitLength;
+            neighbors[i] = texture2D(u_texture, v_texCoords + offset) * kernel[i++];
+        }
+    }
+    return neighbors;
+}
+
+vec4 getGaussianNeighborsSum(vec2 unitLength) {
+    vec4[25] neighbors = getGaussianNeighbors(unitLength);
+    vec4 sum = vec4(0.0);
+    for (int i = 0; i < 25; i++) {
+        sum += neighbors[i];
+    }
+    return sum;
+}
+
 vec4 getOutlined() {
     vec4 texColor = texture2D(u_texture, v_texCoords);
     if (u_outlineWidth > 0.0) {
         vec2 relOutlineWidth = vec2(1.0) / u_textureSize * u_outlineWidth;
-        vec4[8] neighbors = getNeighbors(relOutlineWidth);
-        float neighborAlpha = 0.0;
-        for (int i = 0; i < neighbors.length(); i++) {
-            neighborAlpha += neighbors[i].a;
-        }
-        if (neighborAlpha > c_alphaLv0) {
+        vec4 neighbors = getGaussianNeighborsSum(relOutlineWidth) * c_outlineOverstate;
+        if (neighbors.a > c_alphaLv0) {
             texColor.rgb = u_outlineColor.rgb;
-            texColor.a = min(1.0, neighborAlpha) * u_outlineColor.a;
+            texColor.a = min(1.0, neighbors.a) * u_outlineColor.a;
         }
     }
     return texColor;
@@ -51,7 +76,7 @@ vec4 getOutlined() {
 vec4 getSeamed() {
     vec4 texColor = texture2D(u_texture, v_texCoords);
     vec2 relPixelSize = vec2(1.0) / u_textureSize;
-    vec4[8] neighbors = getNeighbors(relPixelSize);
+    vec4[8] neighbors = getSimpleNeighbors(relPixelSize);
     vec4 sampleColor = vec4(0.0);
     int sampleSize = 0;
     for (int i = 0; i < neighbors.length(); i++) {

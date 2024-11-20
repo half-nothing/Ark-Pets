@@ -1,5 +1,22 @@
 # 更新日志 / CHANGELOG
 
+## v3.4
+| **新增**                 |                                       |
+|:-----------------------|:--------------------------------------|
+| [`#83`]<br>[`c235a25`] | 新增了基于 LNK 的自启动，取代了原来的基于 VBS 的自启动。     |
+| [`f89be4b`]            | 新增了当缩放倍率的设置值较大时的提示。                   |
+| [`2a4de72`]            | 新增了“图标-弹窗”样式的选项警告提示，取代了原来的常驻式的选项警告提示。 |
+
+| **修复**                            |                                      |
+|:----------------------------------|:-------------------------------------|
+| [`#81`]<br>[`#82`]<br>[`adb1b02`] | 修复了特定情况下由于骨骼未重置导致的动画错位或扭曲的问题。        |
+| [`40a1d1f`]                       | 修复了在较大缩放倍率下桌宠尺寸会被强制裁切的问题。            |
+
+| **优化**      |                                    |
+|:------------|:-----------------------------------|
+| [`a7db4b0`] | 优化了高亮描边特效在锐利边缘处的表现，现在采用了新的边缘检测滤波器。 |
+| [`71b525c`] | 优化了透明缝合线填充在较大缩放倍率下的表现。             |
+
 ## v3.3
 | **新增**                                    |                                            |
 |:------------------------------------------|:-------------------------------------------|
@@ -393,6 +410,9 @@
 [`#76`]: https://github.com/isHarryh/Ark-Pets/issues/76
 [`#78`]: https://github.com/isHarryh/Ark-Pets/pull/78
 [`#79`]: https://github.com/isHarryh/Ark-Pets/pull/79
+[`#81`]: https://github.com/isHarryh/Ark-Pets/issues/81
+[`#82`]: https://github.com/isHarryh/Ark-Pets/pull/82
+[`#83`]: https://github.com/isHarryh/Ark-Pets/pull/83
 [`3253706`]: https://github.com/isHarryh/Ark-Pets/commit/3253706fde859a316b3e08362dd57adb98c1df8c
 [`7b2e856`]: https://github.com/isHarryh/Ark-Pets/commit/7b2e8562579ebabbb102b40122cf3130463f03bc
 [`ff82a1e`]: https://github.com/isHarryh/Ark-Pets/commit/ff82a1e21ce396c345038b4cb340f10eeca89cf2
@@ -436,3 +456,10 @@
 [`50467bf`]: https://github.com/isHarryh/Ark-Pets/commit/50467bfa2cc662806df962600465aa6a55c425d2
 [`cdb6a6f`]: https://github.com/isHarryh/Ark-Pets/commit/cdb6a6f5b86807ed6b68a22bcbc30972b7483fdb
 [`b8fbef1`]: https://github.com/isHarryh/Ark-Pets/commit/b8fbef19f898db40039d0735b8a27e95bc8cb161
+[`adb1b02`]: https://github.com/isHarryh/Ark-Pets/commit/adb1b02df79560c0a8a9501b86113e788cfa0622
+[`c235a25`]: https://github.com/isHarryh/Ark-Pets/commit/c235a253c586a2911a24302ee7428ef873459382
+[`40a1d1f`]: https://github.com/isHarryh/Ark-Pets/commit/40a1d1f9d01f37afc5d7ece4b0792ab35fee03ff
+[`f89be4b`]: https://github.com/isHarryh/Ark-Pets/commit/f89be4b362cf8ca5b433e93923bbca8ec96e42b9
+[`2a4de72`]: https://github.com/isHarryh/Ark-Pets/commit/2a4de72de8768bf9f0996e8a20ed8f6ae4dc4c5e
+[`a7db4b0`]: https://github.com/isHarryh/Ark-Pets/commit/a7db4b0e9252e4d08ff1e6e9d4d8b8967ace36bb
+[`71b525c`]: https://github.com/isHarryh/Ark-Pets/commit/71b525c77003175f05dc1805f19d038872846acf

@@ -42,14 +42,16 @@ vec4[24] getGaussianNeighbors(vec2 unitLength) {
         0.0035434, 0.0158805, 0.0261825, 0.0158805, 0.0035434
     );
     vec4 neighbors[24];
-    int i = 0;
+    int ni = 0;
+    int ki = 0;
     for (int y = -2; y <= 2; y++) {
         for (int x = -2; x <= 2; x++) {
-            if (y != 0 && x != 0) {
+            if (!(y == 0 && x == 0)) {
                 vec2 offset = vec2(x, y) * unitLength;
-                neighbors[i] = texture2D(u_texture, v_texCoords + offset) * kernel[i];
-                i++;
+                neighbors[ni] = texture2D(u_texture, v_texCoords + offset) * kernel[ki];
+                ni++;
             }
+            ki++;
         }
     }
     return neighbors;

@@ -37,8 +37,8 @@ public class HostTray {
             try {
                 String laf = UIManager.getSystemLookAndFeelClassName();
                 if (laf.contains("WindowsLookAndFeel")) {
-                    UIManager.put("MenuItem.margin",new Insets(2,-15,2,2));
-                    UIManager.put("Menu.margin",new Insets(2,-15,2,2));
+                    UIManager.put("MenuItem.margin", new Insets(0, -16, 0, 0));
+                    UIManager.put("Menu.margin", new Insets(0, -16, 0, 0));
                 }
                 UIManager.setLookAndFeel(laf);
             } catch (Exception ignored) {}
@@ -60,6 +60,7 @@ public class HostTray {
             popWindow.setSize(1, 1);
             JLabel innerLabel = new JLabel(" ArkPets ");
             innerLabel.setAlignmentX(0.5f);
+            Component innerSep = Box.createVerticalStrut(5);
 
             playerMenu = new JMenu("角色管理");
             JMenuItem optExit = new JMenuItem("退出程序");
@@ -76,7 +77,7 @@ public class HostTray {
                 }
             };
             popMenu.add(innerLabel);
-            popMenu.addSeparator();
+            popMenu.add(innerSep);
             popMenu.add(playerMenu);
             popMenu.add(optExit);
             popMenu.setSize(100, 24 * popMenu.getSubElements().length);

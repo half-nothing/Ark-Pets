@@ -26,8 +26,8 @@ public abstract class MemberTray {
         try {
             String laf = UIManager.getSystemLookAndFeelClassName();
             if (laf.contains("WindowsLookAndFeel")) {
-                UIManager.put("MenuItem.margin", new Insets(2, -15, 2, 2));
-                UIManager.put("Menu.margin", new Insets(2, -15, 2, 2));
+                UIManager.put("MenuItem.margin", new Insets(0, -18, 0, 0));
+                UIManager.put("Menu.margin", new Insets(0, -18, 0, 0));
             }
             UIManager.setLookAndFeel(laf);
         } catch (Exception ignored) {}

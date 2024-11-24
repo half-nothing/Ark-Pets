@@ -1,24 +1,60 @@
 ArkPets附加说明文档
 # 鸣谢
 
-我们由衷地感谢所有曾经为 ArkPets 的开发提供过各种形式的帮助的个人和组织：
+我们由衷地感谢所有曾经为 ArkPets 的开发提供过各种形式的帮助的个人和组织。
 
-|                                                                    个人                                                                     |                             |
-|:-----------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------|
-|                                                  [@Aloento](https://github.com/aloento)                                                   | 提供了前期技术指导                   |
-|                                             [@Auroal-dawn](https://github.com/bicaoluoshuang)                                             | 绘制了 v2.x 的软件 Logo、协助了模型仓库更新 |
-|                                             [@Half-nothing](https://github.com/half-nothing)                                              | 进行了活跃的二次开发实践                |
-| [@南陽劉子驥](https://github.com/KaiserWilheim)<br>[@NappingSodion](https://github.com/KJH-x)<br>[@MegaSteelX](https://github.com/MegaSteelX)  | 提交了诸多有益的 Issues             |
+## 个人 <sub>Individuals</sub>
 
-|                  组织                  |
-|:------------------------------------:|
-| [Java](https://www.oracle.com/java)  |
-|     [GitHub](https://github.com)     |
-| [IconMonstr](https://iconmonstr.com) |
+### 代码贡献
+
+<a href="https://github.com/isHarryh/Ark-Pets/graphs/contributors">
+    <img alt="Contributors Chart" src="https://contrib.rocks/image?repo=isHarryh/Ark-Pets" />
+</a>
+
+- **[@Half-nothing](https://github.com/half-nothing)** 主要参与了集成托盘和自动化构建的开发。
+- **[@Litwak.913](https://github.com/litwak913)** 主要参与了跨平台开发和渲染问题研究。
+
+### 特别鸣谢
+
+- **[@Aloento](https://github.com/aloento)** 提供了前期技术指导。
+- **[@Auroal-dawn](https://github.com/bicaoluoshuang)** 绘制了新版软件 Logo 并协助了模型仓库更新。
+
+### 社区建议
+![GitHub Issues Open](https://img.shields.io/github/issues/isHarryh/Ark-Pets?label=Issues&color=%23006222)
+![GitHub Issues Closed](https://img.shields.io/github/issues-closed/isHarryh/Ark-Pets?label=Issues&color=%236921D7)
 
 
-## 第三方库
-关于本项目依赖的第三方库的 Group-Artifact-Version 信息，请参见仓库根目录的 `build.gradle` 文件。
+以下社区成员提供了诸多有益的 Issues。
+
+- **[@南陽劉子驥](https://github.com/KaiserWilheim)**
+- **[@NappingSodion](https://github.com/KJH-x)**
+- **[@MegaSteelX](https://github.com/MegaSteelX)**
+
+-----
+
+## 组织 <sub>Organizations</sub>
+
+<a href="https://www.oracle.com/java">
+    <img alt="Java" src="https://img.shields.io/badge/java-%23F8981D?style=for-the-badge&logo=java&logoColor=white">
+</a>
+<a href="https://libgdx.com">
+    <img alt="libGDX" src="https://img.shields.io/badge/libgdx-%23E74A45?style=for-the-badge&logo=libgdx&logoColor=white">
+</a>
+<a href="https://github.com">
+    <img alt="GitHub" src="https://img.shields.io/badge/github-%23000000?style=for-the-badge&logo=github&logoColor=white">
+</a>
+<a href="https://gradle.org">
+    <img alt="Gradle" src="https://img.shields.io/badge/gradle-%231BA3CB?style=for-the-badge&logo=gradle&logoColor=white">
+</a>
+<a href="https://esotericsoftware.com">
+    <img alt="Spine" src="https://img.shields.io/badge/spine-%23FF4400?style=for-the-badge&logo=spine&logoColor=white">
+</a>
+<a href="https://iconmonstr.com">
+    <img alt="IconMonstr" src="https://img.shields.io/badge/iconmonstr-%23000000?style=for-the-badge&logo=iconmonstr&logoColor=white">
+</a>
+
+### 第三方库
+关于本项目依赖的第三方库的 *Group-Artifact-Version* 信息，请参见仓库根目录的 `build.gradle` 文件。概述如下：
 
 |                           名称                            | 用途                         |
 |:-------------------------------------------------------:|:---------------------------|

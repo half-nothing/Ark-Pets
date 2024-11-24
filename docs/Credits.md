@@ -12,7 +12,7 @@ ArkPets附加说明文档
 </a>
 
 - **[@Half-nothing](https://github.com/half-nothing)** 主要参与了集成托盘和自动化构建的开发。
-- **[@Litwak.913](https://github.com/litwak913)** 主要参与了跨平台开发和渲染问题研究。
+- **[@Litwak913](https://github.com/litwak913)** 主要参与了跨平台开发和渲染问题研究。
 
 ### 特别鸣谢
 
@@ -22,7 +22,6 @@ ArkPets附加说明文档
 ### 社区建议
 ![GitHub Issues Open](https://img.shields.io/github/issues/isHarryh/Ark-Pets?label=Issues&color=%23006222)
 ![GitHub Issues Closed](https://img.shields.io/github/issues-closed/isHarryh/Ark-Pets?label=Issues&color=%236921D7)
-
 
 以下社区成员提供了诸多有益的 Issues。
 

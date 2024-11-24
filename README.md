@@ -4,14 +4,14 @@
 <!--suppress HtmlDeprecatedAttribute -->
 <div align="center" style="text-align:center">
    <h1> Ark-Pets </h1>
-   <img alt="ArkPets icon" width="64" src="https://raw.githubusercontent.com/isHarryh/Ark-Pets/v3.x/assets/icons/icon.png"/>
+   <img alt="ArkPets icon" width="64" src="https://raw.githubusercontent.com/isHarryh/Ark-Pets/v3.x/assets/icons/icon.png">
    <p>
       Arknights Desktop Pets | 明日方舟桌宠 <br>
       <code><b> v3.5 </b></code>
    </p>
    <p>
       <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/isHarryh/Ark-Pets?label=Java">
-      <img alt="GitHub License" src="https://img.shields.io/github/license/isHarryh/Ark-Pets?label=License"/>
+      <img alt="GitHub License" src="https://img.shields.io/github/license/isHarryh/Ark-Pets?label=License">
       <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/isHarryh/Ark-Pets/build.yml?label=Build">
    </p>
    <sub>
@@ -54,7 +54,6 @@
     6. 启动器若没有运行，每个桌宠将分别创建自己的托盘。
 7. **支持开机自启动等[其他特性](#其他特性)**
 
-
 ### 效果预览图
 
 <table style="margin-left: auto; margin-right: auto;">
@@ -64,7 +63,6 @@
         <td> <img alt="demo3" width="250" src="https://raw.githubusercontent.com/isHarryh/Ark-Pets/v3.x/docs/imgs/demo_3.png"> </td>
     </tr>
 </table>
-
 
 ### 下一步计划
 
@@ -124,7 +122,7 @@
 
 感谢所有曾经为 ArkPets 的开发提供过各种形式的帮助的个人和组织。
 
-- 另见 [鸣谢和第三方库说明](docs/Thanks.md)
+- 另见 [鸣谢和第三方库说明](docs/Credits.md)
 
 ### 许可证
 
@@ -135,3 +133,12 @@
 您可以通过提交 [Issues](https://github.com/isHarryh/Ark-Pets/issues) 等各种方式参与本项目的贡献。 提交 Issues 前，请确认您的议题与已有的议题不重复。提交 Issues 时，请您完整地填写议题模板。
 
 - 另见 ~~很久没更新的~~ [开发者 Wiki](https://github.com/isHarryh/Ark-Pets/wiki)
+
+-----
+
+<div align="center">
+    <p><i>GitHub 历史星标图</i></p>
+    <a href="https://starchart.cc/isHarryh/Ark-Pets">
+       <img alt="Stars Chart" src="https://starchart.cc/isHarryh/Ark-Pets.svg?variant=adaptive">
+    </a>
+</div>

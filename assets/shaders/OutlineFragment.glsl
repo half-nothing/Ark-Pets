@@ -24,9 +24,10 @@ vec4[24] getSimpleNeighbors(vec2 unitLength) {
     int i = 0;
     for (int y = -2; y <= 2; y++) {
         for (int x = -2; x <= 2; x++) {
-            if (y != 0 && x != 0) {
+            if (!(y == 0 && x == 0)) {
                 vec2 offset = vec2(x, y) * unitLength;
                 neighbors[i] = texture2D(u_texture, v_texCoords + offset);
+                i++;
             }
         }
     }

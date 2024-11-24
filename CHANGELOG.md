@@ -17,6 +17,10 @@
 | [`a7db4b0`] | 优化了高亮描边特效在锐利边缘处的表现，现在采用了新的边缘检测滤波器。 |
 | [`71b525c`] | 优化了透明缝合线填充在较大缩放倍率下的表现。             |
 
+| **补丁**                             |                                                     |
+|:-----------------------------------|:----------------------------------------------------|
+| `v3.4.1`<br>[`#89`]<br>[`0d2e6b6`] | 修复了透明缝合线填充生效异常的问题。<br>修复了在 NVIDIA 显卡下角色发生白色线条闪烁的问题。 |
+
 ## v3.3
 | **新增**                                    |                                            |
 |:------------------------------------------|:-------------------------------------------|
@@ -413,6 +417,7 @@
 [`#81`]: https://github.com/isHarryh/Ark-Pets/issues/81
 [`#82`]: https://github.com/isHarryh/Ark-Pets/pull/82
 [`#83`]: https://github.com/isHarryh/Ark-Pets/pull/83
+[`#89`]: https://github.com/isHarryh/Ark-Pets/pull/89
 [`3253706`]: https://github.com/isHarryh/Ark-Pets/commit/3253706fde859a316b3e08362dd57adb98c1df8c
 [`7b2e856`]: https://github.com/isHarryh/Ark-Pets/commit/7b2e8562579ebabbb102b40122cf3130463f03bc
 [`ff82a1e`]: https://github.com/isHarryh/Ark-Pets/commit/ff82a1e21ce396c345038b4cb340f10eeca89cf2
@@ -463,3 +468,4 @@
 [`2a4de72`]: https://github.com/isHarryh/Ark-Pets/commit/2a4de72de8768bf9f0996e8a20ed8f6ae4dc4c5e
 [`a7db4b0`]: https://github.com/isHarryh/Ark-Pets/commit/a7db4b0e9252e4d08ff1e6e9d4d8b8967ace36bb
 [`71b525c`]: https://github.com/isHarryh/Ark-Pets/commit/71b525c77003175f05dc1805f19d038872846acf
+[`0d2e6b6`]: https://github.com/isHarryh/Ark-Pets/commit/0d2e6b645717707a2c302ae844614c867fce74bc

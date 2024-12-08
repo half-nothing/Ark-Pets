@@ -19,7 +19,6 @@ out/
 tmp*/
 temp*/
 test*/
-*.jar
 
 # Exclude runtime files
 /ArkPetsConfig.json

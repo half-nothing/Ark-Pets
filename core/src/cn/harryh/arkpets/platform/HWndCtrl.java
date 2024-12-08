@@ -63,11 +63,6 @@ public abstract class HWndCtrl {
      */
     public abstract void setForeground();
 
-    /** Sets the window's transparency.
-     * @param alpha Alpha value, from 0 to 1.
-     */
-    public abstract void setWindowAlpha(float alpha);
-
     /** Sets the window's position without activating the window.
      * @param insertAfter The window to precede the positioned window in the Z order.
      * @param x The new position of the left side of the window, in client coordinates.

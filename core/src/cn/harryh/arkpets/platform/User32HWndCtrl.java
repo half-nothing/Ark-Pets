@@ -82,13 +82,6 @@ public class User32HWndCtrl extends HWndCtrl {
     }
 
     @Override
-    public void setWindowAlpha(float alpha) {
-        alpha = Math.max(0, Math.min(1, alpha));
-        byte byteAlpha = (byte)((int)(alpha * 255) & 0xFF);
-        User32.INSTANCE.SetLayeredWindowAttributes(hWnd, 0, byteAlpha, User32.LWA_ALPHA);
-    }
-
-    @Override
     public void setWindowPosition(HWndCtrl insertAfter, int x, int y, int w, int h) {
         User32.INSTANCE.SetWindowPos(hWnd, insertAfter != null ? ((User32HWndCtrl) insertAfter).hWnd : null, x, y, w, h, WinUser.SWP_NOACTIVATE);
     }

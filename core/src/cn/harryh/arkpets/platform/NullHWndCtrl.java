@@ -34,10 +34,6 @@ public class NullHWndCtrl extends HWndCtrl {
     }
 
     @Override
-    public void setWindowAlpha(float alpha) {
-    }
-
-    @Override
     public void setWindowPosition(HWndCtrl insertAfter, int x, int y, int w, int h) {
     }
 

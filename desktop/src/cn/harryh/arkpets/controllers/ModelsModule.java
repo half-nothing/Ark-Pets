@@ -3,6 +3,7 @@
  */
 package cn.harryh.arkpets.controllers;
 
+import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.assets.AssetItem;
 import cn.harryh.arkpets.assets.AssetItemGroup;
@@ -23,10 +24,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -68,6 +68,10 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     private Label selectedModelSkinGroupName;
     @FXML
     private Label selectedModelType;
+    @FXML
+    private JFXButton modelFavourite;
+    @FXML
+    private JFXButton topFavourite;
 
     @FXML
     private AnchorPane infoPane;
@@ -111,6 +115,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     private GuiPrefabs.PeerNodeComposer mngBtnComposer;
     private GuiComponents.NoticeBar datasetTooLowVerNotice;
     private GuiComponents.NoticeBar datasetTooHighVerNotice;
+    private final SVGPath favIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR, GuiPrefabs.Colors.COLOR_GRAY);
+    private final SVGPath favFillIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL, GuiPrefabs.Colors.COLOR_WARNING);
+    private boolean filterFavourite;
 
     private ArkHomeFX app;
 
@@ -135,6 +142,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         initModelSearch();
         initModelFilter();
         initModelManage();
+        initModelFavourite();
         modelReload(false);
     }
 
@@ -380,14 +388,54 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         modelHelp.setOnMouseClicked(e -> NetUtils.browseWebpage(urlHelp));
     }
 
+    private void initModelFavourite() {
+        modelFavourite.setGraphic(favIcon);
+        modelFavourite.setRipplerFill(Color.GRAY);
+        modelFavourite.setOnAction(e -> {
+            String key = selectedModelCell.getItem().key;
+            if (app.config.character_favorites.containsKey(key)) {
+                app.config.character_favorites.remove(key);
+                selectedModelCell.getStyleClass().remove("Search-models-item-favourite");
+                modelFavourite.setGraphic(favIcon);
+                Logger.debug("ModelManager", "Remove favourite model " + key);
+            } else {
+                app.config.character_favorites.put(key, new ArkConfig.AssetPrefab());
+                selectedModelCell.getStyleClass().add("Search-models-item-favourite");
+                modelFavourite.setGraphic(favFillIcon);
+                Logger.debug("ModelManager", "Add favourite model " + key);
+            }
+            app.config.save();
+        });
+
+        topFavourite.setOnAction(e -> {
+            searchModelView.scrollTo(0);
+            if (filterFavourite) {
+                GuiPrefabs.replaceStyleClass(topFavourite, "btn-primary", "btn-secondary");
+            } else {
+                GuiPrefabs.replaceStyleClass(topFavourite, "btn-secondary", "btn-primary");
+            }
+            filterFavourite = !filterFavourite;
+            modelSearch(searchModelInput.getText());
+            AssetItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
+            if (recentSelected != null)
+                for (JFXListCell<AssetItem> cell : searchModelView.getItems())
+                    if (recentSelected.equals(cell.getItem())) {
+                        searchModelView.scrollTo(cell);
+                        searchModelView.getSelectionModel().select(cell);
+                    }
+        });
+    }
+
     public void modelSearch(String keyWords) {
         searchModelView.getItems().clear();
         searchModelStatus.setText("");
         if (assertModelLoaded(false)) {
             // Filter and search assets
             int rawSize = assetItemList.size();
-            AssetItemGroup filtered = filterTagSet.isEmpty() ? assetItemList :
-                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
+            AssetItemGroup favoured = !filterFavourite ? assetItemList :
+                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_KEY, app.config.character_favorites.keySet(), AssetItemGroup.FilterMode.MATCH_ANY);
+            AssetItemGroup filtered = filterTagSet.isEmpty() ? favoured :
+                    favoured.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
             AssetItemGroup searched = filtered.searchByKeyWords(keyWords);
             int curSize = searched.size();
             searchModelStatus.setText((rawSize == curSize ? rawSize : curSize + " / " + rawSize) + " 个模型");
@@ -489,12 +537,17 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                         app.config.character_asset != null && !app.config.character_asset.isEmpty()) {
                     // Scroll to recent selected model and then select it.
                     AssetItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
-                    if (recentSelected != null)
+                    if (recentSelected != null) {
                         for (JFXListCell<AssetItem> cell : searchModelView.getItems())
                             if (recentSelected.equals(cell.getItem())) {
                                 searchModelView.scrollTo(cell);
                                 searchModelView.getSelectionModel().select(cell);
                             }
+                        // Check model favourite:
+                        if (app.config.character_favorites.containsKey(recentSelected.key)) {
+                            modelFavourite.setGraphic(favFillIcon);
+                        }
+                    }
                 }
             }
 
@@ -516,23 +569,33 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         Label name = new Label(assetItem.toString());
         name.getStyleClass().addAll("Search-models-label", "Search-models-label-primary");
         name.setPrefSize(assetItem.skinGroupName == null ? width : width * divide, height);
-        name.setLayoutX(0);
+        name.setLayoutX(15);
         Label alias1 = new Label(assetItem.skinGroupName);
         alias1.getStyleClass().addAll("Search-models-label", "Search-models-label-secondary");
         alias1.setPrefSize(width * (1 - divide), height);
         alias1.setLayoutX(assetItem.skinGroupName == null ? 0 : width * divide);
-
+        SVGPath fav = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL,GuiPrefabs.Colors.COLOR_WARNING);
+        fav.getStyleClass().add("Search-models-star");
+        fav.setLayoutX(0);
+        fav.setLayoutY(3);
+        fav.setScaleX(0.75);
+        fav.setScaleY(0.75);
         item.setPrefSize(width, height);
-        item.setGraphic(new Group(name, alias1));
+        item.setGraphic(new Group(fav, name, alias1));
         item.setItem(assetItem);
         item.setId(assetItem.getLocation());
+        if (app.config.character_favorites.containsKey(assetItem.key))
+            item.getStyleClass().add("Search-models-item-favourite");
         return item;
     }
 
     private void selectModel(AssetItem asset, JFXListCell<AssetItem> item) {
         // Reset
-        if (selectedModelCell != null)
+        if (selectedModelCell != null) {
             selectedModelCell.getStyleClass().setAll("Search-models-item");
+            if (app.config.character_favorites.containsKey(selectedModelCell.getItem().key))
+                selectedModelCell.getStyleClass().add("Search-models-item-favourite");
+        }
         selectedModelCell = item;
         selectedModelCell.getStyleClass().add("Search-models-item-active");
         // Display details
@@ -572,6 +635,12 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         // Switch info pane
         if (infoPaneComposer.getActivatedId() != 0)
             infoPaneComposer.activate(0);
+        // Check favourite
+        if (app.config.character_favorites.containsKey(asset.key)) {
+            modelFavourite.setGraphic(favFillIcon);
+        } else {
+            modelFavourite.setGraphic(favIcon);
+        }
         // Apply to app.config, but not to save
         app.config.character_asset = asset.getLocation();
         app.config.character_files = asset.assetList;

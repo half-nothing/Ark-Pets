@@ -7,6 +7,7 @@
     "canvas_color":"#00000000",
     "canvas_fitting_samples":16,
     "character_asset":"",
+    "character_favorites":{},
     "character_files":{},
     "character_label":"",
     "display_fps":30,

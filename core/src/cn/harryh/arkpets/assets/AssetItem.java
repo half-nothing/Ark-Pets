@@ -18,6 +18,8 @@ import java.util.function.Function;
  */
 public class AssetItem implements Serializable {
     @JSONField(serialize = false)
+    public String key;
+    @JSONField(serialize = false)
     public File assetDir;
     @JSONField
     public String assetId;
@@ -207,6 +209,7 @@ public class AssetItem implements Serializable {
         @Override
         Set<T> apply(AssetItem assetItem);
 
+        PropertyExtractor<String> ASSET_ITEM_KEY             = item -> item.key      == null ? Set.of() : Set.of(item.key);
         PropertyExtractor<String> ASSET_ITEM_TYPE            = item -> item.type          == null ? Set.of() : Set.of(item.type);
         PropertyExtractor<String> ASSET_ITEM_STYLE           = item -> item.style         == null ? Set.of() : Set.of(item.style);
         PropertyExtractor<String> ASSET_ITEM_SKIN_GROUP_NAME = item -> item.skinGroupName == null ? Set.of() : Set.of(item.skinGroupName);

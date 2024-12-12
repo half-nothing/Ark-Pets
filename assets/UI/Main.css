@@ -266,6 +266,14 @@ JFXSlider {
     /* Active */
 }
 
+.Search-models-star {
+    -fx-opacity: 0;
+}
+
+.Search-models-item-favourite .Search-models-star {
+    -fx-opacity: 1;
+}
+
 .Search-models-label {
     -fx-text-overrun: ellipsis;
     -fx-label-padding: 2px 2px 2px 4px;

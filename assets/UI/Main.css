@@ -21,15 +21,26 @@
 /* Drop shadow for Nodes */
 .shadowed {
     /* Note: dropshadow(type, color, radius, spread, x, y) */
-    -fx-effect: dropshadow(gaussian, derive(black, 90%), 10, 0.1, 0, 0.5);
+    -fx-effect: dropshadow(gaussian, #00000088, 10, 0.1, 0, 0.5);
 }
 
 /* Color constants */
-.root {
+.root-container {
     -text-normal: #242424;
     -theme-color: #2A528C;
     -theme-color-dim: #8492A5;
     -theme-color-light: #86ABDE;
+}
+
+/* Decoration for Root Container */
+.root-container {
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(gaussian, #00000044, 10, 0.25, 2.5, 2.5);
+}
+
+/* Decoration for root */
+.root {
+    -fx-background-radius: 8px;
 }
 
 /*******************************************************************************
@@ -133,6 +144,7 @@ JFXSlider {
 
 #Sidebar {
     -fx-background-color: -theme-color-light;
+    -fx-background-radius: 0 0 0 8px;
 }
 
 #Title {
@@ -483,6 +495,7 @@ ProgressBar:indeterminate>.bar {
 
 #Title-bar {
     -fx-background-color: -theme-color;
+    -fx-background-radius: 8px 8px 0 0;
 }
 
 #Title-bar Text {
@@ -511,6 +524,10 @@ ProgressBar:indeterminate>.bar {
 #Title-close-btn:hover,
 #Title-close-btn:focused {
     -fx-background-color: #CC2211;
+}
+
+#Title-close-btn {
+    -fx-background-radius: 0 8px 0 0;
 }
 
 /*******************************************************************************

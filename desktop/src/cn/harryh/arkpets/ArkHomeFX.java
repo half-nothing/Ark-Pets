@@ -20,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -62,10 +63,11 @@ public class ArkHomeFX extends Application {
 
         // Setup scene and primary stage.
         Logger.info("Launcher", "Creating main scene");
-        Scene scene = new Scene(rootModule.root);
+        Scene scene = new Scene(rootModule.rootContainer);
         scene.getStylesheets().setAll(Objects.requireNonNull(getClass().getResource("/UI/Main.css")).toExternalForm());
+        scene.setFill(Color.TRANSPARENT);
         stage.getIcons().setAll(new Image(Objects.requireNonNull(getClass().getResource(iconFilePng)).toExternalForm()));
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle(desktopTitle);

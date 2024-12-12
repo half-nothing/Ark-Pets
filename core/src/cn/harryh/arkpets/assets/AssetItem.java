@@ -209,10 +209,31 @@ public class AssetItem implements Serializable {
         @Override
         Set<T> apply(AssetItem assetItem);
 
-        PropertyExtractor<String> ASSET_ITEM_KEY             = item -> item.key      == null ? Set.of() : Set.of(item.key);
+        PropertyExtractor<String> ASSET_ITEM_KEY             = item -> item.key           == null ? Set.of() : Set.of(item.key);
         PropertyExtractor<String> ASSET_ITEM_TYPE            = item -> item.type          == null ? Set.of() : Set.of(item.type);
         PropertyExtractor<String> ASSET_ITEM_STYLE           = item -> item.style         == null ? Set.of() : Set.of(item.style);
         PropertyExtractor<String> ASSET_ITEM_SKIN_GROUP_NAME = item -> item.skinGroupName == null ? Set.of() : Set.of(item.skinGroupName);
         PropertyExtractor<String> ASSET_ITEM_SORT_TAGS       = item -> new HashSet<>(item.sortTags.toJavaList(String.class));
+    }
+
+    /** The Asset Prefab storing the user prefab of the specific asset.
+     * @since ArkPets 3.5
+     */
+    public static class AssetPrefab {
+        @JSONField(defaultValue = "0.2")
+        public float   initial_position_x;
+        @JSONField(defaultValue = "0.2")
+        public float   initial_position_y;
+        @JSONField(defaultValue = "false")
+        public boolean transparent_mode;
+
+        public AssetPrefab() {
+        }
+
+        public AssetPrefab(float x, float y, boolean transparent) {
+            this.initial_position_x = x;
+            this.initial_position_y = y;
+            this.transparent_mode = transparent;
+        }
     }
 }

@@ -3,7 +3,6 @@
  */
 package cn.harryh.arkpets.controllers;
 
-import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.assets.AssetItem;
 import cn.harryh.arkpets.assets.AssetItemGroup;
@@ -399,7 +398,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                 modelFavourite.setGraphic(favIcon);
                 Logger.debug("ModelManager", "Remove favourite model " + key);
             } else {
-                app.config.character_favorites.put(key, new ArkConfig.AssetPrefab());
+                app.config.character_favorites.put(key, new AssetItem.AssetPrefab());
                 selectedModelCell.getStyleClass().add("Search-models-item-favourite");
                 modelFavourite.setGraphic(favFillIcon);
                 Logger.debug("ModelManager", "Add favourite model " + key);

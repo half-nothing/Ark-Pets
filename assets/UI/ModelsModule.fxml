@@ -128,7 +128,7 @@
                 <FlowPane fx:id="infoPaneTagFlow" styleClass="tag-flow"/>
             </ScrollPane>
         </VBox>
-        <JFXButton fx:id="modelFavourite" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+        <JFXButton fx:id="modelFavorite" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
                    prefHeight="40.0" prefWidth="40.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
     </AnchorPane>
     <AnchorPane fx:id="filterPane" layoutX="${_infoPaneX}" layoutY="${_infoPaneY}" prefHeight="${_infoPaneH}"
@@ -206,7 +206,7 @@
     </fx:define>
     <Label id="Search-models-status" fx:id="searchModelStatus" alignment="CENTER_RIGHT" layoutX="${_modelViewX}"
            layoutY="80.0" prefWidth="${_modelViewW}" textAlignment="RIGHT"/>
-    <JFXButton fx:id="topFavourite" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+    <JFXButton fx:id="topFavorite" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
            layoutX="${_modelViewX}" layoutY="60.0" prefWidth="92.5" text="只显示收藏">
         <graphic>
             <AnchorPane prefHeight="25.0" prefWidth="16.0" styleClass="btn-icon">

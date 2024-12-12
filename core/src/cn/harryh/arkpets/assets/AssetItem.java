@@ -220,11 +220,12 @@ public class AssetItem implements Serializable {
      * @since ArkPets 3.5
      */
     public static class AssetPrefab {
-        @JSONField(defaultValue = "0.2")
+        // Attr feature is still WIP
+        @JSONField(defaultValue = "0.2", serialize = false, deserialize = false)
         public float   initial_position_x;
-        @JSONField(defaultValue = "0.2")
+        @JSONField(defaultValue = "0.2", serialize = false, deserialize = false)
         public float   initial_position_y;
-        @JSONField(defaultValue = "false")
+        @JSONField(defaultValue = "false", serialize = false, deserialize = false)
         public boolean transparent_mode;
 
         public AssetPrefab() {

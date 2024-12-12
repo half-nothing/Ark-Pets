@@ -282,7 +282,7 @@ JFXSlider {
     -fx-opacity: 0;
 }
 
-.Search-models-item-favourite .Search-models-star {
+.Search-models-item-favorite .Search-models-star {
     -fx-opacity: 1;
 }
 

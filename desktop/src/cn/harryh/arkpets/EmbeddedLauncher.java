@@ -54,6 +54,12 @@ public class EmbeddedLauncher {
                 Logger.setLevel(Logger.DEBUG);
             }
         };
+        new ArgPending("--renderdoc", args) {
+            @Override
+            protected void process(String command, String addition) {
+                System.load(addition);
+            }
+        };
         Logger.info("System", "Entering the app of EmbeddedLauncher");
         Logger.info("System", "ArkPets version is " + appVersion);
         Logger.debug("System", "Default charset is " + Charset.defaultCharset());

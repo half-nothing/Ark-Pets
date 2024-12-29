@@ -157,6 +157,9 @@
                     <JFXTextField fx:id="configNetworkAgent" prefHeight="23.0" prefWidth="100.0"/>
                     <Label fx:id="configNetworkAgentStatus" alignment="TOP_CENTER" text="-"/>
                 </HBox>
+                <HBox spacing="22.5">
+                    <Label fx:id="runEnvCheck" styleClass="config-hyper-link" text="重新运行环境检查"/>
+                </HBox>
                 <Separator/>
                 <Label styleClass="config-group-title" text="关于软件"/>
                 <HBox spacing="22.5">

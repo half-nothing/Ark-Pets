@@ -7,9 +7,11 @@ import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
+import cn.harryh.arkpets.guitasks.CheckEnvironmentTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
 import cn.harryh.arkpets.platform.StartupConfig;
 import cn.harryh.arkpets.platform.WindowSystem;
+import cn.harryh.arkpets.envchecker.EnvCheckTask;
 import cn.harryh.arkpets.utils.*;
 import cn.harryh.arkpets.utils.GuiComponents.*;
 import com.badlogic.gdx.graphics.Color;
@@ -103,11 +105,12 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXCheckBox configWindowToolwindow;
     @FXML
     private JFXButton configWindowToolwindowHelp;
-
     @FXML
     private JFXComboBox<NamedItem<String>> configWindowSystem;
     @FXML
     private JFXButton configWindowSystemHelp;
+    @FXML
+    private Label runEnvCheck;
     @FXML
     private Label aboutQueryUpdate;
     @FXML
@@ -397,6 +400,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 };
             }
         };
+
+        runEnvCheck.setOnMouseClicked(e -> new CheckEnvironmentTask(app.body, EnvCheckTask.getAvailableTasks()).start());
     }
 
     private static ArrayList<NamedItem<String>> getWindowSystemItems() {
@@ -577,5 +582,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         ss.setPeriod(new Duration(5000));
         ss.setRestartOnFailure(true);
         ss.start();
+    }
+
+    private void clearData() {
     }
 }

@@ -54,10 +54,15 @@ public class EmbeddedLauncher {
                 Logger.setLevel(Logger.DEBUG);
             }
         };
-        new ArgPending("--renderdoc", args) {
+        new ArgPending("--load-lib", args) {
             @Override
             protected void process(String command, String addition) {
-                System.load(addition);
+                Logger.info("System", "Loading the specified library \"" + addition +"\"");
+                try {
+                    System.load(addition);
+                } catch (UnsatisfiedLinkError e) {
+                    Logger.error("System", "Failed to load the specified library, details see below.", e);
+                }
             }
         };
         Logger.info("System", "Entering the app of EmbeddedLauncher");

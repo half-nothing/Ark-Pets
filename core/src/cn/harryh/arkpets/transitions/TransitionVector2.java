@@ -10,11 +10,11 @@ import com.badlogic.gdx.math.Vector2;
  * which controls a vector-2 (x,y) transit from its starting value to its ending value.
  */
 public class TransitionVector2 extends Transition<Vector2> {
-    protected final TernaryFunction<Float, Float> function;
+    protected final EasingFunction easing;
 
-    public TransitionVector2(TernaryFunction<Float, Float> function, float totalProgress) {
+    public TransitionVector2(EasingFunction easingFunction, float totalProgress) {
         super(totalProgress);
-        this.function = function;
+        easing = easingFunction;
         start = new Vector2(0, 0);
         end = new Vector2(0, 0);
     }
@@ -23,8 +23,8 @@ public class TransitionVector2 extends Transition<Vector2> {
     public Vector2 atProgress(float progress) {
         float ratio = currentProgress / totalProgress;
         return new Vector2(
-                function.apply(start.x, end.x, ratio),
-                function.apply(start.y, end.y, ratio)
+                easing.apply(start.x, end.x, ratio),
+                easing.apply(start.y, end.y, ratio)
         );
     }
 

@@ -10,11 +10,11 @@ import com.badlogic.gdx.math.Vector3;
  * which controls a vector-3 (x,y,z) transit from its starting value to its ending value.
  */
 public class TransitionVector3 extends Transition<Vector3> {
-    protected final TernaryFunction<Float, Float> function;
+    protected final EasingFunction easing;
 
-    public TransitionVector3(TernaryFunction<Float, Float> function, float totalProgress) {
+    public TransitionVector3(EasingFunction easingFunction, float totalProgress) {
         super(totalProgress);
-        this.function = function;
+        easing = easingFunction;
         start = new Vector3(0, 0, 0);
         end = new Vector3(0, 0, 0);
     }
@@ -23,9 +23,9 @@ public class TransitionVector3 extends Transition<Vector3> {
     public Vector3 atProgress(float progress) {
         float ratio = currentProgress / totalProgress;
         return new Vector3(
-                function.apply(start.x, end.x, ratio),
-                function.apply(start.y, end.y, ratio),
-                function.apply(start.z, end.z, ratio)
+                easing.apply(start.x, end.x, ratio),
+                easing.apply(start.y, end.y, ratio),
+                easing.apply(start.z, end.z, ratio)
         );
     }
 

@@ -3,6 +3,7 @@
  */
 package cn.harryh.arkpets;
 
+import cn.harryh.arkpets.transitions.EasingFunction;
 import cn.harryh.arkpets.utils.IOUtils.FileUtil;
 import cn.harryh.arkpets.utils.Logger;
 import com.alibaba.fastjson.JSON;
@@ -55,6 +56,8 @@ public class ArkConfig implements Serializable {
     public int          display_margin_bottom;
     /** @since ArkPets 2.1 */ @JSONField(defaultValue = "true")
     public boolean      display_multi_monitors;
+    /** @since ArkPets 3.5 */ @JSONField(defaultValue = "0.3")
+    public float        render_animation_mixture;
     /** @since ArkPets 3.3 */ @JSONField(defaultValue = "1")
     public int          render_outline;
     /** @since ArkPets 3.3 */ @JSONField(defaultValue = "#FFFF00FF")
@@ -85,6 +88,10 @@ public class ArkConfig implements Serializable {
     public float        physic_speed_limit_x;
     /** @since ArkPets 2.2 */ @JSONField(defaultValue = "1000.0")
     public float        physic_speed_limit_y;
+    /** @since ArkPets 3.5 */ @JSONField(defaultValue = "0.3")
+    public float        transition_duration;
+    /** @since ArkPets 3.5 */ @JSONField(defaultValue = "EASE_OUT_CUBIC")
+    public String       transition_type;
     /** @since ArkPets 3.2 */ @JSONField(defaultValue = "true")
     public boolean      window_style_toolwindow;
     /** @since ArkPets 3.2 */ @JSONField(defaultValue = "true")
@@ -151,6 +158,17 @@ public class ArkConfig implements Serializable {
             Logger.error("Config", "Failed to get the default config, details see below.", e);
         }
         return null;
+    }
+
+    /** @see EasingFunction
+     */
+    public static EasingFunction getEasingFunctionFrom(String string) {
+        try {
+            return EasingFunction.valueOf(string);
+        } catch (IllegalArgumentException e) {
+            Logger.warn("Config", "Invalid easing function, using linear");
+            return EasingFunction.LINEAR;
+        }
     }
 
     /** @see com.badlogic.gdx.graphics.Color

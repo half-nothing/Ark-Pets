@@ -6,7 +6,6 @@ package cn.harryh.arkpets;
 import cn.harryh.arkpets.animations.AnimData;
 import cn.harryh.arkpets.animations.GeneralBehavior;
 import cn.harryh.arkpets.concurrent.SocketClient;
-import cn.harryh.arkpets.transitions.TernaryFunction;
 import cn.harryh.arkpets.transitions.TransitionVector2;
 import cn.harryh.arkpets.tray.MemberTrayImpl;
 import cn.harryh.arkpets.platform.HWndCtrl;
@@ -23,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static cn.harryh.arkpets.Const.*;
+import static cn.harryh.arkpets.Const.coreTitleManager;
 
 
 public class ArkPets extends ApplicationAdapter implements InputProcessor {
@@ -86,7 +85,10 @@ public class ArkPets extends ApplicationAdapter implements InputProcessor {
 
 		// 4.Window position setup
 		getHWndLoopCtrl = new LoopCtrl(1f / config.display_fps * 4);
-		windowPosition = new TransitionVector2(TernaryFunction.EASE_OUT_CUBIC, (float)durationNormal.toSeconds());
+		windowPosition = new TransitionVector2(
+				ArkConfig.getEasingFunctionFrom(config.transition_type),
+				Math.max(0, config.transition_duration)
+		);
 		windowPosition.reset(plane.getX(), - (cha.camera.getHeight() + plane.getY()) + offsetY);
 		windowPosition.setToEnd();
 		setWindowPos();

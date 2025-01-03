@@ -8,17 +8,17 @@ package cn.harryh.arkpets.transitions;
  * which controls a float number transit from its starting value to its ending value.
  */
 public class TransitionFloat extends Transition<Float> {
-    protected final TernaryFunction<Float, Float> function;
+    protected final EasingFunction easing;
 
-    public TransitionFloat(TernaryFunction<Float, Float> function, float totalProgress) {
+    public TransitionFloat(EasingFunction easingFunction, float totalProgress) {
         super(totalProgress);
-        this.function = function;
+        easing = easingFunction;
         start = 0f;
         end = 0f;
     }
 
     @Override
     public Float atProgress(float progress) {
-        return function.apply(start, end, currentProgress / totalProgress);
+        return easing.apply(start, end, currentProgress / totalProgress);
     }
 }

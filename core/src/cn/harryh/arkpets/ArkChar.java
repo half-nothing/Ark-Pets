@@ -9,7 +9,7 @@ import cn.harryh.arkpets.animations.AnimClipGroup;
 import cn.harryh.arkpets.animations.AnimComposer;
 import cn.harryh.arkpets.animations.AnimData;
 import cn.harryh.arkpets.assets.AssetItem.AssetAccessor;
-import cn.harryh.arkpets.transitions.TernaryFunction;
+import cn.harryh.arkpets.transitions.EasingFunction;
 import cn.harryh.arkpets.transitions.TransitionFloat;
 import cn.harryh.arkpets.transitions.TransitionVector3;
 import cn.harryh.arkpets.utils.DynamicOrthographicCamara;
@@ -73,10 +73,12 @@ public class ArkChar {
         shader2 = getShader(pass2VShader, pass2FShader);
         Logger.debug("Shader", "Shader program compiled");
         // 2.Geometry setup
-        position = new TransitionVector3(TernaryFunction.EASE_OUT_CUBIC, (float)durationNormal.toSeconds());
-        offsetY = new TransitionFloat(TernaryFunction.EASE_OUT_CUBIC, (float)durationNormal.toSeconds());
-        outlineWidth = new TransitionFloat(TernaryFunction.EASE_OUT_CUBIC, (float)durationFast.toSeconds());
-        alpha = new TransitionFloat(TernaryFunction.EASE_OUT_CUBIC, (float)durationNormal.toSeconds());
+        EasingFunction easingFunction = ArkConfig.getEasingFunctionFrom(config.transition_type);
+        float easingDuration = Math.max(0, config.transition_duration);
+        position = new TransitionVector3(easingFunction, easingDuration);
+        offsetY = new TransitionFloat(easingFunction, easingDuration);
+        outlineWidth = new TransitionFloat(easingFunction, easingDuration);
+        alpha = new TransitionFloat(easingFunction, easingDuration);
         // 3.Skeleton setup
         SkeletonData skeletonData;
         try {

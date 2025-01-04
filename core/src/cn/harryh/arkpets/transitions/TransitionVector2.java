@@ -21,6 +21,8 @@ public class TransitionVector2 extends Transition<Vector2> {
 
     @Override
     public Vector2 atProgress(float progress) {
+        if (totalProgress <= 0)
+            return end;
         float ratio = currentProgress / totalProgress;
         return new Vector2(
                 easing.apply(start.x, end.x, ratio),

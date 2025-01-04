@@ -27,6 +27,7 @@ abstract public class Transition<E> {
     /** Gets the certain value at the specific progress.
      * @param progress The given progress
      * @return The value at the given progress.
+     * @implNote Note that if the total progress is 0, the ending value should always be returned.
      */
     abstract public E atProgress(float progress);
 
@@ -87,10 +88,8 @@ abstract public class Transition<E> {
      * @param totalProgress The new total progress.
      */
     public final void setTotalProgress(float totalProgress) {
-        if (totalProgress <= 0)
-            throw new IllegalArgumentException("Total progress must be greater than 0");
         currentProgress = 0;
-        this.totalProgress = totalProgress;
+        this.totalProgress = Math.max(0, totalProgress);
     }
 
     /** Sets the transition to its ending point where {@code currentProgress = totalProgress}.

@@ -19,6 +19,6 @@ public class TransitionFloat extends Transition<Float> {
 
     @Override
     public Float atProgress(float progress) {
-        return easing.apply(start, end, currentProgress / totalProgress);
+        return totalProgress > 0 ? easing.apply(start, end, currentProgress / totalProgress) : end;
     }
 }

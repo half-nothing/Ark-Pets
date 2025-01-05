@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.MemoryUtil;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -64,6 +65,17 @@ public class EmbeddedLauncher {
                     System.load(addition);
                 } catch (UnsatisfiedLinkError e) {
                     Logger.error("System", "Failed to load the specified library, details see below.", e);
+                }
+            }
+        };
+        new ArgPending("--enable-snapshot", args) {
+            @Override
+            protected void process(String command, String addition) {
+                Logger.info("System", "Enable the snapshot feature");
+                ArkChar.enableSnapshot = true;
+                File temp = new File(PathConfig.tempDirPath);
+                if (!(temp.exists() || temp.mkdir())) {
+                    Logger.error("System", "Failed to create the temporary directory.");
                 }
             }
         };

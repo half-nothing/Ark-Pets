@@ -16,6 +16,7 @@ import cn.harryh.arkpets.utils.DynamicOrthographicCamara;
 import cn.harryh.arkpets.utils.DynamicOrthographicCamara.Insert;
 import cn.harryh.arkpets.utils.Logger;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -52,6 +53,8 @@ public class ArkChar {
     private final AnimationState animationState;
     protected final AnimClipGroup animList;
     protected final HashMap<AnimStage, Insert> stageInsertMap;
+
+    public static boolean enableSnapshot;
 
     /** Initializes an ArkPets character.
      * @param config The ArkPets Config instance which contains the asset's information and other essential settings.
@@ -296,7 +299,16 @@ public class ArkChar {
         // PixmapIO.writePNG(new FileHandle("temp/temp.png"), snapshot);
         camera.getFBO().end();
         // Crop the canvas in order to fit the snapshot
-        camera.cropTo(snapshot, false, true);
+        Insert insert = camera.getFittedInsert(snapshot, false, true);
+        if (enableSnapshot) {
+            snapshot.setColor(Color.RED);
+            snapshot.drawLine(0,-insert.bottom,camera.getWidth(),-insert.bottom);
+            snapshot.drawLine(0,camera.getHeight()+insert.top,camera.getWidth(),camera.getHeight()+insert.top);
+            snapshot.drawLine(-insert.left,0,-insert.left,camera.getHeight());
+            snapshot.drawLine(camera.getWidth()+insert.right,0,camera.getWidth()+insert.right,camera.getHeight());
+            PixmapIO.writePNG(new FileHandle("temp/adjustCanvasSnapshot.png"), snapshot);
+        }
+        camera.setInsert(insert);
         snapshot.dispose();
     }
 

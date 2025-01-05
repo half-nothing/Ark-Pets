@@ -16,7 +16,10 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -286,8 +289,16 @@ public class ArkPets extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean keyTyped(char character) {
-		Logger.debug("Plane Debug Msg", plane.getDebugMsg());
-		Logger.debug("Status Msg", "FPS" + Gdx.graphics.getFramesPerSecond() + ", Heap" + (int) Math.ceil((Gdx.app.getJavaHeap() >> 10) / 1024f) + "MB");
+		if (ArkChar.enableSnapshot && character == 'B') {
+			String name = "temp/snapshot-"+System.currentTimeMillis()+".png";
+			Pixmap snapshot = Pixmap.createFromFrameBuffer(0, 0, cha.camera.getWidth(), cha.camera.getHeight());
+			PixmapIO.writePNG(new FileHandle(name), snapshot);
+			snapshot.dispose();
+			Logger.debug("App", "Snapshot saved to `" + name + "`");
+		} else {
+			Logger.debug("Plane Debug Msg", plane.getDebugMsg());
+			Logger.debug("Status Msg", "FPS" + Gdx.graphics.getFramesPerSecond() + ", Heap" + (int) Math.ceil((Gdx.app.getJavaHeap() >> 10) / 1024f) + "MB");
+		}
 		return false;
 	}
 

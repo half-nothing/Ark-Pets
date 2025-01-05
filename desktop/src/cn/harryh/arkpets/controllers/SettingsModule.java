@@ -364,10 +364,10 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                     app.config.window_system = newValue.value();
                     app.config.save();
                 });
-        new HandbookEntrance(app.body, configWindowSystemHelp) {
+        new HelpHandbookEntrance(app.body, configWindowSystemHelp) {
             @Override
             public Handbook getHandbook() {
-                return new ControlHandbook((Labeled) configWindowSystem.getParent().getChildrenUnmodifiable().get(0)) {
+                return new ControlHelpHandbook((Labeled) configWindowSystem.getParent().getChildrenUnmodifiable().get(0)) {
                     @Override
                     public String getContent() {
                         return getWindowSystemInfo();

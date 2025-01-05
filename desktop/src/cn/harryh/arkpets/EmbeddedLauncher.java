@@ -32,7 +32,7 @@ public class EmbeddedLauncher {
         ArgPending.argCache = args;
         // Logger
         Logger.initialize(LogConfig.logCorePath, LogConfig.logCoreMaxKeep);
-        ArkConfig appConfig = Objects.requireNonNull(ArkConfig.getConfig());
+        ArkConfig appConfig = Objects.requireNonNull(ArkConfig.getConfig(), "ArkConfig returns a null instance, please check the config file.");
         try {
             Logger.setLevel(appConfig.logging_level);
         } catch (Exception ignored) {
@@ -82,7 +82,6 @@ public class EmbeddedLauncher {
         Logger.info("System", "Entering the app of EmbeddedLauncher");
         Logger.info("System", "ArkPets version is " + appVersion);
         Logger.debug("System", "Default charset is " + Charset.defaultCharset());
-        ArkConfig appConfig = Objects.requireNonNull(ArkConfig.getConfig(), "ArkConfig returns a null instance, please check the config file.");
         WindowSystem windowSystem;
         try {
             windowSystem = WindowSystem.values()[appConfig.window_system];

@@ -293,6 +293,7 @@ public class ArkPets extends ApplicationAdapter implements InputProcessor {
 			String name = "temp/snapshot-"+System.currentTimeMillis()+".png";
 			Pixmap snapshot = Pixmap.createFromFrameBuffer(0, 0, cha.camera.getWidth(), cha.camera.getHeight());
 			PixmapIO.writePNG(new FileHandle(name), snapshot);
+			snapshot.dispose();
 			Logger.debug("App", "Snapshot saved to `" + name + "`");
 		} else {
 			Logger.debug("Plane Debug Msg", plane.getDebugMsg());

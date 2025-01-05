@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.MemoryUtil;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -70,6 +71,10 @@ public class EmbeddedLauncher {
             protected void process(String command, String addition) {
                 Logger.info("System", "Enable the snapshot feature");
                 ArkChar.enableSnapshot = true;
+                boolean success = new File(PathConfig.tempDirPath).mkdir();
+                if (!success) {
+                    Logger.error("System", "Failed to create the temporary directory.");
+                }
             }
         };
         Logger.info("System", "Entering the app of EmbeddedLauncher");

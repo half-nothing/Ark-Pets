@@ -71,8 +71,8 @@ public class EmbeddedLauncher {
             protected void process(String command, String addition) {
                 Logger.info("System", "Enable the snapshot feature");
                 ArkChar.enableSnapshot = true;
-                boolean success = new File(PathConfig.tempDirPath).mkdir();
-                if (!success) {
+                File temp = new File(PathConfig.tempDirPath);
+                if (!(temp.exists() || temp.mkdir())) {
                     Logger.error("System", "Failed to create the temporary directory.");
                 }
             }

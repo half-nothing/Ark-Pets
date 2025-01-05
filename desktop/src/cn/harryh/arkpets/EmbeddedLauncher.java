@@ -65,6 +65,13 @@ public class EmbeddedLauncher {
                 }
             }
         };
+        new ArgPending("--enable-snapshot", args) {
+            @Override
+            protected void process(String command, String addition) {
+                Logger.info("System", "Enable the snapshot feature");
+                ArkChar.enableSnapshot = true;
+            }
+        };
         Logger.info("System", "Entering the app of EmbeddedLauncher");
         Logger.info("System", "ArkPets version is " + appVersion);
         Logger.debug("System", "Default charset is " + Charset.defaultCharset());

@@ -26,6 +26,8 @@ public class EmbeddedLauncher {
     // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 
     public static void main (String[] args) {
+        // Disable assistive technologies
+        System.setProperty("javax.accessibility.assistive_technologies", "");
         ArgPending.argCache = args;
         // Logger
         Logger.initialize(LogConfig.logCorePath, LogConfig.logCoreMaxKeep);

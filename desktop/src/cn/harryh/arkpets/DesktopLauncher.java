@@ -19,6 +19,8 @@ import static cn.harryh.arkpets.Const.appVersion;
  */
 public class DesktopLauncher {
     public static void main(String[] args) {
+        // Disable assistive technologies
+        System.setProperty("javax.accessibility.assistive_technologies", "");
         ArgPending.argCache = args;
         // Logger
         Logger.initialize(LogConfig.logDesktopPath, LogConfig.logDesktopMaxKeep);

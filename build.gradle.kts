@@ -118,15 +118,15 @@ fun getVersionMetadata(): String {
     val workflow = System.getenv("GITHUB_WORKFLOW")
     val release = System.getenv("RELEASE")
 
-    if (workflow == "Release" || release != null) {
+    if (workflow == "Release" || !release.isNullOrBlank()) {
         return ""
     }
 
     // CI builds only
-    if (buildId != null) {
+    if (!buildId.isNullOrBlank()) {
         return "+build.$buildId"
     }
 
     // No tracking information could be found about the build
-    return "+nightly"
+    return "+nightly.${(System.currentTimeMillis() % 1e6).toInt().toString().padStart(6, '0')}"
 }

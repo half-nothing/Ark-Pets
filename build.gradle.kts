@@ -46,6 +46,10 @@ allprojects {
     version = "$appVersion${getVersionMetadata()}"
     group = mavenGroup
 
+    ext {
+        set("appCopyright", appCopyright)
+    }
+
     repositories {
         maven("https://maven.aliyun.com/repository/public/")
         mavenLocal()

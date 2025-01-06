@@ -218,6 +218,10 @@ tasks {
     register<Exec>("distExe") {
         group = "dist"
         dependsOn("jpackage")
+
+        environment("APP_VERSION", version)
+        environment("APP_COPYRIGHT", ext.get("appCopyright") as String)
+
         commandLine("iscc", "/Q", issFileRel)
     }
 

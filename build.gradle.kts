@@ -5,6 +5,8 @@ import java.util.*
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.7"
+    id("com.github.jakemarsden.git-hooks") version "0.0.2"
 }
 
 buildscript {
@@ -18,6 +20,10 @@ buildscript {
     dependencies {
         classpath("org.openjfx:javafx-plugin:0.0.13")
     }
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
 }
 
 val appName: String by project
@@ -86,6 +92,20 @@ allprojects {
             }
         }
     }
+}
+
+// code style check for kotlin
+detekt {
+    buildUponDefaultConfig = true
+    autoCorrect = true
+    config.setFrom(rootProject.files("detekt.yml"))
+}
+
+// git hooks for automatically checking code style
+gitHooks {
+    setHooks(
+        mapOf("pre-commit" to "detekt")
+    )
 }
 
 fun getVersionMetadata(): String {

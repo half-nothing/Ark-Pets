@@ -3,8 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.*
 
-val targetJavaVersion: Int = 17
-
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
 }
@@ -22,28 +20,25 @@ buildscript {
     }
 }
 
+val appName: String by project
+
 allprojects {
+    val appAuthor: String by project
+    val appYearBegin: String by project
+    val appVersion: String by project
+    val mavenGroup: String by project
+    val appCopyright = "Copyright (c) $appYearBegin-${SimpleDateFormat("yyyy").format(Date())} $appAuthor"
+    val targetJavaVersion = 17
+
     apply {
-        plugin("eclipse")
         plugin("java")
         plugin("java-library")
         plugin("org.openjfx.javafxplugin")
         plugin("org.jetbrains.kotlin.jvm")
     }
 
-    version = "3.5.0"
-    ext {
-        // App Metadata
-        set("appName", "ArkPets")
-        set("appAuthor", "Harry Huang")
-        set("appYearBegin", "2022")
-        set("appYearCurrent", SimpleDateFormat("yyyy").format(Date()))
-        set("appCopyright", "Copyright (c) ${get("appYearBegin")}-${get("appYearCurrent")} ${get("appAuthor")}")
-        // Prefabs
-        set("gdxVersion", "1.11.0")
-        set("jnaVersion", "5.12.1")
-        set("javaFXVersion", "17.0.8")
-    }
+    version = "$appVersion${getVersionMetadata()}"
+    group = mavenGroup
 
     repositories {
         maven("https://maven.aliyun.com/repository/public/")
@@ -70,42 +65,43 @@ allprojects {
         withType<KotlinCompile>().configureEach {
             compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
         }
+
+        jar {
+            from("LICENSE")
+            manifest {
+                attributes(
+                    "Build-By" to System.getProperty("user.name"),
+                    "Build-TimeStamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(Date()),
+                    "Build-Version" to version,
+                    "Created-By" to "Gradle ${gradle.gradleVersion}",
+                    "Build-Jdk" to "${System.getProperty("java.version")} " +
+                            "(${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
+                    "Build-OS" to "${System.getProperty("os.name")} " +
+                            "${System.getProperty("os.arch")} ${System.getProperty("os.version")}",
+                    "App-Name" to appName,
+                    "App-Version" to appVersion,
+                    "App-Author" to appAuthor,
+                    "Copyright" to appCopyright
+                )
+            }
+        }
     }
 }
 
-val gdxVersion = "1.11.0"
-val jnaVersion = "5.12.1"
-val javaFXVersion = "17.0.8"
+fun getVersionMetadata(): String {
+    val buildId = System.getenv("GITHUB_RUN_NUMBER")
+    val workflow = System.getenv("GITHUB_WORKFLOW")
+    val release = System.getenv("RELEASE")
 
-project(":core") {
-    dependencies {
-        // Spine Runtime
-        api("com.esotericsoftware.spine:spine-libgdx:3.8.99.1")
-        // libGDX
-        api("com.badlogicgames.gdx:gdx:$gdxVersion")
-        api("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
-        // JNA
-        api("net.java.dev.jna:jna:$jnaVersion")
-        api("net.java.dev.jna:jna-platform:$jnaVersion")
-        // JavaFX
-        api("org.openjfx:javafx-base:$javaFXVersion:win")
-        api("org.openjfx:javafx-controls:$javaFXVersion:win")
-        api("org.openjfx:javafx-graphics:$javaFXVersion:win")
-        api("org.openjfx:javafx-fxml:$javaFXVersion:win")
-        // JFoenix
-        api("com.jfoenix:jfoenix:9.0.1")
-        // FastJson
-        api("com.alibaba:fastjson:2.0.39")
-        // Log4j
-        api("apache-log4j:log4j:1.2.15")
+    if (workflow == "Release" || release != null) {
+        return ""
     }
-}
 
-project(":desktop") {
-    dependencies {
-        implementation(project(":core"))
-        // libGDX Desktop
-        api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
-        api("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
+    // CI builds only
+    if (buildId != null) {
+        return "+build.$buildId"
     }
+
+    // No tracking information could be found about the build
+    return "+nightly"
 }

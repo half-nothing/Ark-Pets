@@ -9,16 +9,21 @@ sourceSets {
     }
 }
 
-val mainClassName = "cn.harryh.arkpets.DesktopLauncher"
-val assetsDir = File("../assets")
+dependencies {
+    val gdxVersion: String by rootProject
 
-eclipse {
-    project {
-        name = "${rootProject.ext.get("appName")}-desktop"
-    }
+    implementation(project(":core"))
+    // libGDX Desktop
+    api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
+    api("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
+    // sqlite jdbc driver
+    implementation("org.xerial:sqlite-jdbc:3.47.2.0")
 }
 
 tasks {
+    val mainClassName = "cn.harryh.arkpets.DesktopLauncher"
+    val assetsDir = File("../assets")
+
     processResources {
         includeEmptyDirs = false
         exclude(
@@ -59,22 +64,25 @@ tasks {
     }
 
     /* DISTRIBUTION TASKS */
+    // RootProject vars
+    val appName: String by rootProject
+    val appAuthor: String by rootProject
+    val appVersion: String by rootProject
     // Environment vars
-    val rootDir: String = File(".").absolutePath
     val javaHome: String = System.getProperty("java.home")
     val osName = System.getProperty("os.name").lowercase().split(' ')[0]
     // Distribution related vars
     val jarLibDir = "$buildDir/libs"
-    val jarLibName = "${project.name}-${project.version}"
+    val jarLibName = "$name-$version"
     val jlinkRuntimeDir = "$buildDir/jlink"
     val jlinkRuntimeImg = "$jlinkRuntimeDir/runtime"
     val jlinkModuleList =
         "java.base,java.desktop,java.logging,java.management,java.scripting,jdk.crypto.ec,jdk.localedata,jdk.unsupported"
     val jlinkLocalesList = "en-US,zh-CN"
     val jpackageDir = "$buildDir/jpackage"
-    val issFileRel = "docs/scripts/ExePacking.iss"
+    val issFileRel = "$rootDir/docs/scripts/ExePacking.iss"
     val distDir = "$buildDir/dist"
-    val distName = "${rootProject.ext.get("appName")}-v${project.version}"
+    val distName = "$appName-v$version"
 
     // Generates a distributable JAR file for the app.
     register<Jar>("distJar") {
@@ -82,16 +90,19 @@ tasks {
         dependsOn(classes)
 
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        manifest {
-            "Main-Class" to mainClassName
-        }
 
         dependsOn(configurations.runtimeClasspath)
+
         from(
             configurations.runtimeClasspath.get().map {
                 if (it.isDirectory) it else zipTree(it)
             }
         )
+
+        manifest {
+            attributes("Main-Class" to mainClassName)
+            attributes(jar.get().manifest.attributes)
+        }
 
         with(jar.get())
 
@@ -141,10 +152,12 @@ tasks {
         }
 
         doLast {
+            println("Copying $rootDir/LICENSE to $jpackageDir")
             copy {
                 from("$rootDir/LICENSE")
                 into(jpackageDir)
             }
+            println("LICENSE file copied successfully")
             delete(jlinkRuntimeDir)
         }
 
@@ -155,13 +168,14 @@ tasks {
             "--input", jarLibDir,
             "--dest", jpackageDir,
             "--type", "app-image",
-            "--name", rootProject.ext.get("appName") as String,
-            "--vendor", rootProject.ext.get("appAuthor") as String,
-            "--app-version", project.version as String,
+            "--name", appName,
+            "--vendor", appAuthor,
+            "--app-version", appVersion,
             "--main-class", mainClassName,
-            "--main-jar", jar.get().name,
+            "--main-jar", jar.get().archiveFile.get().asFile.absolutePath,
             "--runtime-image", jlinkRuntimeImg
         )
+
         when {
             osName.contains("windows") -> {
                 commands.add("--icon")
@@ -178,6 +192,7 @@ tasks {
                 commands.add("-XstartOnFirstThread")
             }
         }
+
         commandLine = commands
     }
 

@@ -67,7 +67,7 @@ allprojects {
     }
 
     tasks {
-        withType<JavaCompile>().configureEach() {
+        withType<JavaCompile>().configureEach {
             options.encoding = "UTF-8"
             options.release.set(targetJavaVersion)
         }
@@ -83,6 +83,7 @@ allprojects {
                     "Build-By" to System.getProperty("user.name"),
                     "Build-TimeStamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(Date()),
                     "Build-Version" to version,
+                    "Version-Type" to getVersionMetadata(),
                     "Created-By" to "Gradle ${gradle.gradleVersion}",
                     "Build-Jdk" to "${System.getProperty("java.version")} " +
                             "(${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",

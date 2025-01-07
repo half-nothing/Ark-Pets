@@ -6,6 +6,10 @@ sourceSets {
     }
 }
 
+detekt {
+    source.setFrom("src/")
+}
+
 dependencies {
     val gdxVersion: String by rootProject
     val jnaVersion: String by rootProject

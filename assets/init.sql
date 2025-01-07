@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "metadata"
 (
     "id"    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "group" TEXT    NOT NULL,
     "key"   TEXT    NOT NULL,
     "value" TEXT    NOT NULL
 );
@@ -15,7 +16,8 @@ CREATE TABLE IF NOT EXISTS "model_info"
     "name"            TEXT    NOT NULL,
     "appellation"     TEXT,
     "skin_group_id"   TEXT    NOT NULL,
-    "skin_group_name" TEXT    NOT NULL
+    "skin_group_name" TEXT    NOT NULL,
+    "md5"             TEXT    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "model_assets"

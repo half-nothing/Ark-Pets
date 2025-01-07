@@ -17,4 +17,5 @@ object ModelInfos : Table<ModelInfo>("model_info") {
     val appellation = varchar("appellation").bindTo { it.appellation }.isNull()
     val skinGroupId = varchar("skin_group_id").bindTo { it.skinGroupId }.isNotNull()
     val skinGroupName = varchar("skin_group_name").bindTo { it.skinGroupName }.isNotNull()
+    val md5 = varchar("md5").bindTo { it.md5 }.isNotNull()
 }

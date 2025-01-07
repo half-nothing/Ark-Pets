@@ -5,6 +5,7 @@ package cn.harryh.arkpets;
 
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.Logger;
+import cn.harryh.arkpets.utils.ModelManager;
 import javafx.application.Application;
 
 import java.nio.charset.Charset;
@@ -59,6 +60,11 @@ public class DesktopLauncher {
                 System.exit(0);
             }
         };
+
+        if (System.getenv("VCS_DEBUG") != null) {
+            ModelManager.INSTANCE.init("models_data.json");
+            return;
+        }
 
         // Java FX bootstrap
         Application.launch(ArkHomeFX.class, args);

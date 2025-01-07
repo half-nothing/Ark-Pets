@@ -2,6 +2,7 @@ package cn.harryh.arkpets.database.entity
 
 import org.ktorm.entity.Entity
 
+@Suppress("ComplexInterface")
 interface ModelInfo : Entity<ModelInfo> {
     var id: Int
     var assetId: String
@@ -12,6 +13,7 @@ interface ModelInfo : Entity<ModelInfo> {
     var appellation: String?
     var skinGroupId: String
     var skinGroupName: String
+    var md5: String
 
     companion object : Entity.Factory<ModelInfo>()
 }

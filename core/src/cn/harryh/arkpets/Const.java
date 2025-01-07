@@ -107,6 +107,11 @@ public final class Const {
     }
 
 
+    public static class MetadataGroup {
+        public static final String defaultGroup = "default";
+        public static final String sortTagGroup = "sortTag";
+    }
+
     /** Logging presets definition class.
      */
     public static class LogConfig {

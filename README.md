@@ -12,6 +12,7 @@
    <p>
       <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/isHarryh/Ark-Pets?label=Java">
       <img alt="GitHub License" src="https://img.shields.io/github/license/isHarryh/Ark-Pets?label=License">
+      <img alt="Code Factor Grade" src="https://img.shields.io/codefactor/grade/github/isHarryh/Ark-Pets?label=CodeFactor">
       <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/isHarryh/Ark-Pets/build.yml?label=Build">
    </p>
    <sub>
@@ -68,7 +69,8 @@
 
 以下内容可能在遥远的将来被实现：
 
-- 国际化
+- 国际化与响应布局
+- 支持按需下载资源
 - 支持干员语音功能
 - 全面更新依赖库的版本
 - 支持透明模式等配置的记忆

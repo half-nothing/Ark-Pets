@@ -388,8 +388,6 @@ JFXSlider {
     -fx-border-color: -theme-color;
 }
 
-.config-field {}
-
 .config-field JFXComboBox {
     -fx-font-size: 12px;
     -fx-text-fill: -text-normal;

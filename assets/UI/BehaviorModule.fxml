@@ -69,6 +69,20 @@
                     <Canvas fx:id="configDeployPosition" height="150.0" width="150.0"/>
                 </HBox>
                 <Separator/>
+                <Label styleClass="config-group-title" text="过渡"/>
+                <HBox>
+                    <Label text="动画交叉过渡"/>
+                    <JFXComboBox fx:id="configTransitionAnimation" prefWidth="120.0"/>
+                </HBox>
+                <HBox>
+                    <Label text="常规属性过渡"/>
+                    <JFXComboBox fx:id="configTransitionDuration" prefWidth="120.0"/>
+                </HBox>
+                <HBox>
+                    <Label text="缓动函数"/>
+                    <JFXComboBox fx:id="configTransitionFunction" prefWidth="160.0"/>
+                </HBox>
+                <Separator/>
                 <Label styleClass="config-group-title" text="物理"/>
                 <HBox>
                     <Label text="重力加速度"/>

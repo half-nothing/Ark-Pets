@@ -5,7 +5,9 @@ package cn.harryh.arkpets.controllers;
 
 import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
+import cn.harryh.arkpets.transitions.EasingFunction;
 import cn.harryh.arkpets.utils.GuiComponents;
+import cn.harryh.arkpets.utils.GuiComponents.NamedItem;
 import cn.harryh.arkpets.utils.GuiPrefabs;
 import cn.harryh.arkpets.utils.Logger;
 import com.jfoenix.controls.*;
@@ -49,6 +51,13 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
     private HBox wrapperConfigDeployPosition;
     @FXML
     private Canvas configDeployPosition;
+
+    @FXML
+    private JFXComboBox<NamedItem<Float>> configTransitionAnimation;
+    @FXML
+    private JFXComboBox<NamedItem<Float>> configTransitionDuration;
+    @FXML
+    private JFXComboBox<String> configTransitionFunction;
     @FXML
     private JFXSlider configPhysicGravity;
     @FXML
@@ -143,6 +152,37 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
             app.config.initial_position_y = y;
             app.config.save();
         });
+
+        new GuiComponents.ComboBoxSetup<>(configTransitionAnimation).setItems(new NamedItem<>("禁用", 0f),
+                        new NamedItem<>("快速", 0.1f),
+                        new NamedItem<>("标准", 0.3f),
+                        new NamedItem<>("慢速", 0.6f))
+                .selectValue(app.config.render_animation_mixture, app.config.render_animation_mixture + "s（自定义）")
+                .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
+                    app.config.render_animation_mixture = newValue.value();
+                    app.config.save();
+                });
+        new GuiComponents.ComboBoxSetup<>(configTransitionDuration).setItems(new NamedItem<>("禁用", 0f),
+                        new NamedItem<>("快速", 0.1f),
+                        new NamedItem<>("标准", 0.3f),
+                        new NamedItem<>("慢速", 0.6f))
+                .selectValue(app.config.transition_duration, app.config.transition_duration + "s（自定义）")
+                .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
+                    app.config.transition_duration = newValue.value();
+                    app.config.save();
+                });
+
+        configTransitionFunction.getItems().setAll(EasingFunction.LINEAR.name(),
+                EasingFunction.EASE_OUT_SINE.name(),
+                EasingFunction.EASE_OUT_CUBIC.name(),
+                EasingFunction.EASE_OUT_QUINT.name());
+        configTransitionFunction.valueProperty().addListener(observable -> {
+            if (configTransitionFunction.getValue() != null) {
+                app.config.transition_type = configTransitionFunction.getValue();
+                app.config.save();
+            }
+        });
+        configTransitionFunction.getSelectionModel().select(app.config.transition_type);
 
         GuiComponents.SliderSetup<Integer> setupPhysicGravity = new GuiComponents.SimpleMultipleIntegerSliderSetup(configPhysicGravity, 10);
         setupPhysicGravity

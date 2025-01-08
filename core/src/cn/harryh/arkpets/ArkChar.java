@@ -114,7 +114,7 @@ public class ArkChar {
         for (AnimClip i : animList)
             for (AnimClip j : animList)
                 if (!i.fullName.equals(j.fullName))
-                    asd.setMix(i.fullName, j.fullName, (float)durationNormal.toSeconds());
+                    asd.setMix(i.fullName, j.fullName, config.render_animation_mixture);
         // 5.Animation state setup
         animationState = new AnimationState(asd);
         animationState.apply(skeleton);

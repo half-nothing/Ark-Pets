@@ -1,3 +1,7 @@
-/shelf/
-/uiDesigner.xml
-/workspace.xml
+# Keep repository files
+/*
+/codeStyles
+/inspectionProfiles
+/encodings.xml
+/gradle.xml
+/vcs.xml

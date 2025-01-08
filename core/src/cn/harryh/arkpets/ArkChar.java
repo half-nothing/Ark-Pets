@@ -118,7 +118,7 @@ public class ArkChar {
         // 5.Animation state setup
         animationState = new AnimationState(asd);
         animationState.apply(skeleton);
-        composer = new AnimComposer(animationState){
+        composer = new AnimComposer(animationState) {
             @Override
             protected void onApply(AnimData playing) {
                 Logger.debug("Animation", "Apply " + playing);
@@ -302,10 +302,10 @@ public class ArkChar {
         Insert insert = camera.getFittedInsert(snapshot, false, true);
         if (enableSnapshot) {
             snapshot.setColor(Color.RED);
-            snapshot.drawLine(0,-insert.bottom,camera.getWidth(),-insert.bottom);
-            snapshot.drawLine(0,camera.getHeight()+insert.top,camera.getWidth(),camera.getHeight()+insert.top);
-            snapshot.drawLine(-insert.left,0,-insert.left,camera.getHeight());
-            snapshot.drawLine(camera.getWidth()+insert.right,0,camera.getWidth()+insert.right,camera.getHeight());
+            snapshot.drawLine(0, -insert.bottom, camera.getWidth(), -insert.bottom);
+            snapshot.drawLine(0, camera.getHeight() + insert.top, camera.getWidth(), camera.getHeight() + insert.top);
+            snapshot.drawLine(-insert.left, 0, -insert.left, camera.getHeight());
+            snapshot.drawLine(camera.getWidth() + insert.right, 0, camera.getWidth() + insert.right, camera.getHeight());
             PixmapIO.writePNG(new FileHandle("temp/adjustCanvasSnapshot.png"), snapshot);
         }
         camera.setInsert(insert);

@@ -1,6 +1,6 @@
-package cn.harryh.arkpets.database.model
+package cn.harryh.arkpets.kt.database.model
 
-import cn.harryh.arkpets.database.entity.ModelAsset
+import cn.harryh.arkpets.kt.database.entity.ModelAsset
 import org.ktorm.dsl.isNotNull
 import org.ktorm.schema.Table
 import org.ktorm.schema.int

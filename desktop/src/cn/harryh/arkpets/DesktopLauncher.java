@@ -5,7 +5,7 @@ package cn.harryh.arkpets;
 
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.Logger;
-import cn.harryh.arkpets.utils.ModelManager;
+import cn.harryh.arkpets.kt.ModelManager;
 import javafx.application.Application;
 
 import java.nio.charset.Charset;
@@ -62,8 +62,10 @@ public class DesktopLauncher {
         };
 
         if (System.getenv("VCS_DEBUG") != null) {
+            Long startTime = System.currentTimeMillis();
             ModelManager.INSTANCE.init("models_data.json");
-            return;
+            Long endTime = System.currentTimeMillis();
+            Logger.info("System", "VCS_DEBUG: " + (endTime - startTime) + " ms");
         }
 
         // Java FX bootstrap

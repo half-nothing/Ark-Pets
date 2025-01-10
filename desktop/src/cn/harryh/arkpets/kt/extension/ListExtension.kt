@@ -1,7 +1,13 @@
-package cn.harryh.arkpets.extension
+package cn.harryh.arkpets.kt.extension
 
-import cn.harryh.arkpets.database.entity.Metadata
-import cn.harryh.arkpets.database.entity.ModelInfo
+import cn.harryh.arkpets.kt.database.DatabaseHelper
+import cn.harryh.arkpets.kt.database.entity.Metadata
+import cn.harryh.arkpets.kt.database.entity.ModelInfo
+import org.ktorm.database.Database
+
+val database: Database by lazy {
+    DatabaseHelper.getDatabase()
+}
 
 fun List<Metadata>.getOrNull(key: String): Metadata? {
     val filteredList = filter { it.key == key }

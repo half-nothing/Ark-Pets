@@ -38,6 +38,7 @@ tasks {
             "**/models_enemies/**",
             "**/models/**",
             "**/logs/**",
+            "**/data/**",
             "models_data.json"
         )
     }
@@ -85,7 +86,7 @@ tasks {
     val jlinkRuntimeDir = "$buildDir/jlink"
     val jlinkRuntimeImg = "$jlinkRuntimeDir/runtime"
     val jlinkModuleList =
-        "java.base,java.desktop,java.logging,java.management,java.scripting,jdk.crypto.ec,jdk.localedata,jdk.unsupported"
+        "java.base,java.desktop,java.logging,java.management,java.scripting,java.sql,jdk.crypto.ec,jdk.localedata,jdk.unsupported"
     val jlinkLocalesList = "en-US,zh-CN"
     val jpackageDir = "$buildDir/jpackage"
     val issFileRel = "$rootDir/docs/scripts/ExePacking.iss"

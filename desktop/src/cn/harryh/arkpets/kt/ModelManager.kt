@@ -1,15 +1,16 @@
-package cn.harryh.arkpets.utils
+package cn.harryh.arkpets.kt
 
 import cn.harryh.arkpets.Const
-import cn.harryh.arkpets.database.DatabaseHelper
-import cn.harryh.arkpets.database.entity.Metadata
-import cn.harryh.arkpets.database.entity.ModelAsset
-import cn.harryh.arkpets.database.entity.ModelInfo
-import cn.harryh.arkpets.database.entity.ModelTag
-import cn.harryh.arkpets.extension.*
-import cn.harryh.arkpets.model.ModelConfig
-import cn.harryh.arkpets.model.ModelData
+import cn.harryh.arkpets.kt.database.DatabaseHelper
+import cn.harryh.arkpets.kt.database.entity.Metadata
+import cn.harryh.arkpets.kt.database.entity.ModelAsset
+import cn.harryh.arkpets.kt.database.entity.ModelInfo
+import cn.harryh.arkpets.kt.database.entity.ModelTag
+import cn.harryh.arkpets.kt.extension.*
+import cn.harryh.arkpets.kt.model.ModelConfig
+import cn.harryh.arkpets.kt.model.ModelData
 import com.alibaba.fastjson2.JSON
+import org.ktorm.entity.toList
 import org.ktorm.entity.toMutableList
 import java.io.File
 
@@ -135,7 +136,13 @@ object ModelManager {
     fun init(jsonFileName: String) {
         val json = JSON.parseObject(File(jsonFileName).readText(), ModelData::class.java)
         storageDirectory = json.storageDirectory
-        checkMetadata(json)
-        json.data.forEach { handleModel(it.key, it.value) }
+        database.useTransaction {
+            checkMetadata(json)
+            json.data.forEach { handleModel(it.key, it.value) }
+        }
+        metadataList.clear()
+        modelInfoList.clear()
     }
+
+    fun getAllModels(): List<ModelInfo> = database.modelInfos.toList()
 }

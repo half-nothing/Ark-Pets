@@ -1,4 +1,4 @@
-package cn.harryh.arkpets.model
+package cn.harryh.arkpets.kt.model
 
 data class ModelData(
     val storageDirectory: Map<String, String>,

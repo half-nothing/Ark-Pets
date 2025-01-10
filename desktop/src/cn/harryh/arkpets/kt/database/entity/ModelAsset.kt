@@ -1,4 +1,4 @@
-package cn.harryh.arkpets.database.entity
+package cn.harryh.arkpets.kt.database.entity
 
 import org.ktorm.entity.Entity
 

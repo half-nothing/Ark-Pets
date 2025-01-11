@@ -53,9 +53,17 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
     private Canvas configDeployPosition;
 
     @FXML
+    private Label configTransitionAnimationLabel;
+    @FXML
     private JFXComboBox<NamedItem<Float>> configTransitionAnimation;
     @FXML
+    private JFXButton configTransitionAnimationHelp;
+    @FXML
+    private Label configTransitionDurationLabel;
+    @FXML
     private JFXComboBox<NamedItem<Float>> configTransitionDuration;
+    @FXML
+    private JFXButton configTransitionDurationHelp;
     @FXML
     private JFXComboBox<String> configTransitionFunction;
     @FXML
@@ -162,6 +170,18 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.render_animation_mixture = newValue.value();
                     app.config.save();
                 });
+        new GuiComponents.HelpHandbookEntrance(app.body, configTransitionAnimationHelp) {
+            @Override
+            public GuiComponents.Handbook getHandbook() {
+                return new GuiComponents.ControlHelpHandbook(configTransitionAnimationLabel) {
+                    @Override
+                    public String getContent() {
+                        return "此选项控制的是动画间切换的过渡速度，越慢的过渡会使得动画间切换越平滑。"
+                                + "如果禁用过渡，那么动画间切换将会立即完成，而不会进行交叉过渡。";
+                    }
+                };
+            }
+        };
         new GuiComponents.ComboBoxSetup<>(configTransitionDuration).setItems(new NamedItem<>("禁用", 0f),
                         new NamedItem<>("快速", 0.1f),
                         new NamedItem<>("标准", 0.3f),
@@ -171,6 +191,18 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.transition_duration = newValue.value();
                     app.config.save();
                 });
+        new GuiComponents.HelpHandbookEntrance(app.body, configTransitionDurationHelp) {
+            @Override
+            public GuiComponents.Handbook getHandbook() {
+                return new GuiComponents.ControlHelpHandbook(configTransitionDurationLabel) {
+                    @Override
+                    public String getContent() {
+                        return "此选项控制角色的位置、透明度、水平翻转、高亮描边等属性的过渡速度，越慢的过渡会使得这些属性变化得越平滑。"
+                                + "如果禁用过渡，这些属性的变化可能会表现得不自然。";
+                    }
+                };
+            }
+        };
 
         configTransitionFunction.getItems().setAll(EasingFunction.LINEAR.name(),
                 EasingFunction.EASE_OUT_SINE.name(),
@@ -234,6 +266,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.physic_speed_limit_y = setupPhysicSpeedLimitY.getValidatedValue();
                     app.config.save();
                 });
+
         EventHandler<MouseEvent> configPhysicRestoreEvent = e -> {
             ArkConfig defaults = ArkConfig.getDefaultConfig();
             if (defaults != null) {

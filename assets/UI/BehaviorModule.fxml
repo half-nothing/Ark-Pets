@@ -71,12 +71,14 @@
                 <Separator/>
                 <Label styleClass="config-group-title" text="过渡"/>
                 <HBox>
-                    <Label text="动画交叉过渡"/>
+                    <Label fx:id="configTransitionAnimationLabel" text="动画交叉过渡"/>
                     <JFXComboBox fx:id="configTransitionAnimation" prefWidth="120.0"/>
+                    <JFXButton fx:id="configTransitionAnimationHelp"/>
                 </HBox>
                 <HBox>
-                    <Label text="常规属性过渡"/>
+                    <Label fx:id="configTransitionDurationLabel" text="常规属性过渡"/>
                     <JFXComboBox fx:id="configTransitionDuration" prefWidth="120.0"/>
+                    <JFXButton fx:id="configTransitionDurationHelp"/>
                 </HBox>
                 <HBox>
                     <Label text="缓动函数"/>

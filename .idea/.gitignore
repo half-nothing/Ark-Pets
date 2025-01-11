@@ -1,7 +1,7 @@
 # Keep repository files
 /*
-/codeStyles
-/inspectionProfiles
-/encodings.xml
-/gradle.xml
-/vcs.xml
+!/codeStyles/
+!/inspectionProfiles/
+!/encodings.xml
+!/gradle.xml
+!/vcs.xml

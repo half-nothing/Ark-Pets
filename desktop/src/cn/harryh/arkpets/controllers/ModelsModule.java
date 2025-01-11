@@ -44,6 +44,8 @@ import static cn.harryh.arkpets.utils.GuiPrefabs.tooltipStyle;
 
 public final class ModelsModule implements Controller<ArkHomeFX> {
     @FXML
+    private Label loadEmptyAction;
+    @FXML
     private Pane loadFailureTip;
     @FXML
     private JFXButton searchModelConfirm;
@@ -110,10 +112,12 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     private JFXListCell<AssetItem> selectedModelCell;
     private ArrayList<JFXListCell<AssetItem>> modelCellList = new ArrayList<>();
     private ObservableSet<String> filterTagSet = FXCollections.observableSet();
+
     private GuiPrefabs.PeerNodeComposer infoPaneComposer;
     private GuiPrefabs.PeerNodeComposer mngBtnComposer;
     private GuiComponents.NoticeBar datasetTooLowVerNotice;
     private GuiComponents.NoticeBar datasetTooHighVerNotice;
+
     private final SVGPath favIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR, GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
     private final SVGPath favFillIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL, GuiPrefabs.Colors.COLOR_WARNING);
     private boolean filterFavorite;
@@ -234,12 +238,20 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         searchModelConfirm.setOnAction(e -> modelSearch(searchModelInput.getText()));
 
         searchModelReset.setOnAction(e -> app.popLoading(ev -> {
+            Logger.debug("ModelManager", "Reset search and filter conditions");
             searchModelInput.clear();
             searchModelInput.requestFocus();
             filterTagSet.clear();
             modelSearch("");
             infoPaneComposer.activate(0);
         }));
+
+        loadEmptyAction.setOnMouseClicked(e -> {
+            Logger.debug("ModelManager", "Reset requested from placeholder");
+            if (filterFavorite)
+                topFavorite.getOnAction().handle(new ActionEvent(loadEmptyAction, topFavorite));
+            searchModelReset.getOnAction().handle(new ActionEvent(loadEmptyAction, searchModelReset));
+        });
 
         searchModelRandom.setOnAction(e -> modelRandom());
 
@@ -412,6 +424,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         });
 
         topFavorite.setOnAction(e -> {
+            Logger.debug("ModelManager", "Toggle favorite display");
             searchModelView.scrollTo(0);
             if (filterFavorite) {
                 GuiPrefabs.replaceStyleClass(topFavorite, "btn-primary", "btn-secondary");

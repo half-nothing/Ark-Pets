@@ -475,7 +475,7 @@ ProgressBar:indeterminate>.bar {
 
 #Loading-failure-tip,
 #Loading-waiting-tip {
-    -fx-background-color: #F4F4F4D0;
+    -fx-background-color: #F4F4F4;
 }
 
 #Loading-failure-tip-text {
@@ -489,6 +489,10 @@ ProgressBar:indeterminate>.bar {
 #Loading-waiting-tip>* {
     -fx-fill: derive(-theme-color, 20%);
     -fx-font-weight: bold;
+}
+
+#Loading-empty-tip>* {
+    -fx-fill: dimgray;
 }
 
 #Title-bar {

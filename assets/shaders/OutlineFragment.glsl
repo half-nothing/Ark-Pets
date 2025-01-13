@@ -10,6 +10,7 @@ varying vec2 v_texCoords;       // From VS
 uniform sampler2D u_texture;    // From TCPB
 uniform vec4 u_outlineColor;    // Required
 uniform float u_outlineWidth;   // Required
+uniform float u_outlineAlpha;   // Required
 uniform ivec2 u_textureSize;    // Required
 uniform float u_alpha;          // Required
 
@@ -74,7 +75,7 @@ vec4 getOutlined() {
         vec4 neighbor = getGaussianNeighborsSum(relOutlineWidth) * c_outlineOverstate;
         if (neighbor.a > c_alphaLv0) {
             texColor.rgb = u_outlineColor.rgb;
-            texColor.a = min(1.0, neighbor.a) * u_outlineColor.a;
+            texColor.a = min(1.0, neighbor.a) * u_outlineColor.a * u_outlineAlpha;
         }
     }
     return texColor;

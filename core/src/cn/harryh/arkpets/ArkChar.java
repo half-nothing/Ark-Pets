@@ -39,9 +39,10 @@ public class ArkChar {
 
     private final TwoColorPolygonBatch batch;
     private Texture bgTexture;
+    private final float outlineWidth;
     private final Color outlineColor;
     private final TransitionFloat offsetY;
-    private final TransitionFloat outlineWidth;
+    private final TransitionFloat outlineAlpha;
     private final TransitionFloat alpha;
 
     private final ShaderProgram shader1;
@@ -80,7 +81,7 @@ public class ArkChar {
         float easingDuration = Math.max(0, config.transition_duration);
         position = new TransitionVector3(easingFunction, easingDuration);
         offsetY = new TransitionFloat(easingFunction, easingDuration);
-        outlineWidth = new TransitionFloat(easingFunction, easingDuration);
+        outlineAlpha = new TransitionFloat(easingFunction, easingDuration);
         alpha = new TransitionFloat(easingFunction, easingDuration);
         // 3.Skeleton setup
         SkeletonData skeletonData;
@@ -129,6 +130,7 @@ public class ArkChar {
         };
         // 6.Canvas setup
         setCanvas(ArkConfig.getGdxColorFrom(config.canvas_color));
+        outlineWidth = config.render_outline_width;
         outlineColor = ArkConfig.getGdxColorFrom(config.render_outline_color);
         stageInsertMap = new HashMap<>();
         for (AnimStage stage : animList.clusterByStage().keySet()) {
@@ -167,11 +169,11 @@ public class ArkChar {
         return composer.offer(animData);
     }
 
-    /** Requests to set the outline width of the character.
-     * @param width The outline width in pixel.
+    /** Requests to set the outline's alpha value of the character.
+     * @param newAlpha The new alpha value ranging in [0,1].
      */
-    public void setOutlineWidth(float width) {
-        outlineWidth.reset(Math.max(0f, width));
+    public void setOutlineAlpha(float newAlpha) {
+        outlineAlpha.reset(Math.max(0f, Math.min(1f, newAlpha)));
     }
 
     /** Requests to set the alpha value of the ultimate rendering process.
@@ -221,7 +223,7 @@ public class ArkChar {
         position.reset(camera.getWidth() >> 1, position.end().y, position.end().z);
         position.addProgress(Gdx.graphics.getDeltaTime());
         offsetY.addProgress(Gdx.graphics.getDeltaTime());
-        outlineWidth.addProgress(Gdx.graphics.getDeltaTime());
+        outlineAlpha.addProgress(Gdx.graphics.getDeltaTime());
         alpha.addProgress(Gdx.graphics.getDeltaTime());
         skeleton.setPosition(position.now().x, position.now().y + offsetY.now());
         skeleton.setScaleX(position.now().z);
@@ -244,7 +246,8 @@ public class ArkChar {
         Texture passedTexture = camera.getFBO().getColorBufferTexture();
         shader2.bind();
         shader2.setUniformf("u_outlineColor", outlineColor.r, outlineColor.g, outlineColor.b, outlineColor.a);
-        shader2.setUniformf("u_outlineWidth", outlineWidth.now());
+        shader2.setUniformf("u_outlineWidth", outlineWidth);
+        shader2.setUniformf("u_outlineAlpha", outlineAlpha.now());
         shader2.setUniformi("u_textureSize", passedTexture.getWidth(), passedTexture.getHeight());
         shader2.setUniformf("u_alpha", alpha.now());
         batch.setShader(shader2);

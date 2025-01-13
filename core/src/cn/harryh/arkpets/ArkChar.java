@@ -139,8 +139,8 @@ public class ArkChar {
                 stageInsertMap.put(stage, camera.getInsert().clone());
                 Logger.info("Character", stage + " using " + camera);
             } else {
-                Logger.error("Character", stage + " canvas size exceeded limit.");
-                throw new RuntimeException("Launch ArkPets failed, canvas setup failsafe triggered.");
+                // Failed, then not to put into stageInsertMap
+                Logger.warn("Character", stage + " unable to find a proper canvas size");
             }
         }
         camera.setInsertMaxed();
@@ -206,8 +206,10 @@ public class ArkChar {
      * @throws IndexOutOfBoundsException If the given stage isn't in the internal stage map.
      */
     public void adjustCanvas(AnimStage animStage) {
-        if (!stageInsertMap.containsKey(animStage))
+        if (!stageInsertMap.containsKey(animStage)) {
+            Logger.error("Character", "Failed to adjust the canvas because the given stage corrupted");
             throw new IndexOutOfBoundsException("No such key " + animStage);
+        }
         camera.setInsert(stageInsertMap.get(animStage));
     }
 

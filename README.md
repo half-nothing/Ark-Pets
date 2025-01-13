@@ -6,7 +6,7 @@
    <h1> Ark-Pets </h1>
    <img alt="ArkPets icon" width="64" src="https://raw.githubusercontent.com/isHarryh/Ark-Pets/v3.x/assets/icons/icon.png">
    <p>
-      Arknights Desktop Pets | 明日方舟桌宠 <br>
+      Arknights Desktop Pets | 明日方舟桌宠 (ArkPets) <br>
       <code><b> v3.5 </b></code>
    </p>
    <p>
@@ -116,7 +116,7 @@
 - 如果您想添加自定义的模型，[点击查看](docs/CustomModel.md)说明。
 - 如果您想使用直播流软件捕捉桌宠窗口，可以在启动器 “选项” 页面禁用 “桌宠作为后台程序启动”。
 
-由于需要调用 Win32 特有的 API，目前本程序不支持在其他操作系统运行。
+目前本程序不支持在其他操作系统运行。好消息是，对于 MacOS 和 Linux 的支持已处于开发阶段，敬请期待。
 
 ## 关 于 <sub>About</sub>
 
@@ -135,6 +135,16 @@
 您可以通过提交 [Issues](https://github.com/isHarryh/Ark-Pets/issues) 等各种方式参与本项目的贡献。 提交 Issues 前，请确认您的议题与已有的议题不重复。提交 Issues 时，请您完整地填写议题模板。
 
 - 另见 ~~很久没更新的~~ [开发者 Wiki](https://github.com/isHarryh/Ark-Pets/wiki)
+
+### 友情链接
+
+以下项目是 ArkPets 的关联或衍生项目：
+
+- [isHarryh / Ark-Models](https://github.com/isHarryh/Ark-Models)：明日方舟 Spine 模型库
+- [litwak913 / Ark-Pets-Integration](https://github.com/litwak913/Ark-Pets-Integration)：ArkPets 针对其他桌面系统的集成库
+- [fuyufjh / ArkPets-Web](https://github.com/fuyufjh/ArkPets-Web)：ArkPets 在网页渲染器上的独立实现
+- [isHarryh / Ark-Unpacker](https://github.com/isHarryh/Ark-Unpacker)：用于解包游戏资源的实用工具
+- [Aloento / SuperSpineViewer](https://github.com/Aloento/SuperSpineViewer)：用于查看 Spine 模型的实用工具
 
 -----
 

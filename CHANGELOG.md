@@ -1,5 +1,46 @@
 # 更新日志 / CHANGELOG
 
+## v3.5
+| **新增**                                |                                         |
+|:--------------------------------------|:----------------------------------------|
+| [`#86`]<br>[`e998e4a`]<br>[`7042699`] | 新增了**收藏模型**的功能，现在可以对模型进行收藏并在列表中单独显示它们。  |
+| [`88ffa1e`]                           | 新增了启动器界面的**窗口圆角和窗口阴影**，使得启动器的外观更加现代。    |                                      
+| [`#90`]<br>[`8183242`]<br>[`a38e737`] | 新增了命令行选项 `--load-lib` 用于载入外部库。          |
+| [`#93`]<br>[`16b34aa`]                | 新增了命令行选项 `--enable-snapshot` 用于启用调试性截图。 |
+| [`c36ec5e`]<br>[`f5c09bd`]            | 新增了可以调节桌宠的动画交叉过渡时长等过渡设置的功能。             |
+| [`97095c9`]                           | 新增了启动器模型页面的列表中“没有符合条件的模型”时的一个提示。        |
+
+| **修复**                            |                                           |
+|:----------------------------------|:------------------------------------------|
+| [`#91`]<br>[`#92`]<br>[`dadba6d`] | 修复了特定运行环境下由 Java Access Bridge 导致的软件崩溃问题。 |
+| [`aeed07c`]                       | 修复了特定情况下因物理解算溢出而导致的桌宠异常浮空或位置卡死的问题。        |
+| [`47798fe`]                       | 修复了个别敌方角色因预渲染检查未通过而无法启动的问题。               |
+
+| **优化**      |                         |
+|:------------|:------------------------|
+| [`1072550`] | 优化了缓动函数的代码逻辑。           |
+| [`82a5cee`] | 优化了高亮描边的过渡方式，使之表现得更加自然。 |
+
+[`#86`]: https://github.com/isHarryh/Ark-Pets/pull/86
+[`#90`]: https://github.com/isHarryh/Ark-Pets/pull/90
+[`#91`]: https://github.com/isHarryh/Ark-Pets/issues/91
+[`#92`]: https://github.com/isHarryh/Ark-Pets/pull/92
+[`#93`]: https://github.com/isHarryh/Ark-Pets/pull/93
+[`e998e4a`]: https://github.com/isHarryh/Ark-Pets/commit/e998e4a374ab39424492ce9b1986f0eb35d6e568
+[`7042699`]: https://github.com/isHarryh/Ark-Pets/commit/70426997992a969ae59bb05122d6ca2683d2186e
+[`88ffa1e`]: https://github.com/isHarryh/Ark-Pets/commit/88ffa1eee50531da4427a4e14c55fa315a7e7743
+[`8183242`]: https://github.com/isHarryh/Ark-Pets/commit/8183242e92cafd4fb3b8002f692fc84bb6f529db
+[`a38e737`]: https://github.com/isHarryh/Ark-Pets/commit/a38e737b1911c24fe4ebef46f56c28e0c948e0c3
+[`1072550`]: https://github.com/isHarryh/Ark-Pets/commit/10725500e19a86d902f192b9607cc3f7ef114e4a
+[`16b34aa`]: https://github.com/isHarryh/Ark-Pets/commit/16b34aa38046199ff1c461e5d5f8f2760e311a95
+[`dadba6d`]: https://github.com/isHarryh/Ark-Pets/commit/dadba6da2b1aad68e5937bb6bd739db58c97be56
+[`aeed07c`]: https://github.com/isHarryh/Ark-Pets/commit/aeed07caebf11568cab09691dcfb8a2a7ad09ae2
+[`c36ec5e`]: https://github.com/isHarryh/Ark-Pets/commit/c36ec5e8d65c42a3d07ae8f9957a29bea7d399f8
+[`f5c09bd`]: https://github.com/isHarryh/Ark-Pets/commit/f5c09bdda535c75cdba9039d3d38f7cfba1da1df
+[`97095c9`]: https://github.com/isHarryh/Ark-Pets/commit/97095c9f27505d556d7cacaafb2092e3766552c9
+[`47798fe`]: https://github.com/isHarryh/Ark-Pets/commit/47798fecd17623a18d48c5b92b7246fd02e0b43a
+[`82a5cee`]: https://github.com/isHarryh/Ark-Pets/commit/82a5ceedd48c83ee699a036d316f0e44dee39a77
+
 ## v3.4
 | **新增**                 |                                       |
 |:-----------------------|:--------------------------------------|

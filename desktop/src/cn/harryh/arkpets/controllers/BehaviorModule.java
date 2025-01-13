@@ -6,8 +6,7 @@ package cn.harryh.arkpets.controllers;
 import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.transitions.EasingFunction;
-import cn.harryh.arkpets.utils.GuiComponents;
-import cn.harryh.arkpets.utils.GuiComponents.NamedItem;
+import cn.harryh.arkpets.utils.GuiComponents.*;
 import cn.harryh.arkpets.utils.GuiPrefabs;
 import cn.harryh.arkpets.utils.Logger;
 import com.jfoenix.controls.*;
@@ -110,7 +109,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
             app.config.save();
         });
 
-        GuiComponents.SliderSetup<Integer> setupBehaviorAiActivation = new GuiComponents.SimpleIntegerSliderSetup(configBehaviorAiActivation);
+        SliderSetup<Integer> setupBehaviorAiActivation = new SimpleIntegerSliderSetup(configBehaviorAiActivation);
         setupBehaviorAiActivation
                 .setDisplay(configBehaviorAiActivationValue, "%d 级", "活跃级别 (activation level)")
                 .setRange(0, 8)
@@ -138,7 +137,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
             app.config.save();
         });
 
-        GuiComponents.SliderSetup<Integer> setupDeployMarginBottom = new GuiComponents.SimpleIntegerSliderSetup(configDeployMarginBottom);
+        SliderSetup<Integer> setupDeployMarginBottom = new SimpleIntegerSliderSetup(configDeployMarginBottom);
         setupDeployMarginBottom
                 .setDisplay(configDeployMarginBottomValue, "%d px", "像素 (pixel)")
                 .setRange(0, 120)
@@ -150,7 +149,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                 });
 
         GuiPrefabs.bindToggleAndWrapper(toggleConfigDeployPosition, wrapperConfigDeployPosition, durationFast);
-        GuiComponents.DotPickerSetup setupDeployPosition = new GuiComponents.DotPickerSetup(configDeployPosition);
+        DotPickerSetup setupDeployPosition = new DotPickerSetup(configDeployPosition);
         setupDeployPosition.setRelXY(app.config.initial_position_x, app.config.initial_position_y);
         setupDeployPosition.setOnDotPicked(e -> {
             float x = (float)setupDeployPosition.getRelX();
@@ -161,7 +160,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
             app.config.save();
         });
 
-        new GuiComponents.ComboBoxSetup<>(configTransitionAnimation).setItems(new NamedItem<>("禁用", 0f),
+        new ComboBoxSetup<>(configTransitionAnimation).setItems(new NamedItem<>("禁用", 0f),
                         new NamedItem<>("快速", 0.1f),
                         new NamedItem<>("标准", 0.3f),
                         new NamedItem<>("慢速", 0.6f))
@@ -170,10 +169,10 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.render_animation_mixture = newValue.value();
                     app.config.save();
                 });
-        new GuiComponents.HelpHandbookEntrance(app.body, configTransitionAnimationHelp) {
+        new HelpHandbookEntrance(app.body, configTransitionAnimationHelp) {
             @Override
-            public GuiComponents.Handbook getHandbook() {
-                return new GuiComponents.ControlHelpHandbook(configTransitionAnimationLabel) {
+            public Handbook getHandbook() {
+                return new ControlHelpHandbook(configTransitionAnimationLabel) {
                     @Override
                     public String getContent() {
                         return "此选项控制的是动画间切换的过渡速度，越慢的过渡会使得动画间切换越平滑。"
@@ -182,7 +181,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                 };
             }
         };
-        new GuiComponents.ComboBoxSetup<>(configTransitionDuration).setItems(new NamedItem<>("禁用", 0f),
+        new ComboBoxSetup<>(configTransitionDuration).setItems(new NamedItem<>("禁用", 0f),
                         new NamedItem<>("快速", 0.1f),
                         new NamedItem<>("标准", 0.3f),
                         new NamedItem<>("慢速", 0.6f))
@@ -191,10 +190,10 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.transition_duration = newValue.value();
                     app.config.save();
                 });
-        new GuiComponents.HelpHandbookEntrance(app.body, configTransitionDurationHelp) {
+        new HelpHandbookEntrance(app.body, configTransitionDurationHelp) {
             @Override
-            public GuiComponents.Handbook getHandbook() {
-                return new GuiComponents.ControlHelpHandbook(configTransitionDurationLabel) {
+            public Handbook getHandbook() {
+                return new ControlHelpHandbook(configTransitionDurationLabel) {
                     @Override
                     public String getContent() {
                         return "此选项控制角色的位置、透明度、水平翻转、高亮描边等属性的过渡速度，越慢的过渡会使得这些属性变化得越平滑。"
@@ -216,7 +215,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
         });
         configTransitionFunction.getSelectionModel().select(app.config.transition_type);
 
-        GuiComponents.SliderSetup<Integer> setupPhysicGravity = new GuiComponents.SimpleMultipleIntegerSliderSetup(configPhysicGravity, 10);
+        SliderSetup<Integer> setupPhysicGravity = new SimpleMultipleIntegerSliderSetup(configPhysicGravity, 10);
         setupPhysicGravity
                 .setDisplay(configPhysicGravityValue, "%d px/s²", "像素每平方秒 (pixel/s²)")
                 .setRange(0, 2000)
@@ -226,7 +225,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.physic_gravity_acc = setupPhysicGravity.getValidatedValue();
                     app.config.save();
                 });
-        GuiComponents.SliderSetup<Integer> setupPhysicAirFriction = new GuiComponents.SimpleMultipleIntegerSliderSetup(configPhysicAirFriction, 10);
+        SliderSetup<Integer> setupPhysicAirFriction = new SimpleMultipleIntegerSliderSetup(configPhysicAirFriction, 10);
         setupPhysicAirFriction
                 .setDisplay(configPhysicAirFrictionValue, "%d px/s²", "像素每平方秒 (pixel/s²)")
                 .setRange(0, 2000)
@@ -236,7 +235,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.physic_air_friction_acc = setupPhysicAirFriction.getValidatedValue();
                     app.config.save();
                 });
-        GuiComponents.SliderSetup<Integer> setupPhysicStaticFriction = new GuiComponents.SimpleMultipleIntegerSliderSetup(configPhysicStaticFriction, 10);
+        SliderSetup<Integer> setupPhysicStaticFriction = new SimpleMultipleIntegerSliderSetup(configPhysicStaticFriction, 10);
         setupPhysicStaticFriction
                 .setDisplay(configPhysicStaticFrictionValue, "%d px/s²", "像素每平方秒 (pixel/s²)")
                 .setRange(0, 2000)
@@ -246,7 +245,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.physic_static_friction_acc = setupPhysicStaticFriction.getValidatedValue();
                     app.config.save();
                 });
-        GuiComponents.SliderSetup<Integer> setupPhysicSpeedLimitX = new GuiComponents.SimpleMultipleIntegerSliderSetup(configPhysicSpeedLimitX, 10);
+        SliderSetup<Integer> setupPhysicSpeedLimitX = new SimpleMultipleIntegerSliderSetup(configPhysicSpeedLimitX, 10);
         setupPhysicSpeedLimitX
                 .setDisplay(configPhysicSpeedLimitXValue, "%d px/s", "像素每秒 (pixel/s)")
                 .setRange(0, 2000)
@@ -256,7 +255,7 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                     app.config.physic_speed_limit_x = setupPhysicSpeedLimitX.getValidatedValue();
                     app.config.save();
                 });
-        GuiComponents.SliderSetup<Integer> setupPhysicSpeedLimitY = new GuiComponents.SimpleMultipleIntegerSliderSetup(configPhysicSpeedLimitY, 10);
+        SliderSetup<Integer> setupPhysicSpeedLimitY = new SimpleMultipleIntegerSliderSetup(configPhysicSpeedLimitY, 10);
         setupPhysicSpeedLimitY
                 .setDisplay(configPhysicSpeedLimitYValue, "%d px/s", "像素每秒 (pixel/s)")
                 .setRange(0, 2000)

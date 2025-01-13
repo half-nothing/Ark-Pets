@@ -9,6 +9,7 @@ import cn.harryh.arkpets.assets.AssetItemGroup;
 import cn.harryh.arkpets.assets.ModelsDataset;
 import cn.harryh.arkpets.guitasks.*;
 import cn.harryh.arkpets.utils.*;
+import cn.harryh.arkpets.utils.GuiComponents.*;
 import com.alibaba.fastjson.JSONObject;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
@@ -115,8 +116,8 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
 
     private GuiPrefabs.PeerNodeComposer infoPaneComposer;
     private GuiPrefabs.PeerNodeComposer mngBtnComposer;
-    private GuiComponents.NoticeBar datasetTooLowVerNotice;
-    private GuiComponents.NoticeBar datasetTooHighVerNotice;
+    private NoticeBar datasetTooLowVerNotice;
+    private NoticeBar datasetTooHighVerNotice;
 
     private final SVGPath favIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR, GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
     private final SVGPath favFillIcon = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_STAR_FILL, GuiPrefabs.Colors.COLOR_WARNING);
@@ -267,7 +268,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     }
 
     private void initModelManage() {
-        datasetTooLowVerNotice = new GuiComponents.NoticeBar(noticeBox) {
+        datasetTooLowVerNotice = new NoticeBar(noticeBox) {
             @Override
             protected String getColorString() {
                 return GuiPrefabs.Colors.COLOR_WARNING;
@@ -283,7 +284,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                 return "模型库版本太旧，可能不被软件兼容，请您重新下载模型。";
             }
         };
-        datasetTooHighVerNotice = new GuiComponents.NoticeBar(noticeBox) {
+        datasetTooHighVerNotice = new NoticeBar(noticeBox) {
             @Override
             protected String getColorString() {
                 return GuiPrefabs.Colors.COLOR_WARNING;

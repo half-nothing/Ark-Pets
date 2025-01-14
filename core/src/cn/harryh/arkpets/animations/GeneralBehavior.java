@@ -7,7 +7,7 @@ import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.animations.AnimClip.*;
 import java.util.*;
 
-import static cn.harryh.arkpets.Const.*;
+import static cn.harryh.arkpets.Const.behaviorBaseWeight;
 
 
 public class GeneralBehavior extends Behavior {
@@ -59,10 +59,11 @@ public class GeneralBehavior extends Behavior {
     private AnimDataWeight[] getActionList(AnimClipGroup animList) {
         ArrayList<AnimDataWeight> actionList = new ArrayList<>(List.of(
                 new AnimDataWeight(animList.getLoopAnimData(AnimType.IDLE), (int)(behaviorBaseWeight / Math.sqrt(config.behavior_ai_activation))),
-                new AnimDataWeight(animList.getLoopAnimData(AnimType.SIT ).derive(50, 0), config.behavior_allow_sit  ? behaviorWeightLv2 : 0),
-                new AnimDataWeight(animList.getLoopAnimData(AnimType.MOVE).derive(0, +1), config.behavior_allow_walk ? behaviorWeightLv1 : 0),
-                new AnimDataWeight(animList.getLoopAnimData(AnimType.MOVE).derive(0, -1), config.behavior_allow_walk ? behaviorWeightLv1 : 0),
-                new AnimDataWeight(animList.getStrictAnimData(AnimType.SPECIAL).join(animList.getLoopAnimData(AnimType.IDLE)), 16)
+                new AnimDataWeight(animList.getLoopAnimData(AnimType.SIT).derive(50, 0), config.behavior_allow_sit  ? 1 << 6 : 0),
+                new AnimDataWeight(animList.getLoopAnimData(AnimType.SLEEP).derive(50, 0), config.behavior_allow_sleep ? 1 << 5 : 0),
+                new AnimDataWeight(animList.getLoopAnimData(AnimType.MOVE).derive(0, +1), config.behavior_allow_walk ? 1 << 5 : 0),
+                new AnimDataWeight(animList.getLoopAnimData(AnimType.MOVE).derive(0, -1), config.behavior_allow_walk ? 1 << 5 : 0),
+                new AnimDataWeight(animList.getStrictAnimData(AnimType.SPECIAL).join(animList.getLoopAnimData(AnimType.IDLE)), config.behavior_allow_walk ? 1 << 4 : 0)
         ));
         actionList.removeIf(e -> e.anim().isEmpty());
         return actionList.toArray(new AnimDataWeight[0]);

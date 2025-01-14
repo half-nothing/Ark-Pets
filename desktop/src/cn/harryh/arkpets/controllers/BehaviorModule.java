@@ -29,6 +29,10 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
     @FXML
     private JFXCheckBox configBehaviorAllowSit;
     @FXML
+    private JFXCheckBox configBehaviorAllowSleep;
+    @FXML
+    private JFXCheckBox configBehaviorAllowSpecial;
+    @FXML
     private JFXSlider configBehaviorAiActivation;
     @FXML
     private Label configBehaviorAiActivationValue;
@@ -106,6 +110,16 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
         configBehaviorAllowSit.setSelected(app.config.behavior_allow_sit);
         configBehaviorAllowSit.setOnAction(e -> {
             app.config.behavior_allow_sit = configBehaviorAllowSit.isSelected();
+            app.config.save();
+        });
+        configBehaviorAllowSleep.setSelected(app.config.behavior_allow_sleep);
+        configBehaviorAllowSleep.setOnAction(e -> {
+            app.config.behavior_allow_sleep = configBehaviorAllowSleep.isSelected();
+            app.config.save();
+        });
+        configBehaviorAllowSpecial.setSelected(app.config.behavior_allow_special);
+        configBehaviorAllowSpecial.setOnAction(e -> {
+            app.config.behavior_allow_special = configBehaviorAllowSpecial.isSelected();
             app.config.save();
         });
 

@@ -25,6 +25,10 @@
                     <JFXCheckBox fx:id="configBehaviorAllowSit" mnemonicParsing="false" text="允许坐下"/>
                 </HBox>
                 <HBox>
+                    <JFXCheckBox fx:id="configBehaviorAllowSleep" mnemonicParsing="false" text="允许躺下"/>
+                    <JFXCheckBox fx:id="configBehaviorAllowSpecial" mnemonicParsing="false" text="允许特殊动作"/>
+                </HBox>
+                <HBox>
                     <Label text="动作活跃度"/>
                     <JFXSlider fx:id="configBehaviorAiActivation"/>
                     <Label fx:id="configBehaviorAiActivationValue" text="0"/>

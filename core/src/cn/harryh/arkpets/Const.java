@@ -44,8 +44,6 @@ public final class Const {
 
     // Behavior presets
     public static final int behaviorBaseWeight      = 320;
-    public static final int behaviorWeightLv1       = 32;
-    public static final int behaviorWeightLv2       = 64;
     public static final float droppedThreshold      = 10f;
 
     // Duration presets

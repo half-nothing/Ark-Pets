@@ -68,7 +68,12 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
     @FXML
     private JFXButton configTransitionDurationHelp;
     @FXML
-    private JFXComboBox<String> configTransitionFunction;
+    private Label configTransitionFunctionLabel;
+    @FXML
+    private JFXComboBox<NamedItem<String>> configTransitionFunction;
+    @FXML
+    private JFXButton configTransitionFunctionHelp;
+
     @FXML
     private JFXSlider configPhysicGravity;
     @FXML
@@ -189,8 +194,8 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                 return new ControlHelpHandbook(configTransitionAnimationLabel) {
                     @Override
                     public String getContent() {
-                        return "此选项控制的是动画间切换的过渡速度，越慢的过渡会使得动画间切换越平滑。"
-                                + "如果禁用过渡，那么动画间切换将会立即完成，而不会进行交叉过渡。";
+                        return "此选项控制的是动画间切换的过渡速度，越慢的过渡会使得动画间切换越平滑。" +
+                                "如果禁用过渡，那么动画间切换将会立即完成，而不会进行交叉过渡。";
                     }
                 };
             }
@@ -210,24 +215,33 @@ public final class BehaviorModule implements Controller<ArkHomeFX> {
                 return new ControlHelpHandbook(configTransitionDurationLabel) {
                     @Override
                     public String getContent() {
-                        return "此选项控制角色的位置、透明度、水平翻转、高亮描边等属性的过渡速度，越慢的过渡会使得这些属性变化得越平滑。"
-                                + "如果禁用过渡，这些属性的变化可能会表现得不自然。";
+                        return "此选项控制角色的位置、透明度、水平翻转、高亮描边等属性的过渡速度，越慢的过渡会使得这些属性变化得越平滑。" +
+                                "如果禁用过渡，这些属性的变化可能会表现得不自然。";
                     }
                 };
             }
         };
-
-        configTransitionFunction.getItems().setAll(EasingFunction.LINEAR.name(),
-                EasingFunction.EASE_OUT_SINE.name(),
-                EasingFunction.EASE_OUT_CUBIC.name(),
-                EasingFunction.EASE_OUT_QUINT.name());
-        configTransitionFunction.valueProperty().addListener(observable -> {
-            if (configTransitionFunction.getValue() != null) {
-                app.config.transition_type = configTransitionFunction.getValue();
-                app.config.save();
+        new ComboBoxSetup<>(configTransitionFunction).setItems(new NamedItem<>("线性（Linear）", EasingFunction.LINEAR.name()),
+                        new NamedItem<>("正弦缓出（EaseOutSine）", EasingFunction.EASE_OUT_SINE.name()),
+                        new NamedItem<>("三次方缓出（EaseOutCubic）", EasingFunction.EASE_OUT_CUBIC.name()),
+                        new NamedItem<>("五次方缓出（EaseOutQuint）", EasingFunction.EASE_OUT_QUINT.name()))
+                .selectValue(app.config.transition_type, app.config.transition_type)
+                .setOnNonNullValueUpdated((observableValue, oldValue, newValue) -> {
+                    app.config.transition_type = newValue.value();
+                    app.config.save();
+                });
+        new HelpHandbookEntrance(app.body, configTransitionFunctionHelp) {
+            @Override
+            public Handbook getHandbook() {
+                return new ControlHelpHandbook(configTransitionFunctionLabel) {
+                    @Override
+                    public String getContent() {
+                        return "缓动函数决定了属性随时间变化的快慢。" +
+                                "线性函数使得属性按照固定的速度变化；缓入/缓出函数会在变化开始/结束时降低速度，从而使变化更加自然。";
+                    }
+                };
             }
-        });
-        configTransitionFunction.getSelectionModel().select(app.config.transition_type);
+        };
 
         SliderSetup<Integer> setupPhysicGravity = new SimpleMultipleIntegerSliderSetup(configPhysicGravity, 10);
         setupPhysicGravity

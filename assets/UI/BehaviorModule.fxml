@@ -85,8 +85,9 @@
                     <JFXButton fx:id="configTransitionDurationHelp"/>
                 </HBox>
                 <HBox>
-                    <Label text="缓动函数"/>
-                    <JFXComboBox fx:id="configTransitionFunction" prefWidth="160.0"/>
+                    <Label fx:id="configTransitionFunctionLabel" text="缓动函数"/>
+                    <JFXComboBox fx:id="configTransitionFunction" prefWidth="120.0"/>
+                    <JFXButton fx:id="configTransitionFunctionHelp"/>
                 </HBox>
                 <Separator/>
                 <Label styleClass="config-group-title" text="物理"/>

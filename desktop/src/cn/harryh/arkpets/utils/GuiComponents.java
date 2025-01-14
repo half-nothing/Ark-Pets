@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class GuiComponents {
      * @param <N> The value type of the items.
      */
     @SuppressWarnings("UnusedReturnValue")
-    public static class ComboBoxSetup<N extends Number> {
+    public static class ComboBoxSetup<N extends Serializable> {
         protected final ComboBox<NamedItem<N>> comboBox;
 
         public ComboBoxSetup(ComboBox<NamedItem<N>> comboBox) {
@@ -299,13 +300,13 @@ public class GuiComponents {
     }
 
 
-    public record NamedItem<N extends Number>(String name, N value) {
+    public record NamedItem<N extends Serializable>(String name, N value) {
         @Override
         public String toString() {
             return name;
         }
 
-        public static <N extends Number> NamedItem<N> match(List<NamedItem<N>> candidateOptions, N targetValue) {
+        public static <N extends Serializable> NamedItem<N> match(List<NamedItem<N>> candidateOptions, N targetValue) {
             for (NamedItem<N> i : candidateOptions)
                 if (targetValue.equals(i.value))
                     return i;

@@ -470,7 +470,7 @@ public class GuiComponents {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER, GuiPrefabs.COLOR_DANGER);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_DANGER, GuiPrefabs.COLOR_DANGER);
         }
     }
 
@@ -487,7 +487,7 @@ public class GuiComponents {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.COLOR_WARNING);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT, GuiPrefabs.COLOR_WARNING);
         }
     }
 
@@ -512,7 +512,7 @@ public class GuiComponents {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.COLOR_INFO);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP_ALT, GuiPrefabs.COLOR_INFO);
         }
     }
 
@@ -563,7 +563,7 @@ public class GuiComponents {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_DANGER, GuiPrefabs.COLOR_DANGER);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_DANGER, GuiPrefabs.COLOR_DANGER);
         }
     }
 
@@ -588,7 +588,7 @@ public class GuiComponents {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING, GuiPrefabs.COLOR_WARNING);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING, GuiPrefabs.COLOR_WARNING);
         }
     }
 
@@ -600,7 +600,7 @@ public class GuiComponents {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP, GuiPrefabs.COLOR_INFO);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP, GuiPrefabs.COLOR_INFO);
         }
     }
 }

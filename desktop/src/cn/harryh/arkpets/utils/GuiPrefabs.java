@@ -15,10 +15,11 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -42,24 +43,17 @@ import static cn.harryh.arkpets.Const.durationNormal;
 
 @SuppressWarnings("unused")
 public class GuiPrefabs {
-    public static final String tooltipStyle = "-fx-text-fill:#FFF;-fx-font-size:10px;-fx-font-weight:normal;";
+    public static final Color COLOR_INFO       = Color.web("#37B");
+    public static final Color COLOR_SUCCESS    = Color.web("#5B5");
+    public static final Color COLOR_WARNING    = Color.web("#E93");
+    public static final Color COLOR_DANGER     = Color.web("#F54");
+    public static final Color COLOR_WHITE      = Color.web("#FFF");
+    public static final Color COLOR_BLACK      = Color.web("#000");
+    public static final Color COLOR_DARK_GRAY  = Color.web("#222");
+    public static final Color COLOR_GRAY       = Color.web("#444");
+    public static final Color COLOR_LIGHT_GRAY = Color.web("#666");
 
-
-    public static class Colors {
-        public static final String COLOR_INFO       = "#37B";
-        public static final String COLOR_SUCCESS    = "#5B5";
-        public static final String COLOR_WARNING    = "#E93";
-        public static final String COLOR_DANGER     = "#F54";
-        public static final String COLOR_WHITE      = "#FFF";
-        public static final String COLOR_BLACK      = "#000";
-        public static final String COLOR_DARK_GRAY  = "#222";
-        public static final String COLOR_GRAY       = "#444";
-        public static final String COLOR_LIGHT_GRAY = "#666";
-
-        private Colors() {
-        }
-    }
-
+    private static final String tooltipStyle = "-fx-text-fill:#FFF;-fx-font-size:10px;-fx-font-weight:normal;";
 
     public static void fadeInNode(Node node, Duration duration, EventHandler<ActionEvent> onFinished) {
         FadeTransition fadeT = new FadeTransition(duration, node);
@@ -121,6 +115,12 @@ public class GuiPrefabs {
         node.getStyleClass().setAll(styleClass);
     }
 
+    public static void addTooltip(Control control, String content) {
+        Tooltip tooltip = new Tooltip(content);
+        tooltip.setStyle(tooltipStyle);
+        control.setTooltip(tooltip);
+    }
+
 
     public static class Icons {
         public static final String ICON_INFO        = "m12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-.001 5.75c.69 0 1.251.56 1.251 1.25s-.561 1.25-1.251 1.25-1.249-.56-1.249-1.25.559-1.25 1.249-1.25zm2.001 12.25h-4v-1c.484-.179 1-.201 1-.735v-4.467c0-.534-.516-.618-1-.797v-1h3v6.265c0 .535.517.558 1 .735v.999z";
@@ -146,6 +146,18 @@ public class GuiPrefabs {
             SVGPath svgPath = new SVGPath();
             svgPath.setContent(svg);
             svgPath.setFill(Paint.valueOf(color));
+            return svgPath;
+        }
+
+        /** Gets an SVGPath Node using the given path string and color.
+         * @param svg The SVG path string.
+         * @param color The specified color instance.
+         * @return JavaFX SVGPath Node.
+         */
+        public static SVGPath getIcon(String svg, Color color) {
+            SVGPath svgPath = new SVGPath();
+            svgPath.setContent(svg);
+            svgPath.setFill(color);
             return svgPath;
         }
 
@@ -182,7 +194,7 @@ public class GuiPrefabs {
             body.getChildren().add(h3);
 
             JFXDialogLayout layout = new JFXDialogLayout();
-            layout.setHeading(Dialogs.getHeading(graphic, title, Colors.COLOR_LIGHT_GRAY));
+            layout.setHeading(Dialogs.getHeading(graphic, title, COLOR_LIGHT_GRAY));
             layout.setBody(body);
             layout.setActions(Dialogs.getOkayButton(dialog));
             dialog.setContent(layout);
@@ -209,7 +221,7 @@ public class GuiPrefabs {
             body.getChildren().add(h3);
 
             JFXDialogLayout layout = new JFXDialogLayout();
-            layout.setHeading(Dialogs.getHeading(graphic, title, Colors.COLOR_LIGHT_GRAY));
+            layout.setHeading(Dialogs.getHeading(graphic, title, COLOR_LIGHT_GRAY));
             layout.setBody(body);
             JFXButton confirmButton = getOkayButton(dialog);
             JFXButton cancelButton = getCancelButton(dialog);
@@ -245,13 +257,14 @@ public class GuiPrefabs {
             content.getChildren().add(textArea);
 
             JFXDialogLayout layout = new JFXDialogLayout();
-            layout.setHeading(Dialogs.getHeading(Icons.getIcon(Icons.ICON_DANGER, Colors.COLOR_DANGER), "发生异常", Colors.COLOR_DANGER));
+            layout.setHeading(Dialogs.getHeading(Icons.getIcon(Icons.ICON_DANGER, COLOR_DANGER), "发生异常", COLOR_DANGER));
             layout.setBody(content);
 
             JFXButton button = new JFXButton();
             button.setText("导出日志");
-            button.setTextFill(Paint.valueOf(Colors.COLOR_WHITE));
-            button.setStyle("-fx-font-size:13px;-fx-text-fill:" + Colors.COLOR_WHITE + ";-fx-background-color:" + Colors.COLOR_WARNING);
+            button.setTextFill(COLOR_WHITE);
+            button.setFont(Font.font(13));
+            button.setBackground(new Background(new BackgroundFill(COLOR_INFO, null, null)));
             button.setOnAction(ev -> {
                 Logger.info("Dialog", "Ready to export logs");
                 // Collect related log files
@@ -335,24 +348,29 @@ public class GuiPrefabs {
                 actionList.add(index, action);
         }
 
-        public static Label getHeading(Node graphic, String text, String color) {
+        public static Label getHeading(Node graphic, String text, Color color) {
             Label label = new Label(text);
             label.setGraphic(graphic);
             label.setGraphicTextGap(5);
-            label.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:" + color);
+            label.setFont(Font.font(16));
+            label.setStyle("-fx-font-weight:bold");
+            label.setTextFill(color);
             return label;
         }
 
         public static Label getPrefabsH2(String text) {
             Label h2 = new Label(text);
-            h2.setStyle("-fx-font-size:16px;-fx-text-fill:" + Colors.COLOR_DARK_GRAY);
+            h2.setFont(Font.font(16));
+            h2.setTextFill(COLOR_DARK_GRAY);
             h2.setWrapText(true);
             return h2;
         }
 
         public static Label getPrefabsH3(String text) {
             Label h3 = new Label(text);
-            h3.setStyle("-fx-font-size:12px;-fx-min-height:38px;-fx-wrap-text:true;-fx-text-fill:" + Colors.COLOR_LIGHT_GRAY);
+            h3.setFont(Font.font(12));
+            h3.setTextFill(COLOR_LIGHT_GRAY);
+            h3.setMinHeight(38);
             h3.setWrapText(true);
             return h3;
         }
@@ -360,8 +378,9 @@ public class GuiPrefabs {
         public static JFXButton getCancelButton(JFXDialog dialog) {
             JFXButton button = new JFXButton();
             button.setText("取 消");
-            button.setTextFill(Paint.valueOf(Colors.COLOR_WHITE));
-            button.setStyle("-fx-font-size:13px;-fx-text-fill:" + Colors.COLOR_WHITE + ";-fx-background-color:" + Colors.COLOR_INFO);
+            button.setTextFill(COLOR_WHITE);
+            button.setFont(Font.font(13));
+            button.setBackground(new Background(new BackgroundFill(COLOR_INFO, null, null)));
             button.setOnAction(e -> disposeDialog(dialog));
             return button;
         }
@@ -369,8 +388,9 @@ public class GuiPrefabs {
         public static JFXButton getOkayButton(JFXDialog dialog) {
             JFXButton button = new JFXButton();
             button.setText("确 认");
-            button.setTextFill(Paint.valueOf(Colors.COLOR_WHITE));
-            button.setStyle("-fx-font-size:13px;-fx-text-fill:" + Colors.COLOR_WHITE + ";-fx-background-color:" + Colors.COLOR_INFO);
+            button.setTextFill(COLOR_WHITE);
+            button.setFont(Font.font(13));
+            button.setBackground(new Background(new BackgroundFill(COLOR_INFO, null, null)));
             button.setOnAction(e -> disposeDialog(dialog));
             return button;
         }
@@ -378,7 +398,9 @@ public class GuiPrefabs {
         public static JFXButton getGotoButton(JFXDialog dialog) {
             JFXButton button = new JFXButton();
             button.setText("前 往");
-            button.setStyle("-fx-font-size:13px;-fx-text-fill:" + Colors.COLOR_WHITE + ";-fx-background-color:" + Colors.COLOR_SUCCESS);
+            button.setTextFill(COLOR_WHITE);
+            button.setFont(Font.font(13));
+            button.setBackground(new Background(new BackgroundFill(COLOR_SUCCESS, null, null)));
             button.setOnAction(e -> disposeDialog(dialog));
             return button;
         }
@@ -386,7 +408,9 @@ public class GuiPrefabs {
         public static JFXButton getTrustButton(JFXDialog dialog) {
             JFXButton button = new JFXButton();
             button.setText("信 任");
-            button.setStyle("-fx-font-size:13px;-fx-text-fill:" + Colors.COLOR_WHITE + ";-fx-background-color:" + Colors.COLOR_WARNING);
+            button.setTextFill(COLOR_WHITE);
+            button.setFont(Font.font(13));
+            button.setBackground(new Background(new BackgroundFill(COLOR_WARNING, null, null)));
             button.setOnAction(e -> disposeDialog(dialog));
             return button;
         }

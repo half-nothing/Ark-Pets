@@ -12,7 +12,6 @@ import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
-import static cn.harryh.arkpets.utils.GuiPrefabs.Colors;
 import static cn.harryh.arkpets.utils.GuiPrefabs.Icons;
 
 
@@ -57,13 +56,13 @@ public class VerifyModelsTask extends GuiTask {
                         if (!item.isExisted()) {
                             // Dir missing:
                             Logger.info("Checker", "Model repo check finished (dir not integral)");
-                            dialogGraphic[0] = Icons.getIcon(Icons.ICON_WARNING_ALT, Colors.COLOR_WARNING);
+                            dialogGraphic[0] = Icons.getIcon(Icons.ICON_WARNING_ALT, GuiPrefabs.COLOR_WARNING);
                             dialogHeader[0] = "已发现问题，模型资源可能不完整";
                             dialogContent[0] = "资源 " + item.assetDir + " 不存在。重新下载模型文件可能解决此问题。";
                         } else {
                             // Dir existing but file missing
                             Logger.info("Checker", "Model repo check finished (file not integral)");
-                            dialogGraphic[0] = Icons.getIcon(Icons.ICON_WARNING_ALT, Colors.COLOR_WARNING);
+                            dialogGraphic[0] = Icons.getIcon(Icons.ICON_WARNING_ALT, GuiPrefabs.COLOR_WARNING);
                             dialogHeader[0] = "已发现问题，模型资源可能不完整";
                             dialogContent[0] = "资源 " + item.assetDir + " 缺少部分文件。重新下载模型文件可能解决此问题。";
                         }
@@ -74,7 +73,7 @@ public class VerifyModelsTask extends GuiTask {
 
                 if (!flag) {
                     Logger.info("Checker", "Model repo check finished (okay)");
-                    dialogGraphic[0] = Icons.getIcon(Icons.ICON_SUCCESS_ALT, Colors.COLOR_SUCCESS);
+                    dialogGraphic[0] = Icons.getIcon(Icons.ICON_SUCCESS_ALT, GuiPrefabs.COLOR_SUCCESS);
                     dialogHeader[0] = "模型资源是完整的。";
                     dialogContent[0] = "这只能说明本地的模型资源是完整的，但不一定是最新的。";
                 }

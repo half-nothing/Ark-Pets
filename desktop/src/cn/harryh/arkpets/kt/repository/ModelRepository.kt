@@ -69,7 +69,7 @@ object ModelRepository : Repository() {
                 it.value = value
                 updateMetaData(it)
             }
-            metadataCache.remove(it.key)
+            metadataCache.remove("${ModelRepository.repoName}.$group.$key")
             return
         }
         addMetaData(group, key, value)

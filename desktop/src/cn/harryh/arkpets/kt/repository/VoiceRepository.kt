@@ -15,7 +15,7 @@ object VoiceRepository : Repository() {
     }
 
     override fun initRepository() {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
     private fun executePendingOperations() {

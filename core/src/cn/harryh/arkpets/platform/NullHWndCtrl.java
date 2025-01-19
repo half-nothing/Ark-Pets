@@ -15,10 +15,10 @@ public class NullHWndCtrl extends HWndCtrl {
         super("", new WindowRect());
     }
 
-    public static NullHWndCtrl find(String className, String windowName){
-        if(windowName.equals("ArkPets")){
-            if(!NullHWndCtrl.startupFind){
-                NullHWndCtrl.startupFind=true;
+    public static NullHWndCtrl find(String className, String windowName) {
+        if (windowName.equals("ArkPets")) {
+            if (!NullHWndCtrl.startupFind) {
+                NullHWndCtrl.startupFind = true;
                 return null;
             }
         }
@@ -51,10 +51,10 @@ public class NullHWndCtrl extends HWndCtrl {
 
     @Override
     public void setWindowPosition(HWndCtrl insertAfter, int x, int y, int w, int h) {
-        if(lasth!=h||lastw!=w){
-            lasth=h;
-            lastw=w;
-            Gdx.graphics.setWindowedMode(w,h);
+        if (lasth != h || lastw != w) {
+            lasth = h;
+            lastw = w;
+            Gdx.graphics.setWindowedMode(w, h);
         }
     }
 

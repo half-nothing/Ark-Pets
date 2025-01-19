@@ -33,5 +33,6 @@
     "transition_duration":0.3,
     "transition_type":"EASE_OUT_CUBIC",
     "window_style_toolwindow":true,
-    "window_style_topmost":true
+    "window_style_topmost":true,
+    "window_system":"AUTO"
 }

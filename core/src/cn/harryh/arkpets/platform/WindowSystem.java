@@ -41,10 +41,24 @@ public enum WindowSystem {
     }
 
     /** Initializes the platform window system.
+     * @param platform WindowSystem to initialize.
      */
-    public static void init() {
-        PLATFORM = detectWindowSystem();
+    public static void init(WindowSystem platform) {
+        PLATFORM = platform;
+        if (PLATFORM == WindowSystem.AUTO){
+            PLATFORM = detectWindowSystem();
+        }
         Logger.info("System", "Using " + PLATFORM.toString() + " Window System");
+        switch (PLATFORM) {
+            // TODO
+        }
+    }
+
+    /** Get current WindowSystem.
+     * @return The current WindowSystem.
+     */
+    public static WindowSystem getWindowSystem() {
+        return PLATFORM;
     }
 
     /** Finds a window.
@@ -58,7 +72,7 @@ public enum WindowSystem {
                 return User32HWndCtrl.find(className, windowText);
             }
             default -> {
-                return new NullHWndCtrl();
+                return NullHWndCtrl.find(className, windowText);
             }
         }
     }
@@ -96,5 +110,24 @@ public enum WindowSystem {
      */
     public static void free() {
         // TODO
+    }
+
+    /** Return current WindowSystem should enable resize.
+     */
+    public static boolean needResize() {
+        switch (PLATFORM) {
+            case X11, MUTTER, KWIN -> {
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    /** Return current WindowSystem should enable decoration.
+     */
+    public static boolean needDecorated() {
+        return PLATFORM == NULL;
     }
 }

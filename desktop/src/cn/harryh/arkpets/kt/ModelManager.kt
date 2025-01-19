@@ -3,145 +3,107 @@ package cn.harryh.arkpets.kt
 import cn.harryh.arkpets.Const
 import cn.harryh.arkpets.kt.database.DatabaseHelper
 import cn.harryh.arkpets.kt.database.entity.Metadata
-import cn.harryh.arkpets.kt.database.entity.ModelAsset
 import cn.harryh.arkpets.kt.database.entity.ModelInfo
-import cn.harryh.arkpets.kt.database.entity.ModelTag
-import cn.harryh.arkpets.kt.extension.*
+import cn.harryh.arkpets.kt.extension.md5
+import cn.harryh.arkpets.kt.extension.metadata
+import cn.harryh.arkpets.kt.extension.modelInfos
+import cn.harryh.arkpets.kt.extension.updateInfo
 import cn.harryh.arkpets.kt.model.ModelConfig
 import cn.harryh.arkpets.kt.model.ModelData
 import com.alibaba.fastjson2.JSON
+import org.ktorm.entity.map
 import org.ktorm.entity.toList
-import org.ktorm.entity.toMutableList
 import java.io.File
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 object ModelManager {
-    private val database by lazy {
-        DatabaseHelper.getDatabase()
-    }
+    private val database = DatabaseHelper.getDatabase()
 
-    private val metadataList by lazy {
-        database.metadata.toMutableList()
-    }
+    private val metadataCache: MutableMap<String, Metadata> = mutableMapOf()
 
-    private val modelInfoList by lazy {
-        database.modelInfos.toMutableList()
-    }
+    private val modelInfoCache: MutableMap<String, ModelInfo> = mutableMapOf()
 
     private lateinit var storageDirectory: Map<String, String>
 
+    private val pattern = Pattern.compile("build_((char_\\d+_\\w+)([\\s\\S#]+)*)?", Pattern.CASE_INSENSITIVE)
+
+    private val matcher: Matcher = pattern.matcher("")
+
     private fun handleMetadata(group: String, key: String, value: String) {
-        metadataList.getOrNull(key)?.let {
+        metadataCache["$group.$key"]?.let {
             if (it.value != value) {
                 it.value = value
-                database.updateMetaData(it)
+                DatabaseHelper.updateMetaData(it)
             }
-            metadataList.remove(it)
-        } ?: run {
-            database.addMetaData(
-                Metadata {
-                    this.group = group
-                    this.key = key
-                    this.value = value
-                }
-            )
+            metadataCache.remove(it.key)
+            return
         }
+        DatabaseHelper.addMetaData(group, key, value)
     }
 
-    private fun checkMetadata(data: ModelData) {
+    private fun checkMetadata(data: ModelConfig) {
         data.sortTags.forEach { handleMetadata(Const.MetadataGroup.sortTagGroup, it.key, it.value) }
         handleMetadata(
             Const.MetadataGroup.defaultGroup,
-            ModelData::gameDataVersionDescription.name,
+            ModelConfig::gameDataVersionDescription.name,
             data.gameDataVersionDescription
         )
         handleMetadata(
             Const.MetadataGroup.defaultGroup,
-            ModelData::gameDataServerRegion.name,
+            ModelConfig::gameDataServerRegion.name,
             data.gameDataServerRegion
         )
         handleMetadata(
             Const.MetadataGroup.defaultGroup,
-            ModelData::arkPetsCompatibility.name,
+            ModelConfig::arkPetsCompatibility.name,
             data.arkPetsCompatibility.joinToString(".")
         )
-        metadataList.forEach { it.delete() }
+        metadataCache.forEach { it.value.delete() }
+        metadataCache.clear()
     }
 
-    @Suppress("LongMethod", "NestedBlockDepth")
-    private fun handleModel(key: String, data: ModelConfig) {
+    private fun handleModel(key: String, data: ModelData) {
         val md5 = data.md5(key)
-        modelInfoList.getOrNull(data.assetId)?.let {
-            if (it.md5 != md5) {
-                it.md5 = md5
-                it.assetId = data.assetId
-                it.type = data.type
-                it.style = data.style
-                it.name = data.name
-                it.appellation = data.appellation
-                it.skinGroupId = data.skinGroupId
-                it.skinGroupName = data.skinGroupName
-                it.storePath = "${storageDirectory.getOrDefault(data.type, ".")}/$key"
-                database.updateModelInfo(it)
-            }
-            modelInfoList.remove(it)
-        } ?: run {
-            val modelInfo = ModelInfo {
-                this.md5 = md5
-                this.assetId = data.assetId
-                this.type = data.type
-                this.style = data.style
-                this.name = data.name
-                this.appellation = data.appellation
-                this.skinGroupId = data.skinGroupId
-                this.skinGroupName = data.skinGroupName
-                this.storePath = "${storageDirectory.getOrDefault(data.type, ".")}/$key"
-            }
-            database.addModelInfo(modelInfo)
-            data.sortTags.forEach {
-                database.addModelTags(
-                    ModelTag {
-                        this.modelInfo = modelInfo
-                        this.tag = it
-                    }
-                )
-            }
-            data.assetList.forEach {
-                when (it.value) {
-                    is String -> {
-                        database.addModelAssets(
-                            ModelAsset {
-                                this.modelInfo = modelInfo
-                                this.type = it.key
-                                this.filename = it.value as String
-                            }
-                        )
-                    }
-
-                    is List<*> -> {
-                        (it.value as List<*>).forEach { filename ->
-                            database.addModelAssets(
-                                ModelAsset {
-                                    this.modelInfo = modelInfo
-                                    this.type = it.key
-                                    this.filename = filename as String
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+        val storePath = "${storageDirectory.getOrDefault(data.type, ".")}/$key"
+        matcher.reset(data.assetId)
+        if (matcher.find() && matcher.groupCount() >= 2) {
+            data.assetId = matcher.group(1)
         }
+        var modelInfo = modelInfoCache[data.assetId]
+        if (modelInfo != null) {
+            modelInfoCache.remove(modelInfo.assetId)
+            if (modelInfo.md5 == md5) {
+                return
+            }
+            modelInfo.updateInfo(data, md5, storePath)
+            DatabaseHelper.updateModelInfo(modelInfo)
+            return
+        }
+        modelInfo = ModelInfo().updateInfo(data, md5, storePath)
+        DatabaseHelper.addModelInfo(modelInfo)
+        DatabaseHelper.addModelTags(modelInfo, data.sortTags)
+        DatabaseHelper.addModelAssets(modelInfo, data.assetList)
+    }
+
+    private fun checkModelData(data: Map<String, ModelData>) {
+        data.forEach { handleModel(it.key, it.value) }
+        modelInfoCache.forEach { it.value.delete() }
+        modelInfoCache.clear()
     }
 
     fun init(jsonFileName: String) {
-        val json = JSON.parseObject(File(jsonFileName).readText(), ModelData::class.java)
-        storageDirectory = json.storageDirectory
-        database.useTransaction {
-            checkMetadata(json)
-            json.data.forEach { handleModel(it.key, it.value) }
+        val json = JSON.parseObject(File(jsonFileName).readText(), ModelConfig::class.java)
+        database.metadata.map {
+            metadataCache.put("${it.group}.${it.key}", it)
         }
-        metadataList.clear()
-        modelInfoList.clear()
+        database.modelInfos.map {
+            modelInfoCache.put(it.assetId, it)
+        }
+        storageDirectory = json.storageDirectory
+        checkMetadata(json)
+        checkModelData(json.data)
+        DatabaseHelper.executePendingOperations()
     }
 
     fun getAllModels(): List<ModelInfo> = database.modelInfos.toList()

@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS "model_info"
     "appellation"     TEXT,
     "skin_group_id"   TEXT    NOT NULL,
     "skin_group_name" TEXT    NOT NULL,
-    "md5"             TEXT    NOT NULL
+    "md5"             TEXT    NOT NULL,
+    "exist"           BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS "model_assets"

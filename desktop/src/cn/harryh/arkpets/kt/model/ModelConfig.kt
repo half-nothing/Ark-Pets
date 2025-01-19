@@ -1,13 +1,10 @@
 package cn.harryh.arkpets.kt.model
 
 data class ModelConfig(
-    val assetId: String,
-    val type: String,
-    val style: String?,
-    val name: String,
-    val appellation: String?,
-    val skinGroupId: String,
-    val skinGroupName: String,
-    val sortTags: List<String>,
-    val assetList: Map<String, Any>
+    val storageDirectory: Map<String, String>,
+    val sortTags: Map<String, String>,
+    val gameDataVersionDescription: String,
+    val gameDataServerRegion: String,
+    val data: Map<String, ModelData>,
+    val arkPetsCompatibility: List<Int>
 )

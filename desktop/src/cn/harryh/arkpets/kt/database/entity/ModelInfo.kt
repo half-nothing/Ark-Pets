@@ -14,6 +14,7 @@ interface ModelInfo : Entity<ModelInfo> {
     var skinGroupId: String
     var skinGroupName: String
     var md5: String
+    var exist: Int
 
     companion object : Entity.Factory<ModelInfo>()
 }

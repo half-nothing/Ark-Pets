@@ -9,6 +9,7 @@ import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
 import cn.harryh.arkpets.platform.StartupConfig;
+import cn.harryh.arkpets.platform.WindowSystem;
 import cn.harryh.arkpets.utils.*;
 import cn.harryh.arkpets.utils.GuiComponents.*;
 import com.badlogic.gdx.graphics.Color;
@@ -95,7 +96,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXButton configWindowToolwindowHelp;
 
     @FXML
-    private JFXComboBox<NamedItem<Integer>> configWindowSystem;
+    private JFXComboBox<NamedItem<String>> configWindowSystem;
     @FXML
     private JFXButton configWindowSystemHelp;
     @FXML
@@ -357,9 +358,9 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             }
         };
 
-        NamedItem<Integer>[] items = getWindowSystemItems().toArray(new NamedItem[0]);
+        NamedItem<String>[] items = (NamedItem[]) getWindowSystemItems().toArray();
         new ComboBoxSetup<>(configWindowSystem).setItems(items)
-                .selectValue(app.config.window_system, "自动")
+                .selectValue(app.config.window_system, app.config.window_system)
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
                     app.config.window_system = newValue.value();
                     app.config.save();
@@ -377,21 +378,21 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         };
     }
 
-    private static ArrayList<NamedItem<Integer>> getWindowSystemItems() {
-        ArrayList<NamedItem<Integer>> windowSystemItems = new ArrayList<>();
-        windowSystemItems.add(new NamedItem<>("自动", 0));
+    private static ArrayList<NamedItem<String>> getWindowSystemItems() {
+        ArrayList<NamedItem<String>> windowSystemItems = new ArrayList<>();
+        windowSystemItems.add(new NamedItem<>("自动", WindowSystem.AUTO.name()));
         if (Platform.isWindows()) {
-            windowSystemItems.add(new NamedItem<>("User32", 1));
+            windowSystemItems.add(new NamedItem<>("User32", WindowSystem.USER32.name()));
         }
         if (Platform.isLinux()) {
-            windowSystemItems.add(new NamedItem<>("X11", 2));
-            windowSystemItems.add(new NamedItem<>("Mutter", 3));
-            windowSystemItems.add(new NamedItem<>("KWin", 4));
+            windowSystemItems.add(new NamedItem<>("X11", WindowSystem.X11.name()));
+            windowSystemItems.add(new NamedItem<>("Mutter", WindowSystem.MUTTER.name()));
+            windowSystemItems.add(new NamedItem<>("KWin", WindowSystem.KWIN.name()));
         }
         if (Platform.isMac()) {
-            windowSystemItems.add(new NamedItem<>("Quartz", 5));
+            windowSystemItems.add(new NamedItem<>("Quartz", WindowSystem.QUARTZ.name()));
         }
-        windowSystemItems.add(new NamedItem<>("NULL", 6));
+        windowSystemItems.add(new NamedItem<>("NULL", WindowSystem.NULL.name()));
         return windowSystemItems;
     }
 

@@ -82,13 +82,7 @@ public class EmbeddedLauncher {
         Logger.info("System", "Entering the app of EmbeddedLauncher");
         Logger.info("System", "ArkPets version is " + appVersion);
         Logger.debug("System", "Default charset is " + Charset.defaultCharset());
-        WindowSystem windowSystem;
-        try {
-            windowSystem = WindowSystem.values()[appConfig.window_system];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Logger.warn("System", "Invalid window system,using auto detect");
-            windowSystem = WindowSystem.AUTO;
-        }
+        WindowSystem windowSystem = ArkConfig.getWindowSystemFrom(appConfig.window_system);
         try {
             WindowSystem.init(windowSystem);
             Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();

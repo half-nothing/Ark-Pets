@@ -124,4 +124,10 @@ public enum WindowSystem {
             }
         }
     }
+
+    /** Return current WindowSystem should enable decoration.
+     */
+    public static boolean needDecorated() {
+        return PLATFORM == NULL;
+    }
 }

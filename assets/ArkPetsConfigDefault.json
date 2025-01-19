@@ -34,5 +34,5 @@
     "transition_type":"EASE_OUT_CUBIC",
     "window_style_toolwindow":true,
     "window_style_topmost":true,
-    "window_system":0
+    "window_system":"AUTO"
 }

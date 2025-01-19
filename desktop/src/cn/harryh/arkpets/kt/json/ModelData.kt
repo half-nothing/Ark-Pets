@@ -1,4 +1,4 @@
-package cn.harryh.arkpets.kt.model
+package cn.harryh.arkpets.kt.json
 
 data class ModelData(
     var assetId: String,

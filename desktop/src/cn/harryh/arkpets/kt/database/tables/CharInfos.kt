@@ -1,11 +1,11 @@
-package cn.harryh.arkpets.kt.database.model
+package cn.harryh.arkpets.kt.database.tables
 
-import cn.harryh.arkpets.kt.database.entity.ModelInfo
+import cn.harryh.arkpets.kt.database.entity.CharInfo
 import org.ktorm.schema.Table
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
-object ModelInfos : Table<ModelInfo>("model_info") {
+object CharInfos : Table<CharInfo>("char_info") {
     val id = int("id").bindTo { it.id }.primaryKey()
     val assetId = varchar("asset_id").bindTo { it.assetId }
     val storePath = varchar("store_path").bindTo { it.storePath }

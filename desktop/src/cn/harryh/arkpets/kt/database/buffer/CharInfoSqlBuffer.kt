@@ -1,22 +1,22 @@
-package cn.harryh.arkpets.kt.database.repository
+package cn.harryh.arkpets.kt.database.buffer
 
-import cn.harryh.arkpets.kt.database.entity.ModelInfo
-import cn.harryh.arkpets.kt.database.model.ModelInfos
+import cn.harryh.arkpets.kt.database.entity.CharInfo
+import cn.harryh.arkpets.kt.database.tables.CharInfos
 import org.ktorm.database.Database
 import org.ktorm.dsl.AssignmentsBuilder
 import org.ktorm.dsl.batchInsert
 import org.ktorm.dsl.batchUpdate
 import org.ktorm.dsl.eq
 
-class ModelInfoRepository(database: Database) : Repository<ModelInfo>(database) {
+class CharInfoSqlBuffer(database: Database) : SqlBuffer<CharInfo>(database) {
     override fun pendingInserts() {
-        database.batchInsert(ModelInfos) {
+        database.batchInsert(CharInfos) {
             pendingInserts.forEach { info -> item { setData(it, info) } }
         }
     }
 
     override fun pendingUpdates() {
-        database.batchUpdate(ModelInfos) {
+        database.batchUpdate(CharInfos) {
             pendingUpdates.forEach { info ->
                 item {
                     setData(it, info)
@@ -26,7 +26,7 @@ class ModelInfoRepository(database: Database) : Repository<ModelInfo>(database) 
         }
     }
 
-    private fun AssignmentsBuilder.setData(it: ModelInfos, info: ModelInfo) {
+    private fun AssignmentsBuilder.setData(it: CharInfos, info: CharInfo) {
         set(it.assetId, info.assetId)
         set(it.storePath, info.storePath)
         set(it.type, info.type)

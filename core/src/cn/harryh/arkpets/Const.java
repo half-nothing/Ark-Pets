@@ -106,11 +106,28 @@ public final class Const {
         public static final Version databaseVersion  = new Version(1, 0, 0);
     }
 
+    public static class RepositoryConfig {
+        public static class ModelRepository {
+            public static class MetadataGroup {
+                public static final String defaultGroup = "default";
+                public static final String sortTagGroup = "sortTag";
+            }
 
-    public static class MetadataGroup {
-        public static final String defaultGroup = "default";
-        public static final String sortTagGroup = "sortTag";
+            public static final String repoName         = "ModelRepository";
+            public static final String repoPath         = "models";
+            public static final String metadataFilePath = "models_data.json";
+        }
+
+        public static class VoiceRepository {
+            public static class MetadataGroup {
+                public static final String defaultGroup = "default";
+            }
+
+            public static final String repoName = "VoiceRepository";
+            public static final String repoPath = "voice";
+        }
     }
+
 
     /** Logging presets definition class.
      */

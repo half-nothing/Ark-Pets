@@ -1,13 +1,13 @@
-package cn.harryh.arkpets.kt.database.repository
+package cn.harryh.arkpets.kt.database.buffer
 
 import cn.harryh.arkpets.kt.database.entity.Metadata
-import cn.harryh.arkpets.kt.database.model.MetadataList
+import cn.harryh.arkpets.kt.database.tables.MetadataList
 import org.ktorm.database.Database
 import org.ktorm.dsl.batchInsert
 import org.ktorm.dsl.batchUpdate
 import org.ktorm.dsl.eq
 
-class MetadataRepository(database: Database) : Repository<Metadata>(database) {
+class MetadataSqlBuffer(database: Database) : SqlBuffer<Metadata>(database) {
     override fun pendingInserts() {
         database.batchInsert(MetadataList) {
             pendingInserts.forEach { info ->

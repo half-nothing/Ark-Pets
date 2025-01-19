@@ -1,4 +1,4 @@
-package cn.harryh.arkpets.kt.model
+package cn.harryh.arkpets.kt.json
 
 data class VoiceConfig(
     val localizations: Map<String, Map<String, String>>,

@@ -1,6 +1,6 @@
 package cn.harryh.arkpets.kt.extension
 
-import cn.harryh.arkpets.kt.model.ModelData
+import cn.harryh.arkpets.kt.json.ModelData
 import com.alibaba.fastjson2.JSON
 import java.security.MessageDigest
 

@@ -1,4 +1,4 @@
-package cn.harryh.arkpets.kt.database.model
+package cn.harryh.arkpets.kt.database.tables
 
 import cn.harryh.arkpets.kt.database.entity.ModelVoiceClip
 import org.ktorm.schema.Table

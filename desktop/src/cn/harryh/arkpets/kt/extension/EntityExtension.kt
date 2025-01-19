@@ -1,9 +1,9 @@
 package cn.harryh.arkpets.kt.extension
 
-import cn.harryh.arkpets.kt.database.entity.ModelInfo
-import cn.harryh.arkpets.kt.model.ModelData
+import cn.harryh.arkpets.kt.database.entity.CharInfo
+import cn.harryh.arkpets.kt.json.ModelData
 
-fun ModelInfo.updateInfo(data: ModelData, md5: String, storePath: String): ModelInfo {
+fun CharInfo.updateInfo(data: ModelData, md5: String, storePath: String): CharInfo {
     this.md5 = md5
     this.assetId = data.assetId
     this.type = data.type

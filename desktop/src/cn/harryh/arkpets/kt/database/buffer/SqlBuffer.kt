@@ -1,9 +1,9 @@
-package cn.harryh.arkpets.kt.database.repository
+package cn.harryh.arkpets.kt.database.buffer
 
 import cn.harryh.arkpets.utils.Logger
 import org.ktorm.database.Database
 
-abstract class Repository<T>(protected val database: Database) {
+abstract class SqlBuffer<T>(protected val database: Database) {
     protected val pendingInserts = mutableListOf<T>()
     protected val pendingUpdates = mutableListOf<T>()
 

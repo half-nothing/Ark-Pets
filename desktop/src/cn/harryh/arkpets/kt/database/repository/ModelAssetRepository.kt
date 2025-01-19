@@ -16,6 +16,7 @@ class ModelAssetRepository(database: Database) : Repository<ModelAsset>(database
                     set(it.modelId, info.modelInfo.id)
                     set(it.type, info.type)
                     set(it.filename, info.filename)
+                    set(it.exist, info.exist)
                 }
             }
         }
@@ -28,6 +29,7 @@ class ModelAssetRepository(database: Database) : Repository<ModelAsset>(database
                     set(it.modelId, info.modelInfo.id)
                     set(it.type, info.type)
                     set(it.filename, info.filename)
+                    set(it.exist, info.exist)
                     where { it.id eq info.id }
                 }
             }

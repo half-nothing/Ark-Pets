@@ -16,5 +16,4 @@ object ModelInfos : Table<ModelInfo>("model_info") {
     val skinGroupId = varchar("skin_group_id").bindTo { it.skinGroupId }
     val skinGroupName = varchar("skin_group_name").bindTo { it.skinGroupName }
     val md5 = varchar("md5").bindTo { it.md5 }
-    val exist = int("exist").bindTo { it.exist }
 }

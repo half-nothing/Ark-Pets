@@ -12,6 +12,7 @@ class MetadataRepository(database: Database) : Repository<Metadata>(database) {
         database.batchInsert(MetadataList) {
             pendingInserts.forEach { info ->
                 item {
+                    set(it.repo, info.repo)
                     set(it.group, info.group)
                     set(it.key, info.key)
                     set(it.value, info.value)
@@ -24,6 +25,7 @@ class MetadataRepository(database: Database) : Repository<Metadata>(database) {
         database.batchUpdate(MetadataList) {
             pendingUpdates.forEach { info ->
                 item {
+                    set(it.repo, info.repo)
                     set(it.group, info.group)
                     set(it.key, info.key)
                     set(it.value, info.value)

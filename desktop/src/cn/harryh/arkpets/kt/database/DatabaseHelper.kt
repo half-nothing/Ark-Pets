@@ -67,6 +67,7 @@ object DatabaseHelper {
     fun addMetaData(group: String, key: String, value: String) {
         metadataRepository.addInsert(
             Metadata {
+                this.repo = "model"
                 this.group = group
                 this.key = key
                 this.value = value

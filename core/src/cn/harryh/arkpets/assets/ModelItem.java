@@ -87,8 +87,8 @@ public class ModelItem implements Serializable {
     @JSONField(serialize = false)
     public String getPinyinSuoxie() {
         if (pinyinSuoxie == null) {
-            String quanpin = Pinyin.toPinyin(name, " ");
-            if (!quanpin.trim().isEmpty()) {
+            String quanpin = Pinyin.toPinyin(name, " ").trim();
+            if (!quanpin.isEmpty()) {
                 StringBuilder builder = new StringBuilder();
                 for (String word : quanpin.split("\\s+")) {
                     builder.append(word.charAt(0));

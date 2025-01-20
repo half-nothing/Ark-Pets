@@ -4,6 +4,7 @@
 package cn.harryh.arkpets.assets;
 
 import cn.harryh.arkpets.assets.ModelItem.PropertyExtractor;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -45,14 +46,21 @@ public class ModelItemGroup implements Collection<ModelItem> {
     public ModelItemGroup searchByKeyWords(String keyWords) {
         if (keyWords == null || keyWords.isEmpty())
             return this;
-        String[] wordList = keyWords.toUpperCase().split(" ");
+        // Word list: uppercase and deduplicate
+        String[] wordList = deduplicateArray(keyWords.toUpperCase().split(" "));
+        // Word list: extend with zh-Hans and zh-Hant conversions
+        String[] wordListST = deduplicateArray(concatArrays(
+                wordList,
+                ZhConverterUtil.toSimple(keyWords).toUpperCase().split(" "),
+                ZhConverterUtil.toTraditional(keyWords).toUpperCase().split(" ")
+        ));
         ModelItemGroup result = new ModelItemGroup();
 
         // Rule: match name
         for (ModelItem model : this) {
             if (!result.contains(model) && model.name != null) {
                 String nameLower = model.name.toUpperCase();
-                for (String word : wordList) {
+                for (String word : wordListST) {
                     if (nameLower.contains(word)) {
                         result.add(model);
                         break;
@@ -175,11 +183,24 @@ public class ModelItemGroup implements Collection<ModelItem> {
         modelItemList.sort(Comparator.comparing(model -> model.assetDir, Comparator.naturalOrder()));
     }
 
+    protected String[] concatArrays(String[] array1, String[] array2, String[] array3) {
+        String[] result = new String[array1.length + array2.length + array3.length];
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        System.arraycopy(array3, 0, result, array1.length + array2.length, array3.length);
+        return result;
+    }
+
+    protected String[] deduplicateArray(String[] array) {
+        return Arrays.stream(array).distinct().toArray(String[]::new);
+    }
+
 
     public static class FilterMode {
-        public static final int MATCH_ANY           = 0b1;
-        public static final int MATCH_REVERSE       = 0b10;
+        public static final int MATCH_ANY     = 0b1;
+        public static final int MATCH_REVERSE = 0b10;
     }
+
 
     @Override
     public Iterator<ModelItem> iterator() {

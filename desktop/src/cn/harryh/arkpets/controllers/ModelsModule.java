@@ -447,21 +447,25 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         searchModelView.getItems().clear();
         searchModelStatus.setText("");
         if (assertModelLoaded(false)) {
-            // Filter and search assets
+            // Filter assets
             int rawSize = assetItemList.size();
             ModelItemGroup favoured = !filterFavorite ? assetItemList :
                     assetItemList.filter(ModelItem.PropertyExtractor.ASSET_ITEM_KEY, app.config.character_favorites.keySet(), ModelItemGroup.FilterMode.MATCH_ANY);
             ModelItemGroup filtered = filterTagSet.isEmpty() ? favoured :
                     favoured.filter(ModelItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
+            // Search assets
+            long tStart = System.nanoTime();
             ModelItemGroup searched = filtered.searchByKeyWords(keyWords);
+            long tEnd = System.nanoTime();
             int curSize = searched.size();
             searchModelStatus.setText((rawSize == curSize ? rawSize : curSize + " / " + rawSize) + " 个模型");
             // Add cells
             for (JFXListCell<ModelItem> cell : modelCellList)
                 if (searched.contains(cell.getItem()))
                     searchModelView.getItems().add(cell);
+            Logger.info("ModelManager", "Search \"%s\" (%d results, %.1f ms)"
+                    .formatted(keyWords, curSize, (tEnd - tStart) / 1000000f));
         }
-        Logger.info("ModelManager", "Search \"" + keyWords + "\" (" + searchModelView.getItems().size() + ")");
         searchModelView.refresh();
     }
 

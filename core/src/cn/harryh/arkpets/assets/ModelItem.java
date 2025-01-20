@@ -7,6 +7,7 @@ import cn.harryh.arkpets.utils.Logger;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.github.promeg.pinyinhelper.Pinyin;
 
 import java.io.File;
 import java.io.Serializable;
@@ -42,7 +43,10 @@ public class ModelItem implements Serializable {
     /** @deprecated Legacy field in old version dataset */ @JSONField @Deprecated
     public JSONObject checksum;
 
+    // Lazy generated fields:
     private ModelAssetAccessor accessor;
+    private String pinyinQuanpin;
+    private String pinyinSuoxie;
 
     protected static final String[] extensions = {".atlas", ".png", ".skel"};
 
@@ -65,6 +69,36 @@ public class ModelItem implements Serializable {
         if (accessor == null)
             accessor = new ModelAssetAccessor(assetList);
         return accessor;
+    }
+
+    /** Gets the 拼音全拼 (Pinyin Quanpin, full Pinyin transcription) of the model's name.
+     * @return A String.
+     */
+    @JSONField(serialize = false)
+    public String getPinyinQuanpin() {
+        if (pinyinQuanpin == null)
+            pinyinQuanpin = Pinyin.toPinyin(name, "");
+        return pinyinQuanpin;
+    }
+
+    /** Gets the 拼音缩写 (Pinyin Suoxie, abbreviate Pinyin transcription) of the model's name.
+     * @return A String.
+     */
+    @JSONField(serialize = false)
+    public String getPinyinSuoxie() {
+        if (pinyinSuoxie == null) {
+            String quanpin = Pinyin.toPinyin(name, " ");
+            if (!quanpin.trim().isEmpty()) {
+                StringBuilder builder = new StringBuilder();
+                for (String word : quanpin.split("\\s+")) {
+                    builder.append(word.charAt(0));
+                }
+                pinyinSuoxie = builder.toString();
+            } else {
+                pinyinSuoxie = "";
+            }
+        }
+        return pinyinSuoxie;
     }
 
     /** Verifies the integrity of the necessary fields of this {@code ModelItem}.

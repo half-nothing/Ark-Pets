@@ -45,23 +45,61 @@ public class ModelItemGroup implements Collection<ModelItem> {
     public ModelItemGroup searchByKeyWords(String keyWords) {
         if (keyWords == null || keyWords.isEmpty())
             return this;
-        String[] wordList = keyWords.split(" ");
+        String[] wordList = keyWords.toUpperCase().split(" ");
         ModelItemGroup result = new ModelItemGroup();
-        for (ModelItem asset : this) {
-            for (String word : wordList) {
-                if (asset.name != null &&
-                        asset.name.toLowerCase().contains(word.toLowerCase())) {
-                    result.add(asset);
-                }
-            }
-            for (String word : wordList) {
-                if (asset.appellation != null &&
-                        asset.appellation.toLowerCase().contains(word.toLowerCase())) {
-                    if (!result.contains(asset))
-                        result.add(asset);
+
+        // Rule: match name
+        for (ModelItem model : this) {
+            if (!result.contains(model) && model.name != null) {
+                String nameLower = model.name.toUpperCase();
+                for (String word : wordList) {
+                    if (nameLower.contains(word)) {
+                        result.add(model);
+                        break;
+                    }
                 }
             }
         }
+
+        // Rule: match appellation
+        for (ModelItem model : this) {
+            if (!result.contains(model) && model.appellation != null) {
+                String appellLower = model.appellation.toUpperCase();
+                for (String word : wordList) {
+                    if (appellLower.contains(word)) {
+                        result.add(model);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Rule: match Pinyin suoxie
+        for (ModelItem model : this) {
+            if (!result.contains(model) && model.getPinyinSuoxie() != null) {
+                String appellLower = model.getPinyinSuoxie().toUpperCase();
+                for (String word : wordList) {
+                    if (appellLower.contains(word)) {
+                        result.add(model);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Rule: match Pinyin quanpin
+        for (ModelItem model : this) {
+            if (!result.contains(model) && model.getPinyinQuanpin() != null) {
+                String appellLower = model.getPinyinQuanpin().toUpperCase();
+                for (String word : wordList) {
+                    if (appellLower.contains(word)) {
+                        result.add(model);
+                        break;
+                    }
+                }
+            }
+        }
+
         return result;
     }
 

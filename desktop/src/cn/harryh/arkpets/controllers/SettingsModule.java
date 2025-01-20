@@ -358,7 +358,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             }
         };
 
-        NamedItem<String>[] items = (NamedItem[]) getWindowSystemItems().toArray();
+        NamedItem<String>[] items = getWindowSystemItems().toArray(new NamedItem[0]);
         new ComboBoxSetup<>(configWindowSystem).setItems(items)
                 .selectValue(app.config.window_system, app.config.window_system)
                 .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {

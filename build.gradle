@@ -1,0 +1,97 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
+buildscript {
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/public/" } // Aliyun Mirrors
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin/" }
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.openjfx:javafx-plugin:0.0.13"
+    }
+}
+
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "java-library"
+    apply plugin: "org.openjfx.javafxplugin"
+
+    version = "3.6.0"
+    ext {
+        // App Metadata
+        appName = "ArkPets"
+        appAuthor = "Harry Huang"
+        appYearBegin = "2022"
+        appYearCurrent = new Date().format("yyyy", TimeZone.getTimeZone("GMT+0:00"))
+        appCopyright = "Copyright (c) ${appYearBegin}-${appYearCurrent} ${appAuthor}" as GStringImpl
+        // Prefabs
+        gdxVersion = "1.11.0"
+        jnaVersion = "5.12.1"
+        javaFXVersion = "17.0.8"
+        dbusVersion = "5.0.0"
+        lwjglVersion = "3.3.4"
+    }
+
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/public/" } // Aliyun Mirrors
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+
+project(":desktop") {
+    dependencies {
+        implementation project(":core")
+        // libGDX Desktop
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    }
+}
+
+
+project(":core") {
+    dependencies {
+        // Spine Runtime
+        api "com.esotericsoftware.spine:spine-libgdx:3.8.99.1"
+        // libGDX
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        // JNA
+        api "net.java.dev.jna:jna:$jnaVersion"
+        api "net.java.dev.jna:jna-platform:$jnaVersion"
+        // JavaFX
+        def javaFXPlatforms = ["win", "mac", "linux"]
+        javaFXPlatforms.each {
+            api "org.openjfx:javafx-base:$javaFXVersion:$it"
+            api "org.openjfx:javafx-controls:$javaFXVersion:$it"
+            api "org.openjfx:javafx-graphics:$javaFXVersion:$it"
+            api "org.openjfx:javafx-fxml:$javaFXVersion:$it"
+        }
+        // JFoenix
+        api "com.jfoenix:jfoenix:9.0.1"
+        // FastJson
+        api "com.alibaba:fastjson:2.0.39"
+        // Log4j
+        api "apache-log4j:log4j:1.2.15"
+        // dbus-java
+        api "com.github.hypfvieh:dbus-java-core:$dbusVersion"
+        api "com.github.hypfvieh:dbus-java-transport-native-unixsocket:$dbusVersion"
+        // LWJGL
+        def lwjglList = ["lwjgl", "lwjgl-opengl", "lwjgl-stb", "lwjgl-openal", "lwjgl-jemalloc", "lwjgl-glfw"]
+        lwjglList.each {
+            api("org.lwjgl:" + it) {
+                version {
+                    strictly lwjglVersion
+                }
+            }
+        }
+        // TiniPinyin
+        api 'com.github.promeg:tinypinyin:2.0.3'
+        // OpenCC4j
+        api 'com.github.houbb:opencc4j:1.8.1'
+    }
+}

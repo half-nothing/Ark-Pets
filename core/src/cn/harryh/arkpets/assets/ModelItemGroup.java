@@ -59,9 +59,9 @@ public class ModelItemGroup implements Collection<ModelItem> {
         // Rule: match name
         for (ModelItem model : this) {
             if (!result.contains(model) && model.name != null) {
-                String nameLower = model.name.toUpperCase();
+                String upper = model.name.toUpperCase();
                 for (String word : wordListST) {
-                    if (nameLower.contains(word)) {
+                    if (upper.contains(word)) {
                         result.add(model);
                         break;
                     }
@@ -72,9 +72,9 @@ public class ModelItemGroup implements Collection<ModelItem> {
         // Rule: match appellation
         for (ModelItem model : this) {
             if (!result.contains(model) && model.appellation != null) {
-                String appellLower = model.appellation.toUpperCase();
+                String upper = model.appellation.toUpperCase();
                 for (String word : wordList) {
-                    if (appellLower.contains(word)) {
+                    if (upper.contains(word)) {
                         result.add(model);
                         break;
                     }
@@ -85,9 +85,9 @@ public class ModelItemGroup implements Collection<ModelItem> {
         // Rule: match Pinyin suoxie
         for (ModelItem model : this) {
             if (!result.contains(model) && model.getPinyinSuoxie() != null) {
-                String appellLower = model.getPinyinSuoxie().toUpperCase();
+                String upper = model.getPinyinSuoxie().toUpperCase();
                 for (String word : wordList) {
-                    if (appellLower.contains(word)) {
+                    if (upper.contains(word)) {
                         result.add(model);
                         break;
                     }
@@ -98,15 +98,16 @@ public class ModelItemGroup implements Collection<ModelItem> {
         // Rule: match Pinyin quanpin
         for (ModelItem model : this) {
             if (!result.contains(model) && model.getPinyinQuanpin() != null) {
-                String appellLower = model.getPinyinQuanpin().toUpperCase();
+                String upper = model.getPinyinQuanpin().toUpperCase();
                 for (String word : wordList) {
-                    if (appellLower.contains(word)) {
+                    if (upper.contains(word)) {
                         result.add(model);
                         break;
                     }
                 }
             }
         }
+
 
         return result;
     }

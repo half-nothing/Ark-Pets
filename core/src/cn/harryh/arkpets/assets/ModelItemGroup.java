@@ -108,6 +108,18 @@ public class ModelItemGroup implements Collection<ModelItem> {
             }
         }
 
+        // Rule: match skin group name
+        for (ModelItem model : this) {
+            if (!result.contains(model) && model.skinGroupName != null) {
+                String upper = model.skinGroupName.toUpperCase();
+                for (String word : wordListST) {
+                    if (upper.contains(word)) {
+                        result.add(model);
+                        break;
+                    }
+                }
+            }
+        }
 
         return result;
     }
@@ -184,7 +196,7 @@ public class ModelItemGroup implements Collection<ModelItem> {
         modelItemList.sort(Comparator.comparing(model -> model.assetDir, Comparator.naturalOrder()));
     }
 
-    protected String[] concatArrays(String[] array1, String[] array2, String[] array3) {
+    protected static String[] concatArrays(String[] array1, String[] array2, String[] array3) {
         String[] result = new String[array1.length + array2.length + array3.length];
         System.arraycopy(array1, 0, result, 0, array1.length);
         System.arraycopy(array2, 0, result, array1.length, array2.length);
@@ -192,7 +204,7 @@ public class ModelItemGroup implements Collection<ModelItem> {
         return result;
     }
 
-    protected String[] deduplicateArray(String[] array) {
+    protected static String[] deduplicateArray(String[] array) {
         return Arrays.stream(array).distinct().toArray(String[]::new);
     }
 

@@ -3,8 +3,8 @@
  */
 package cn.harryh.arkpets.guitasks;
 
-import cn.harryh.arkpets.assets.AssetItem;
-import cn.harryh.arkpets.assets.AssetItemGroup;
+import cn.harryh.arkpets.assets.ModelItem;
+import cn.harryh.arkpets.assets.ModelItemGroup;
 import cn.harryh.arkpets.assets.ModelsDataset;
 import cn.harryh.arkpets.utils.GuiPrefabs;
 import cn.harryh.arkpets.utils.Logger;
@@ -39,12 +39,12 @@ public class VerifyModelsTask extends GuiTask {
         return new Task<>() {
             @Override
             protected Boolean call() {
-                AssetItemGroup validModelAssets = modelsDataset.data.filter(AssetItem::isValid);
+                ModelItemGroup validModelAssets = modelsDataset.data.filter(ModelItem::isValid);
                 int currentProgress = 0;
                 int totalProgress = validModelAssets.size();
 
                 boolean flag = false;
-                for (AssetItem item : validModelAssets) {
+                for (ModelItem item : validModelAssets) {
                     this.updateProgress(currentProgress++, totalProgress);
                     if (this.isCancelled()) {
                         // Cancelled:

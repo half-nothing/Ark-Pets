@@ -14,9 +14,9 @@ import java.util.*;
 import java.util.function.Function;
 
 
-/** One Asset Item is corresponding to one certain local Spine asset.
+/** One Model Item is corresponding to one certain local Spine model.
  */
-public class AssetItem implements Serializable {
+public class ModelItem implements Serializable {
     @JSONField(serialize = false)
     public String key;
     @JSONField(serialize = false)
@@ -42,11 +42,11 @@ public class AssetItem implements Serializable {
     /** @deprecated Legacy field in old version dataset */ @JSONField @Deprecated
     public JSONObject checksum;
 
-    private AssetAccessor accessor;
+    private ModelAssetAccessor accessor;
 
     protected static final String[] extensions = {".atlas", ".png", ".skel"};
 
-    private AssetItem() {
+    private ModelItem() {
     }
 
     /** Gets the directory where the asset files located in.
@@ -57,20 +57,20 @@ public class AssetItem implements Serializable {
         return assetDir.toString();
     }
 
-    /** Gets the Asset Accessor of this asset.
-     * @return An Asset Accessor instance.
+    /** Gets the Model Asset Accessor of the model's asset files.
+     * @return A Model Asset Accessor instance.
      */
     @JSONField(serialize = false)
-    public AssetAccessor getAccessor() {
+    public ModelAssetAccessor getAccessor() {
         if (accessor == null)
-            accessor = new AssetAccessor(assetList);
+            accessor = new ModelAssetAccessor(assetList);
         return accessor;
     }
 
-    /** Verifies the integrity of the necessary fields of this {@code AssetItem}.
+    /** Verifies the integrity of the necessary fields of this {@code ModelItem}.
      * @return {@code true} if all the following conditions are satisfied, otherwise {@code false}:
      *          1. Both {@code assetDir} and {@code type} are not {@code null}.
-     *          2. The {@code AssetAccessor} is available.
+     *          2. The {@code ModelAssetAccessor} is available.
      */
     @JSONField(serialize = false)
     public boolean isValid() {
@@ -127,21 +127,21 @@ public class AssetItem implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof AssetItem) {
-            return ((AssetItem)obj).assetDir.equals(assetDir);
+        if (obj instanceof ModelItem) {
+            return ((ModelItem)obj).assetDir.equals(assetDir);
         }
         return false;
     }
 
 
-    /** The Asset Accessor providing methods to get the resource files of the asset.
+    /** The Model Asset Accessor providing methods to get the resource files of the model's asset files.
      * @since ArkPets 2.2
      */
-    public static class AssetAccessor {
+    public static class ModelAssetAccessor {
         private final ArrayList<String> list;
         private final HashMap<String, ArrayList<String>> map;
 
-        public AssetAccessor(JSONObject fileMap) {
+        public ModelAssetAccessor(JSONObject fileMap) {
             ArrayList<String> list = new ArrayList<>();
             HashMap<String, ArrayList<String>> map = new HashMap<>();
             try {
@@ -197,17 +197,17 @@ public class AssetItem implements Serializable {
     }
 
 
-    /** The Asset Property Extractor specializing in extracting a specified property.
+    /** The Model Property Extractor specializing in extracting a specified property.
      * @param <T> The type of the specified property, typically {@code String}.
      * @since ArkPets 2.2
      */
-    public interface PropertyExtractor<T> extends Function<AssetItem, Set<T>> {
-        /** Extracts the specified property of the given Asset Item.
-         * @param assetItem The given Asset Item.
+    public interface PropertyExtractor<T> extends Function<ModelItem, Set<T>> {
+        /** Extracts the specified property of the given Model Item.
+         * @param modelItem The given Model Item.
          * @return A value {@link Set} of the extracted property.
          */
         @Override
-        Set<T> apply(AssetItem assetItem);
+        Set<T> apply(ModelItem modelItem);
 
         PropertyExtractor<String> ASSET_ITEM_KEY             = item -> item.key           == null ? Set.of() : Set.of(item.key);
         PropertyExtractor<String> ASSET_ITEM_TYPE            = item -> item.type          == null ? Set.of() : Set.of(item.type);
@@ -216,7 +216,8 @@ public class AssetItem implements Serializable {
         PropertyExtractor<String> ASSET_ITEM_SORT_TAGS       = item -> new HashSet<>(item.sortTags.toJavaList(String.class));
     }
 
-    /** The Asset Prefab storing the user prefab of the specific asset.
+
+    /** The Model Prefab storing the user prefab of the specific model.
      * @since ArkPets 3.5
      */
     public static class AssetPrefab {

@@ -4,8 +4,8 @@
 package cn.harryh.arkpets.controllers;
 
 import cn.harryh.arkpets.ArkHomeFX;
-import cn.harryh.arkpets.assets.AssetItem;
-import cn.harryh.arkpets.assets.AssetItemGroup;
+import cn.harryh.arkpets.assets.ModelItem;
+import cn.harryh.arkpets.assets.ModelItemGroup;
 import cn.harryh.arkpets.assets.ModelsDataset;
 import cn.harryh.arkpets.guitasks.*;
 import cn.harryh.arkpets.utils.*;
@@ -60,7 +60,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     @FXML
     private Label searchModelStatus;
     @FXML
-    private JFXListView<JFXListCell<AssetItem>> searchModelView;
+    private JFXListView<JFXListCell<ModelItem>> searchModelView;
     @FXML
     private Label selectedModelName;
     @FXML
@@ -108,9 +108,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
     @FXML
     private Label modelHelp;
 
-    private AssetItemGroup assetItemList;
-    private JFXListCell<AssetItem> selectedModelCell;
-    private ArrayList<JFXListCell<AssetItem>> modelCellList = new ArrayList<>();
+    private ModelItemGroup assetItemList;
+    private JFXListCell<ModelItem> selectedModelCell;
+    private ArrayList<JFXListCell<ModelItem>> modelCellList = new ArrayList<>();
     private ObservableSet<String> filterTagSet = FXCollections.observableSet();
 
     private GuiPrefabs.PeerNodeComposer infoPaneComposer;
@@ -158,7 +158,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                                 IOUtils.FileUtil.readString(new File(PathConfig.fileModelsDataPath), charsetDefault)
                         )
                 );
-                app.modelsDataset.data.removeIf(Predicate.not(AssetItem::isValid));
+                app.modelsDataset.data.removeIf(Predicate.not(ModelItem::isValid));
                 try {
                     // Check the dataset compatibility
                     Version compatibleVersion = app.modelsDataset.arkPetsCompatibility;
@@ -415,7 +415,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                 modelFavorite.setGraphic(favIcon);
                 Logger.debug("ModelManager", "Remove favorite model " + key);
             } else {
-                app.config.character_favorites.put(key, new AssetItem.AssetPrefab());
+                app.config.character_favorites.put(key, new ModelItem.AssetPrefab());
                 selectedModelCell.getStyleClass().add("Search-models-item-favorite");
                 modelFavorite.setGraphic(favFillIcon);
                 Logger.debug("ModelManager", "Add favorite model " + key);
@@ -433,9 +433,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             }
             filterFavorite = !filterFavorite;
             modelSearch(searchModelInput.getText());
-            AssetItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
+            ModelItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
             if (recentSelected != null)
-                for (JFXListCell<AssetItem> cell : searchModelView.getItems())
+                for (JFXListCell<ModelItem> cell : searchModelView.getItems())
                     if (recentSelected.equals(cell.getItem())) {
                         searchModelView.scrollTo(cell);
                         searchModelView.getSelectionModel().select(cell);
@@ -449,15 +449,15 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         if (assertModelLoaded(false)) {
             // Filter and search assets
             int rawSize = assetItemList.size();
-            AssetItemGroup favoured = !filterFavorite ? assetItemList :
-                    assetItemList.filter(AssetItem.PropertyExtractor.ASSET_ITEM_KEY, app.config.character_favorites.keySet(), AssetItemGroup.FilterMode.MATCH_ANY);
-            AssetItemGroup filtered = filterTagSet.isEmpty() ? favoured :
-                    favoured.filter(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
-            AssetItemGroup searched = filtered.searchByKeyWords(keyWords);
+            ModelItemGroup favoured = !filterFavorite ? assetItemList :
+                    assetItemList.filter(ModelItem.PropertyExtractor.ASSET_ITEM_KEY, app.config.character_favorites.keySet(), ModelItemGroup.FilterMode.MATCH_ANY);
+            ModelItemGroup filtered = filterTagSet.isEmpty() ? favoured :
+                    favoured.filter(ModelItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS, filterTagSet);
+            ModelItemGroup searched = filtered.searchByKeyWords(keyWords);
             int curSize = searched.size();
             searchModelStatus.setText((rawSize == curSize ? rawSize : curSize + " / " + rawSize) + " 个模型");
             // Add cells
-            for (JFXListCell<AssetItem> cell : modelCellList)
+            for (JFXListCell<ModelItem> cell : modelCellList)
                 if (searched.contains(cell.getItem()))
                     searchModelView.getItems().add(cell);
         }
@@ -479,19 +479,19 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
             Logger.info("ModelManager", "Reloading");
             boolean willGc = modelCellList != null;
             modelCellList = new ArrayList<>();
-            assetItemList = new AssetItemGroup();
+            assetItemList = new ModelItemGroup();
 
             if (initModelsDataset(doPopNotice)) {
                 // 1. Update list cells and asset items:
                 try {
                     // Find every model assets.
-                    assetItemList.addAll(app.modelsDataset.data.filter(AssetItem::isExisted));
+                    assetItemList.addAll(app.modelsDataset.data.filter(ModelItem::isExisted));
                     if (assetItemList.isEmpty())
                         throw new IOException("Found no assets in the target directories.");
                     // Initialize list view.
                     searchModelView.getSelectionModel().getSelectedItems().addListener(
-                            (ListChangeListener<JFXListCell<AssetItem>>) (observable -> observable.getList().forEach(
-                                    (Consumer<JFXListCell<AssetItem>>) cell -> selectModel(cell.getItem(), cell))
+                            (ListChangeListener<JFXListCell<ModelItem>>) (observable -> observable.getList().forEach(
+                                    (Consumer<JFXListCell<ModelItem>>) cell -> selectModel(cell.getItem(), cell))
                             )
                     );
                     searchModelView.setFixedCellSize(30);
@@ -502,7 +502,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                     // Explicitly set all lists to empty.
                     Logger.error("ModelManager", "Failed to initialize model assets due to unknown reasons, details see below.", ex);
                     modelCellList = new ArrayList<>();
-                    assetItemList = new AssetItemGroup();
+                    assetItemList = new ModelItemGroup();
                     if (doPopNotice)
                         GuiPrefabs.Dialogs.createCommonDialog(app.body,
                                 GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT, GuiPrefabs.COLOR_WARNING),
@@ -529,7 +529,7 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                 });
                 filterPaneTagFlow.getChildren().clear();
                 if (assetItemList != null && app.modelsDataset != null) {
-                    ArrayList<String> sortTags = new ArrayList<>(assetItemList.extract(AssetItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS));
+                    ArrayList<String> sortTags = new ArrayList<>(assetItemList.extract(ModelItem.PropertyExtractor.ASSET_ITEM_SORT_TAGS));
                     sortTags.sort(Comparator.naturalOrder());
                     sortTags.forEach(s -> {
                         String t = app.modelsDataset.sortTags == null ? s : app.modelsDataset.sortTags.getOrDefault(s, s);
@@ -553,9 +553,9 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
                 if (assetItemList != null && !modelCellList.isEmpty() &&
                         app.config.character_asset != null && !app.config.character_asset.isEmpty()) {
                     // Scroll to recent selected model and then select it.
-                    AssetItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
+                    ModelItem recentSelected = assetItemList.searchByRelPath(app.config.character_asset);
                     if (recentSelected != null) {
-                        for (JFXListCell<AssetItem> cell : searchModelView.getItems())
+                        for (JFXListCell<ModelItem> cell : searchModelView.getItems())
                             if (recentSelected.equals(cell.getItem())) {
                                 searchModelView.scrollTo(cell);
                                 searchModelView.getSelectionModel().select(cell);
@@ -577,20 +577,20 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         });
     }
 
-    private JFXListCell<AssetItem> getMenuItem(AssetItem assetItem, JFXListView<JFXListCell<AssetItem>> container) {
+    private JFXListCell<ModelItem> getMenuItem(ModelItem modelItem, JFXListView<JFXListCell<ModelItem>> container) {
         double width = container.getPrefWidth() - 50;
         double height = 30;
         double divide = 0.618;
-        JFXListCell<AssetItem> item = new JFXListCell<>();
+        JFXListCell<ModelItem> item = new JFXListCell<>();
         item.getStyleClass().addAll("Search-models-item");
-        Label name = new Label(assetItem.toString());
+        Label name = new Label(modelItem.toString());
         name.getStyleClass().addAll("Search-models-label", "Search-models-label-primary");
-        name.setPrefSize(assetItem.skinGroupName == null ? width : width * divide, height);
+        name.setPrefSize(modelItem.skinGroupName == null ? width : width * divide, height);
         name.setLayoutX(15);
-        Label alias1 = new Label(assetItem.skinGroupName);
+        Label alias1 = new Label(modelItem.skinGroupName);
         alias1.getStyleClass().addAll("Search-models-label", "Search-models-label-secondary");
         alias1.setPrefSize(width * (1 - divide), height);
-        alias1.setLayoutX(assetItem.skinGroupName == null ? 0 : width * divide);
+        alias1.setLayoutX(modelItem.skinGroupName == null ? 0 : width * divide);
         SVGPath fav = GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_STAR_FILLED, GuiPrefabs.COLOR_WARNING);
         fav.getStyleClass().add("Search-models-star");
         fav.setLayoutX(0);
@@ -599,14 +599,14 @@ public final class ModelsModule implements Controller<ArkHomeFX> {
         fav.setScaleY(0.75);
         item.setPrefSize(width, height);
         item.setGraphic(new Group(fav, name, alias1));
-        item.setItem(assetItem);
-        item.setId(assetItem.getLocation());
-        if (app.config.character_favorites.containsKey(assetItem.key))
+        item.setItem(modelItem);
+        item.setId(modelItem.getLocation());
+        if (app.config.character_favorites.containsKey(modelItem.key))
             item.getStyleClass().add("Search-models-item-favorite");
         return item;
     }
 
-    private void selectModel(AssetItem asset, JFXListCell<AssetItem> item) {
+    private void selectModel(ModelItem asset, JFXListCell<ModelItem> item) {
         // Reset
         if (selectedModelCell != null) {
             selectedModelCell.getStyleClass().setAll("Search-models-item");

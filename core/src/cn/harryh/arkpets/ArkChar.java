@@ -8,7 +8,7 @@ import cn.harryh.arkpets.animations.AnimClip.AnimStage;
 import cn.harryh.arkpets.animations.AnimClipGroup;
 import cn.harryh.arkpets.animations.AnimComposer;
 import cn.harryh.arkpets.animations.AnimData;
-import cn.harryh.arkpets.assets.AssetItem.AssetAccessor;
+import cn.harryh.arkpets.assets.ModelItem.ModelAssetAccessor;
 import cn.harryh.arkpets.transitions.EasingFunction;
 import cn.harryh.arkpets.transitions.TransitionFloat;
 import cn.harryh.arkpets.transitions.TransitionVector3;
@@ -87,9 +87,9 @@ public class ArkChar {
         SkeletonData skeletonData;
         try {
             String assetLocation = config.character_asset;
-            AssetAccessor assetAccessor = new AssetAccessor(config.character_files);
-            String path2atlas = assetLocation + separator + assetAccessor.getFirstFileOf(".atlas");
-            String path2skel = assetLocation + separator + assetAccessor.getFirstFileOf(".skel");
+            ModelAssetAccessor modelAssetAccessor = new ModelAssetAccessor(config.character_files);
+            String path2atlas = assetLocation + separator + modelAssetAccessor.getFirstFileOf(".atlas");
+            String path2skel = assetLocation + separator + modelAssetAccessor.getFirstFileOf(".skel");
             // Load atlas
             TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path2atlas));
             // Load skel (use SkeletonJson instead of SkeletonBinary if the file type is JSON)

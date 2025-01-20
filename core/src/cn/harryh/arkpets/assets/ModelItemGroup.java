@@ -3,16 +3,16 @@
  */
 package cn.harryh.arkpets.assets;
 
-import cn.harryh.arkpets.assets.AssetItem.PropertyExtractor;
+import cn.harryh.arkpets.assets.ModelItem.PropertyExtractor;
 
 import java.util.*;
 import java.util.function.Predicate;
 
 
-/** The class implements the Collection of {@link AssetItem}.
+/** The class implements the Collection of {@link ModelItem}.
  * <hr>
  * The structure of the root directory may be like what is shown below.
- * Each {@code SubDir} represents an {@code AssetItem}.
+ * Each {@code SubDir} represents an {@code ModelItem}.
  *
  * <blockquote><pre>
  * +-RootDir
@@ -27,27 +27,27 @@ import java.util.function.Predicate;
  *
  * @since ArkPets 2.4
  */
-public class AssetItemGroup implements Collection<AssetItem> {
-    protected final ArrayList<AssetItem> assetItemList;
+public class ModelItemGroup implements Collection<ModelItem> {
+    protected final ArrayList<ModelItem> modelItemList;
 
-    public AssetItemGroup(Collection<AssetItem> assetItemList) {
-        this.assetItemList = new ArrayList<>(assetItemList);
+    public ModelItemGroup(Collection<ModelItem> modelItemList) {
+        this.modelItemList = new ArrayList<>(modelItemList);
     }
 
-    public AssetItemGroup() {
+    public ModelItemGroup() {
         this(new ArrayList<>());
     }
 
-    /** Searches the Asset Items whose {@code name} and {@code appellation} match the given keywords.
+    /** Searches the Model Items whose {@code name} and {@code appellation} match the given keywords.
      * @param keyWords The given keywords. Each keyword should be separated by a blank.
-     * @return An Asset Item Group. Returns {@code this} if the parameter {@code keyWords} is {@code null} or empty.
+     * @return A Model Item Group. Returns {@code this} if the parameter {@code keyWords} is {@code null} or empty.
      */
-    public AssetItemGroup searchByKeyWords(String keyWords) {
+    public ModelItemGroup searchByKeyWords(String keyWords) {
         if (keyWords == null || keyWords.isEmpty())
             return this;
         String[] wordList = keyWords.split(" ");
-        AssetItemGroup result = new AssetItemGroup();
-        for (AssetItem asset : this) {
+        ModelItemGroup result = new ModelItemGroup();
+        for (ModelItem asset : this) {
             for (String word : wordList) {
                 if (asset.name != null &&
                         asset.name.toLowerCase().contains(word.toLowerCase())) {
@@ -65,50 +65,50 @@ public class AssetItemGroup implements Collection<AssetItem> {
         return result;
     }
 
-    /** Searches the Asset Item whose relative path provided by {@code getLocation} matches the given path string.
+    /** Searches the Model Item whose relative path provided by {@code getLocation} matches the given path string.
      * @param relPath The given path string.
-     * @return The first matched Asset Item. Returns {@code null} if no one matched.
+     * @return The first matched Model Item. Returns {@code null} if no one matched.
      */
-    public AssetItem searchByRelPath(String relPath) {
+    public ModelItem searchByRelPath(String relPath) {
         if (relPath == null || relPath.isEmpty())
             return null;
-        for (AssetItem asset : this)
-            if (asset.getLocation().equalsIgnoreCase(relPath))
-                return asset;
+        for (ModelItem model : this)
+            if (model.getLocation().equalsIgnoreCase(relPath))
+                return model;
         return null;
     }
 
-    /** Collects the values of a specified property of the Asset Items.
+    /** Collects the values of a specified property of the Model Items.
      * @param property A property extractor.
      * @return A Set that contains all the possible values of the property.
      * @param <T> The type of the property value.
      */
     public <T> Set<T> extract(PropertyExtractor<T> property) {
         HashSet<T> result = new HashSet<>();
-        for (AssetItem item : this)
+        for (ModelItem item : this)
             result.addAll(property.apply(item));
         return result;
     }
 
-    /** Returns a new Asset Item Group consisting of the Asset Items that match the given predicate.
-     * @param predicate A predicate to apply to each Asset Item to determine if it should be included.
-     * @return An Asset Item Group.
+    /** Returns a new Model Item Group consisting of the Model Items that match the given predicate.
+     * @param predicate A predicate to apply to each Model Item to determine if it should be included.
+     * @return A Model Item Group.
      */
-    public AssetItemGroup filter(Predicate<AssetItem> predicate) {
-        return new AssetItemGroup(assetItemList.stream().filter(predicate).toList());
+    public ModelItemGroup filter(Predicate<ModelItem> predicate) {
+        return new ModelItemGroup(modelItemList.stream().filter(predicate).toList());
     }
 
-    /** Returns a new Asset Item Group consisting of the Asset Items whose property satisfied the requirements.
+    /** Returns a new Model Item Group consisting of the Model Items whose property satisfied the requirements.
      * @param property A property extractor.
      * @param filterValues The property values to be matched.
-     * @param mode The {@link AssetItemGroup.FilterMode}.
-     * @return An Asset Item Group.
+     * @param mode The {@link ModelItemGroup.FilterMode}.
+     * @return A Model Item Group.
      * @param <T> The type of the property value.
      */
-    public <T> AssetItemGroup filter(PropertyExtractor<T> property, Set<T> filterValues, int mode) {
+    public <T> ModelItemGroup filter(PropertyExtractor<T> property, Set<T> filterValues, int mode) {
         final boolean TRUE = (mode & FilterMode.MATCH_REVERSE) == 0;
-        return filter(assetItem -> {
-            Set<T> itemValues = property.apply(assetItem);
+        return filter(item -> {
+            Set<T> itemValues = property.apply(item);
             if ((mode & FilterMode.MATCH_ANY) != 0) {
                 for (T value : itemValues)
                     if (filterValues.contains(value))
@@ -121,20 +121,20 @@ public class AssetItemGroup implements Collection<AssetItem> {
         });
     }
 
-    /** Returns a new Asset Item Group consisting of the Asset Items whose property satisfied the requirements.
+    /** Returns a new Model Item Group consisting of the Model Items whose property satisfied the requirements.
      * @param property A property extractor.
      * @param filterValues The property values to be matched.
-     * @return An Asset Item Group.
+     * @return A Model Item Group.
      * @param <T> The type of the property value.
      */
-    public <T> AssetItemGroup filter(PropertyExtractor<T> property, Set<T> filterValues) {
+    public <T> ModelItemGroup filter(PropertyExtractor<T> property, Set<T> filterValues) {
         return filter(property, filterValues, 0);
     }
 
-    /** Sorts the Asset Items by their {@code assetDir} in natural order.
+    /** Sorts the Model Items by their {@code assetDir} in natural order.
      */
     public void sort() {
-        assetItemList.sort(Comparator.comparing(asset -> asset.assetDir, Comparator.naturalOrder()));
+        modelItemList.sort(Comparator.comparing(model -> model.assetDir, Comparator.naturalOrder()));
     }
 
 
@@ -144,17 +144,17 @@ public class AssetItemGroup implements Collection<AssetItem> {
     }
 
     @Override
-    public Iterator<AssetItem> iterator() {
-        return assetItemList.iterator();
+    public Iterator<ModelItem> iterator() {
+        return modelItemList.iterator();
     }
 
     @Override
-    public boolean add(AssetItem assetItem) {
-        return !assetItemList.contains(assetItem) && assetItemList.add(assetItem);
+    public boolean add(ModelItem modelItem) {
+        return !modelItemList.contains(modelItem) && modelItemList.add(modelItem);
     }
 
     @Override
-    public boolean addAll(Collection<? extends AssetItem> c) {
+    public boolean addAll(Collection<? extends ModelItem> c) {
         int size = size();
         c.forEach(this::add);
         return size != size();
@@ -162,51 +162,51 @@ public class AssetItemGroup implements Collection<AssetItem> {
 
     @Override
     public boolean contains(Object o) {
-        return assetItemList.contains(o);
+        return modelItemList.contains(o);
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return assetItemList.containsAll(c);
+        return modelItemList.containsAll(c);
     }
 
     @Override
     public boolean remove(Object o) {
-        return assetItemList.remove(o);
+        return modelItemList.remove(o);
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return assetItemList.removeAll(c);
+        return modelItemList.removeAll(c);
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return assetItemList.retainAll(c);
+        return modelItemList.retainAll(c);
     }
 
     @Override
     public void clear() {
-        assetItemList.clear();
+        modelItemList.clear();
     }
 
     @Override
     public boolean isEmpty() {
-        return assetItemList.isEmpty();
+        return modelItemList.isEmpty();
     }
 
     @Override
     public int size() {
-        return assetItemList.size();
+        return modelItemList.size();
     }
 
     @Override
     public Object[] toArray() {
-        return assetItemList.toArray();
+        return modelItemList.toArray();
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return assetItemList.toArray(a);
+        return modelItemList.toArray(a);
     }
 }

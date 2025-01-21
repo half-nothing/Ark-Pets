@@ -45,7 +45,7 @@ public enum WindowSystem {
      */
     public static void init(WindowSystem platform) {
         PLATFORM = platform;
-        if (PLATFORM == WindowSystem.AUTO){
+        if (PLATFORM == WindowSystem.AUTO) {
             PLATFORM = detectWindowSystem();
         }
         Logger.info("System", "Using " + PLATFORM.toString() + " Window System");

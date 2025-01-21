@@ -22,8 +22,8 @@ public class X11HWndCtrl extends HWndCtrl {
     public static final int STATE_ADD = 1;
 
     public X11HWndCtrl(X11Ext.Window hWnd) {
-        super(winText(hWnd),getWindowRect(hWnd));
-        this.hWnd=hWnd;
+        super(winText(hWnd), getWindowRect(hWnd));
+        this.hWnd = hWnd;
     }
 
     public static void init() {
@@ -184,7 +184,7 @@ public class X11HWndCtrl extends HWndCtrl {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        X11HWndCtrl hWndCtrl = (X11HWndCtrl)o;
+        X11HWndCtrl hWndCtrl = (X11HWndCtrl) o;
         return hWnd.equals(hWndCtrl.hWnd);
     }
 
@@ -371,7 +371,7 @@ public class X11HWndCtrl extends HWndCtrl {
     private static boolean visible(X11.Window hWnd) {
         X11.XWindowAttributes attr = new X11.XWindowAttributes();
         x11.XGetWindowAttributes(display, hWnd, attr);
-        if (attr.map_state != x11.IsViewable) {
+        if (attr.map_state != X11.IsViewable) {
             return false;
         }
         X11.Window root = x11.XDefaultRootWindow(display);

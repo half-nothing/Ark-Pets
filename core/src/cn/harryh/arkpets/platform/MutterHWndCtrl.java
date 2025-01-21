@@ -23,7 +23,7 @@ public class MutterHWndCtrl extends HWndCtrl {
     private static ArkPetsInterface dBusInterface;
 
     protected MutterHWndCtrl(DetailsStruct details) {
-        super(details.title, new WindowRect(details.y, details.y + details.h.intValue(),  details.x, details.x + details.w.intValue()));
+        super(details.title, new WindowRect(details.y, details.y + details.h.intValue(), details.x, details.x + details.w.intValue()));
         this.hWnd = details.id;
         this.details = details;
     }
@@ -65,7 +65,7 @@ public class MutterHWndCtrl extends HWndCtrl {
 
     @Override
     public void setTaskbar(boolean enable) {
-        dBusInterface.Stick(hWnd,!enable);
+        dBusInterface.Stick(hWnd, !enable);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class MutterHWndCtrl extends HWndCtrl {
 
     @Override
     public void setTopmost(boolean enable) {
-        dBusInterface.Above(hWnd,enable);
+        dBusInterface.Above(hWnd, enable);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class MutterHWndCtrl extends HWndCtrl {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MutterHWndCtrl hWndCtrl = (MutterHWndCtrl)o;
+        MutterHWndCtrl hWndCtrl = (MutterHWndCtrl) o;
         return hWnd.equals(hWndCtrl.hWnd);
     }
 
@@ -144,9 +144,9 @@ public class MutterHWndCtrl extends HWndCtrl {
 
         void Activate(UInt32 winid);
 
-        void Above(UInt32 winid,boolean above);
+        void Above(UInt32 winid, boolean above);
 
-        void Stick(UInt32 winid,boolean stick);
+        void Stick(UInt32 winid, boolean stick);
 
         List<DetailsStruct> List();
 

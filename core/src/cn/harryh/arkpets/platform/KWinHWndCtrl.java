@@ -55,7 +55,7 @@ public class KWinHWndCtrl extends HWndCtrl {
 
     @Override
     public void setWindowPosition(HWndCtrl insertAfter, int x, int y, int w, int h) {
-        dBusInterface.MoveResize(hWnd,x,y,new UInt32(w),new UInt32(h));
+        dBusInterface.MoveResize(hWnd, x, y, new UInt32(w), new UInt32(h));
     }
 
     @Override
@@ -133,7 +133,7 @@ public class KWinHWndCtrl extends HWndCtrl {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        KWinHWndCtrl hWndCtrl = (KWinHWndCtrl)o;
+        KWinHWndCtrl hWndCtrl = (KWinHWndCtrl) o;
         return hWnd.equals(hWndCtrl.hWnd);
     }
 
@@ -155,8 +155,6 @@ public class KWinHWndCtrl extends HWndCtrl {
         List<DetailsStruct> List();
 
         DetailsStruct Details(String winid);
-
-        void Alpha(String uuid, double alpha);
 
         boolean IsActive(String uuid);
 

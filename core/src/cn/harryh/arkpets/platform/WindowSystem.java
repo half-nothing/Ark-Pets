@@ -45,12 +45,20 @@ public enum WindowSystem {
      */
     public static void init(WindowSystem platform) {
         PLATFORM = platform;
-        if (PLATFORM == WindowSystem.AUTO){
+        if (PLATFORM == WindowSystem.AUTO) {
             PLATFORM = detectWindowSystem();
         }
         Logger.info("System", "Using " + PLATFORM.toString() + " Window System");
         switch (PLATFORM) {
-            // TODO
+            case MUTTER -> {
+                MutterHWndCtrl.init();
+            }
+            case KWIN -> {
+                KWinHWndCtrl.init();
+            }
+            case X11 -> {
+                X11HWndCtrl.init();
+            }
         }
     }
 
@@ -71,6 +79,15 @@ public enum WindowSystem {
             case USER32 -> {
                 return User32HWndCtrl.find(className, windowText);
             }
+            case MUTTER -> {
+                return MutterHWndCtrl.find(className, windowText);
+            }
+            case KWIN -> {
+                return KWinHWndCtrl.find(className, windowText);
+            }
+            case X11 -> {
+                return X11HWndCtrl.find(className, windowText);
+            }
             default -> {
                 return NullHWndCtrl.find(className, windowText);
             }
@@ -86,6 +103,15 @@ public enum WindowSystem {
             case USER32 -> {
                 return User32HWndCtrl.getWindowList(onlyVisible);
             }
+            case MUTTER -> {
+                return MutterHWndCtrl.getWindowList(onlyVisible);
+            }
+            case KWIN -> {
+                return KWinHWndCtrl.getWindowList(onlyVisible);
+            }
+            case X11 -> {
+                return X11HWndCtrl.getWindowList(onlyVisible);
+            }
             default -> {
                 return new ArrayList<>();
             }
@@ -100,6 +126,15 @@ public enum WindowSystem {
             case USER32 -> {
                 return User32HWndCtrl.getTopmostWindow();
             }
+            case MUTTER -> {
+                return MutterHWndCtrl.getTopmostWindow();
+            }
+            case KWIN -> {
+                return KWinHWndCtrl.getTopmostWindow();
+            }
+            case X11 -> {
+                return X11HWndCtrl.getTopmost();
+            }
             default -> {
                 return new NullHWndCtrl();
             }
@@ -109,7 +144,17 @@ public enum WindowSystem {
     /** Frees all the resources.
      */
     public static void free() {
-        // TODO
+        switch (PLATFORM) {
+            case MUTTER -> {
+                MutterHWndCtrl.free();
+            }
+            case KWIN -> {
+                KWinHWndCtrl.free();
+            }
+            case X11 -> {
+                X11HWndCtrl.free();
+            }
+        }
     }
 
     /** Return current WindowSystem should enable resize.

@@ -21,12 +21,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -58,6 +56,8 @@ public final class RootModule implements Controller<ArkHomeFX> {
     @FXML
     public AnchorPane wrapper3;
     @FXML
+    public Pane wrapper4;
+    @FXML
     private Pane loadingMask;
     @FXML
     private Pane splashScreen;
@@ -75,18 +75,7 @@ public final class RootModule implements Controller<ArkHomeFX> {
     @FXML
     public JFXButton launchBtn;
 
-    @FXML
-    public AnchorPane titleBar;
-    @FXML
-    public Text titleText;
-    @FXML
-    private JFXButton titleMinimizeBtn;
-    @FXML
-    private JFXButton titleCloseBtn;
-
     private ArkHomeFX app;
-    private double xOffset;
-    private double yOffset;
 
     @Override
     public void initializeWith(ArkHomeFX app) {
@@ -196,38 +185,6 @@ public final class RootModule implements Controller<ArkHomeFX> {
             Logger.info("Launcher", "User close request");
             GuiPrefabs.fadeOutWindow(app.stage, durationNormal, ev -> Platform.exit());
         }, durationFast, durationNormal);
-    }
-
-    @FXML
-    public void titleBarPressed(MouseEvent event) {
-        xOffset = event.getSceneX();
-        yOffset = event.getSceneY();
-    }
-
-    @FXML
-    public void titleBarDragged(MouseEvent event) {
-        app.stage.setX(event.getScreenX() - xOffset);
-        app.stage.setY(event.getScreenY() - yOffset);
-    }
-
-    @FXML
-    public void windowMinimize(MouseEvent event) {
-        GuiPrefabs.fadeOutWindow(app.stage, durationFast, e -> {
-            app.stage.hide();
-            app.stage.setIconified(true);
-        });
-    }
-
-    @FXML
-    public void windowClose(MouseEvent event) {
-        String solidExitTip = (app.config != null && app.config.launcher_solid_exit) ?
-            "退出程序将会同时退出已启动的桌宠。" : "退出程序后已启动的桌宠将会保留。";
-        GuiPrefabs.Dialogs.createConfirmDialog(body,
-                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP_ALT, GuiPrefabs.COLOR_INFO),
-                "确认退出",
-                "现在退出 " + appName + " 吗？",
-                "根据您的设置，" + solidExitTip + "\n使用最小化 [-] 按钮可以隐藏窗口到系统托盘。",
-                this::exit).show();
     }
 
     private void initLaunchButton() {

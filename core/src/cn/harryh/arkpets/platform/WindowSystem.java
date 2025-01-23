@@ -29,11 +29,15 @@ public enum WindowSystem {
         } else if (Platform.isLinux()) {
             String desktop = System.getenv("XDG_CURRENT_DESKTOP");
             String type = System.getenv("XDG_SESSION_TYPE");
-            if (desktop.equals("GNOME")) {
-                return WindowSystem.MUTTER;
-            } else if (desktop.equals("KDE")) {
-                return WindowSystem.KWIN;
-            } else if (type.equals("x11")) {
+            if (desktop != null && type != null) {
+                if (desktop.equals("GNOME")) {
+                    return WindowSystem.MUTTER;
+                } else if (desktop.equals("KDE") && type.equals("wayland")) {
+                    return WindowSystem.KWIN;
+                } else if (type.equals("x11")) {
+                    return WindowSystem.X11;
+                }
+            } else {
                 return WindowSystem.X11;
             }
         }
@@ -58,6 +62,9 @@ public enum WindowSystem {
             }
             case X11 -> {
                 X11HWndCtrl.init();
+            }
+            case QUARTZ -> {
+                QuartzHWndCtrl.init();
             }
         }
     }
@@ -88,6 +95,9 @@ public enum WindowSystem {
             case X11 -> {
                 return X11HWndCtrl.find(className, windowText);
             }
+            case QUARTZ -> {
+                return QuartzHWndCtrl.find(className, windowText);
+            }
             default -> {
                 return NullHWndCtrl.find(className, windowText);
             }
@@ -111,6 +121,9 @@ public enum WindowSystem {
             }
             case X11 -> {
                 return X11HWndCtrl.getWindowList(onlyVisible);
+            }
+            case QUARTZ -> {
+                return QuartzHWndCtrl.getWindowList(onlyVisible);
             }
             default -> {
                 return new ArrayList<>();
@@ -153,6 +166,9 @@ public enum WindowSystem {
             }
             case X11 -> {
                 X11HWndCtrl.free();
+            }
+            case QUARTZ -> {
+                QuartzHWndCtrl.free();
             }
         }
     }

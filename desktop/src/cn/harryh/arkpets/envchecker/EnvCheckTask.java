@@ -39,7 +39,6 @@ public abstract class EnvCheckTask {
         ArrayList<EnvCheckTask> list = new ArrayList<>();
         list.add(new SleepEnvCheckTask(1500));
         if(Platform.isWindows()) {
-            list.add(new DWMEnvCheckTask());
             list.add(new WinGraphicsEnvCheckTask());
         }
         return list;

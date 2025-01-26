@@ -61,7 +61,7 @@ allprojects {
         detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
         implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.0")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-        runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
     }
 
     tasks {

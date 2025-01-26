@@ -20,6 +20,7 @@ dependencies {
     // libGDX Desktop
     api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
     api("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
+    implementation("io.github.biezhi:TinyPinyin:2.0.3.RELEASE")
     // sqlite jdbc driver
     implementation("org.xerial:sqlite-jdbc:3.47.2.0")
     // kotlin orm framework

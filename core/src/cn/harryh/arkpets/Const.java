@@ -108,14 +108,11 @@ public final class Const {
 
     public static class RepositoryConfig {
         public static class ModelRepository {
-            public static class MetadataGroup {
-                public static final String defaultGroup = "default";
-                public static final String sortTagGroup = "sortTag";
-            }
-
             public static final String repoName         = "ModelRepository";
-            public static final String repoPath         = "models";
-            public static final String metadataFilePath = "models_data.json";
+            public static final String localPath        = "models";
+            public static final String remotePath       = "remote";
+            public static final String metadataFileName = "models_data.json";
+            public static final String metadataFilePath = localPath + "/" + metadataFileName;
         }
 
         public static class VoiceRepository {

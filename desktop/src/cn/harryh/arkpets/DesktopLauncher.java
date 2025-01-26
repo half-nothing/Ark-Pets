@@ -4,7 +4,7 @@
 package cn.harryh.arkpets;
 
 import cn.harryh.arkpets.kt.repository.ModelRepository;
-import cn.harryh.arkpets.kt.repository.VoiceRepository;
+import cn.harryh.arkpets.kt.repository.RepositoryConfig;
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.Logger;
 import javafx.application.Application;
@@ -62,14 +62,24 @@ public class DesktopLauncher {
             }
         };
 
-        if (Objects.equals(System.getenv("VCS_DEBUG"), "TRUE")) {
+        if (System.getenv("VCS_DEBUG") != null) {
             Logger.setLevel(Logger.DEBUG);
+            RepositoryConfig modelRepositoryConfig = new RepositoryConfig(
+                    Const.RepositoryConfig.ModelRepository.repoName,
+                    Const.RepositoryConfig.ModelRepository.localPath,
+                    Const.RepositoryConfig.ModelRepository.remotePath,
+                    Const.RepositoryConfig.ModelRepository.metadataFileName,
+                    Const.RepositoryConfig.ModelRepository.metadataFileName
+            );
             Long startTime = System.currentTimeMillis();
-            ModelRepository.INSTANCE.initRepository();
-            VoiceRepository.INSTANCE.initRepository();
+            ModelRepository.INSTANCE.initRepository(modelRepositoryConfig);
+//            VoiceRepository.INSTANCE.initRepository();
+            ModelRepository.INSTANCE.getAllEntities();
             Long endTime = System.currentTimeMillis();
             Logger.info("System", "VCS_DEBUG: " + (endTime - startTime) + " ms");
-            return;
+            if (Objects.equals(System.getenv("VCS_DEBUG"), "TRUE")) {
+                return;
+            }
         }
 
         // Java FX bootstrap

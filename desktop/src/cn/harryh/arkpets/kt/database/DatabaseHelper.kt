@@ -1,6 +1,7 @@
 package cn.harryh.arkpets.kt.database
 
 import cn.harryh.arkpets.Const
+import cn.harryh.arkpets.kt.extension.checkFolderExist
 import cn.harryh.arkpets.utils.Logger
 import org.ktorm.database.Database
 import java.io.File
@@ -8,19 +9,13 @@ import java.io.FileNotFoundException
 import java.sql.Connection
 import java.sql.DriverManager
 import kotlin.concurrent.thread
-import kotlin.io.path.Path
-import kotlin.io.path.createDirectories
-import kotlin.io.path.exists
 
 object DatabaseHelper {
     private val database: Database
     private val connection: Connection
 
     init {
-        val path = Path(Const.PathConfig.dataDirPath)
-        if (!path.exists()) {
-            path.createDirectories()
-        }
+        Const.PathConfig.dataDirPath.checkFolderExist(true)
         Class.forName("org.sqlite.JDBC")
         connection = DriverManager.getConnection("jdbc:sqlite:${Const.PathConfig.databaseFilePath}")
         // Register shutdown hook

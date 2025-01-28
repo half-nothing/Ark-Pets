@@ -4,10 +4,14 @@ import cn.harryh.arkpets.utils.IOUtils;
 import cn.harryh.arkpets.utils.Logger;
 import cn.harryh.arkpets.utils.NVAPIWrapper;
 import com.sun.jna.Native;
+import com.sun.jna.NativeLong;
+import com.sun.jna.WString;
 import com.sun.jna.platform.win32.Advapi32;
 import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.Win32Exception;
 import com.sun.jna.platform.win32.WinReg;
 import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.ptr.PointerByReference;
 
 import java.io.File;
 
@@ -35,8 +39,10 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
 
     public WinGraphicsEnvCheckTask() {
         super();
-        launcherPath = new File("ArkPets.exe").getAbsolutePath().replaceAll("\"", "\"\"");
-        javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+        javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
+        File launcher = new File("ArkPets.exe");
+        if(launcher.exists()) launcherPath = launcher.getAbsolutePath().replaceAll("\"", "\"\"");
+        else launcherPath = javaBin;
     }
 
     @Override
@@ -53,10 +59,7 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
     public boolean tryFix() {
         try {
             switch (fix) {
-                case NV -> {
-                    setNvidiaGLSettings(launcherPath);
-                    setNvidiaGLSettings(javaBin);
-                }
+                case NV -> setNvidiaGLSettings(launcherPath, javaBin);
                 case WIN_SAV -> {
                     setWinGraphicsCard(launcherPath, false);
                     setWinGraphicsCard(javaBin, false);
@@ -68,17 +71,14 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
                 case WIN_PERF_NV -> {
                     setWinGraphicsCard(launcherPath, true);
                     setWinGraphicsCard(javaBin, true);
-                    setNvidiaGLSettings(launcherPath);
-                    setNvidiaGLSettings(javaBin);
+                    setNvidiaGLSettings(launcherPath, javaBin);
                 }
             }
         } catch (Exception e) {
             Logger.error("System", "Failed to modify graphics settings", e);
+            failureDetail = "自动设置显卡失败";
+            failureReason = "尝试设置显卡时失败，请查看“常见问题解答”中的方法进行设置。";
             return false;
-        } finally {
-            if (fix == FixMode.NV || fix == FixMode.WIN_PERF_NV) {
-                NVAPIWrapper.NvAPI_Unload();
-            }
         }
         return true;
     }
@@ -103,11 +103,9 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
                     return true;
                 } else if (cards.contains("AMD") && cards.contains("NVIDIA")) {
                     // A+N Hybrid
-                    NVAPIWrapper.NvAPI_Initialize();
                     boolean card = checkWinGraphicsCard(launcherPath, true) && checkWinGraphicsCard(javaBin, true);
-                    boolean nv = checkNvidiaGLSettings(launcherPath) && checkNvidiaGLSettings(javaBin);
+                    boolean nv = checkNvidiaGLSettings();
                     if (card && nv) {
-                        NVAPIWrapper.NvAPI_Unload();
                         return true;
                     }
                     if (!card && !nv) fix = FixMode.WIN_PERF_NV;
@@ -122,13 +120,11 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
                     return false;
                 } else if (cards.contains("NVIDIA")) {
                     // NVIDIA only
-                    NVAPIWrapper.NvAPI_Initialize();
-                    boolean status = checkNvidiaGLSettings(launcherPath) && checkNvidiaGLSettings(javaBin);
+                    boolean status = checkNvidiaGLSettings();
                     if (!status) {
                         fix = FixMode.NV;
                         return false;
                     }
-                    NVAPIWrapper.NvAPI_Unload();
                     return true;
                 } else if (cards.contains("Intel")) {
                     // Intel only
@@ -169,46 +165,104 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
         }
     }
 
-    private static boolean checkNvidiaGLSettings(String path) {
+    public boolean checkNvidiaGLSettings() {
         boolean status = false;
-        //TODO
+        NVAPIWrapper.NvAPI_Initialize();
+        PointerByReference sess = new PointerByReference();
+        NVAPIWrapper.NvAPI_DRS_CreateSession(sess);
+        NVAPIWrapper.NvAPI_DRS_LoadSettings(sess.getValue());
+        PointerByReference pro = new PointerByReference();
+        try {
+            NVAPIWrapper.NvAPI_DRS_FindProfileByName(sess.getValue(),new WString(NVAPI_PROFILE_NAME),pro);
+            status = true;
+        } catch (Exception ignore) {}
+        NVAPIWrapper.NvAPI_DRS_DestroySession(sess.getValue());
+        NVAPIWrapper.NvAPI_Unload();
         return status;
     }
 
-    private static void setNvidiaGLSettings(String path) {
-        //TODO
+    public void setNvidiaGLSettings(String... path) {
+        NVAPIWrapper.NvAPI_Initialize();
+        PointerByReference sess = new PointerByReference();
+        NVAPIWrapper.NvAPI_DRS_CreateSession(sess);
+        NVAPIWrapper.NvAPI_DRS_LoadSettings(sess.getValue());
+        PointerByReference prof = new PointerByReference();
+        NVAPIWrapper.NVDRS_PROFILE.ByReference profile = new NVAPIWrapper.NVDRS_PROFILE.ByReference();
+        NVAPIWrapper.writeStringToShortArray(NVAPI_PROFILE_NAME,profile.profileName);
+        NVAPIWrapper.NvAPI_DRS_CreateProfile(sess.getValue(),profile,prof);
+        for (String p : path) {
+            NVAPIWrapper.NVDRS_APPLICATION.ByReference app = new NVAPIWrapper.NVDRS_APPLICATION.ByReference();
+            NVAPIWrapper.writeStringToShortArray(p,app.appName);
+            NVAPIWrapper.writeStringToShortArray(p,app.userFriendlyName);
+            NVAPIWrapper.NvAPI_DRS_CreateApplication(sess.getValue(),prof.getValue(),app);
+        }
+        NVAPIWrapper.NVDRS_SETTING.ByReference glSetting = new NVAPIWrapper.NVDRS_SETTING.ByReference();
+        glSetting.settingId=new NativeLong(0x2072C5A3);
+        glSetting.settingType = 0;
+        glSetting.currentValue.u32 = new NativeLong(1);
+        //NVAPIWrapper.NVDRS_SETTING.ByReference dxgiSetting = new NVAPIWrapper.NVDRS_SETTING.ByReference();
+        // todo dxgiSetting.settingId= new NativeLong(0x20D690F8);
+        // todo dxgiSetting.currentValue.u32 =
+        //dxgiSetting.settingType = 0;
+        NVAPIWrapper.NVDRS_SETTING.ByReference optimusSetting = new NVAPIWrapper.NVDRS_SETTING.ByReference();
+        optimusSetting.settingId=new NativeLong(0x10F9DC81);
+        optimusSetting.currentValue.u32 = new NativeLong(1);
+        optimusSetting.settingType = 0;
+        NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(),prof.getValue(),glSetting);
+        //NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(),prof.getValue(),dxgiSetting);
+        NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(),prof.getValue(),optimusSetting);
+        NVAPIWrapper.NvAPI_DRS_SaveSettings(sess.getValue());
+        NVAPIWrapper.NvAPI_DRS_DestroySession(sess.getValue());
+        NVAPIWrapper.NvAPI_Unload();
+        Logger.info("EnvCheck", "Success write NVIDIA GPU settings");
     }
 
-    public static boolean checkWinGraphicsCard(String path, boolean performance) {
+    public boolean checkWinGraphicsCard(String path, boolean performance) {
         WinReg.HKEYByReference outKey = new WinReg.HKEYByReference();
         int winstatus = Advapi32.INSTANCE.RegOpenKeyEx(HKEY_CURRENT_USER,
                 "Software\\Microsoft\\DirectX\\UserGpuPreferences", 0, KEY_READ, outKey);
-        if (winstatus != 0) throw new RuntimeException("Registry open fail: " + winstatus);
+        if (winstatus != 0) throw new Win32Exception(winstatus);
         char[] data = new char[1024];
         winstatus = Advapi32.INSTANCE.RegQueryValueEx(outKey.getValue(), path, 0,
                 new IntByReference(REG_SZ), data, new IntByReference(1024));
         if (winstatus != 0) {
-            if (winstatus == 2) return !performance; // not found, power saving possible
-            throw new RuntimeException("Registry query fail: " + winstatus);
+            if (winstatus == 2) return false; // not found, uncertain card.
+            throw new Win32Exception(winstatus);
         }
         String value = Native.toString(data);
         Advapi32.INSTANCE.RegCloseKey(outKey.getValue());
-        if (value.contains("GpuPreference=0;") && !performance) return true; // power saving possible
+        if (value.contains("GpuPreference=0;")) return false; // uncertain card.
         if (value.contains("GpuPreference=1;") && !performance) return true;
         return value.contains("GpuPreference=2;") && performance;
     }
 
-    public static void setWinGraphicsCard(String path, boolean performance) {
+    public void setWinGraphicsCard(String path, boolean performance) {
         WinReg.HKEYByReference outKey = new WinReg.HKEYByReference();
         int winstatus = Advapi32.INSTANCE.RegOpenKeyEx(HKEY_CURRENT_USER,
                 "Software\\Microsoft\\DirectX\\UserGpuPreferences", 0, KEY_WRITE, outKey);
-        if (winstatus != 0) throw new RuntimeException("Registry open fail: " + winstatus);
+        if (winstatus != 0) throw new Win32Exception(winstatus);
         String value = performance ? "GpuPreference=2;" : "GpuPreference=1;";
         Advapi32Util.registrySetStringValue(outKey.getValue(), path, value);
         Advapi32.INSTANCE.RegCloseKey(outKey.getValue());
+        Logger.info("EnvCheck", "Success set GPU to " + (performance ? "performance" : "power-saving") + "mode");
     }
 
-    private static void removeNvidiaSettings(String path) {
-
+    public void removeNvidiaSettings() {
+        try {
+            String cards = wmicCheck();
+            if (cards != null && cards.contains("NVIDIA")) {
+                NVAPIWrapper.NvAPI_Initialize();
+                PointerByReference sess = new PointerByReference();
+                NVAPIWrapper.NvAPI_DRS_CreateSession(sess);
+                NVAPIWrapper.NvAPI_DRS_LoadSettings(sess.getValue());
+                PointerByReference pro = new PointerByReference();
+                NVAPIWrapper.NvAPI_DRS_FindProfileByName(sess.getValue(),new WString(NVAPI_PROFILE_NAME),pro);
+                NVAPIWrapper.NvAPI_DRS_DeleteProfile(sess.getValue(),pro.getValue());
+                NVAPIWrapper.NvAPI_DRS_SaveSettings(sess.getValue());
+                NVAPIWrapper.NvAPI_DRS_DestroySession(sess.getValue());
+                NVAPIWrapper.NvAPI_Unload();
+                Logger.info("EnvCheck", "Success remove NVIDIA GPU settings");
+            }
+        } catch (Exception ignore) {}
     }
 }

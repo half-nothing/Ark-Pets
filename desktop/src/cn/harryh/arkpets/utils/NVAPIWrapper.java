@@ -1,7 +1,6 @@
 package cn.harryh.arkpets.utils;
 
 import com.sun.jna.*;
-import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 
@@ -22,10 +21,6 @@ public class NVAPIWrapper {
         checkStatus(getFunction(0x375DBD6B).invokeInt(new Object[]{hSession}));
     }
 
-    public static void NvAPI_DRS_GetSetting(Pointer hSession, Pointer hProfile,NativeLong settingId,NVDRS_SETTING.ByReference pSetting) {
-        checkStatus(getFunction(0x73BF8338).invokeInt(new Object[]{hSession,hProfile,settingId,pSetting}));
-    }
-
     public static void NvAPI_DRS_SaveSettings(Pointer hSession) {
         checkStatus(getFunction(0xFCBC7E14).invokeInt(new Object[]{hSession}));
     }
@@ -38,12 +33,20 @@ public class NVAPIWrapper {
         checkStatus(getFunction(0xD22BDD7E).invokeInt(new Object[]{}));
     }
 
-    public static void NvAPI_DRS_EnumApplications(Pointer hSession, Pointer hProfile, NativeLong startIndex, LongByReference appCount, NVDRS_APPLICATION.ByReference pApplication) {
-        checkStatus(getFunction(0x7FA2173A).invokeInt(new Object[]{hSession, hProfile, startIndex, appCount, pApplication}));
+    public static void NvAPI_DRS_CreateApplication(Pointer hSession, Pointer hProfile, NVDRS_APPLICATION.ByReference pApplication) {
+        checkStatus(getFunction(0x4347A9DE).invokeInt(new Object[]{hSession, hProfile, pApplication}));
+    }
+
+    public static void NvAPI_DRS_CreateProfile(Pointer hSession, NVDRS_PROFILE.ByReference pProfileInfo, PointerByReference phProfile) {
+        checkStatus(getFunction(0xCC176068).invokeInt(new Object[]{hSession,pProfileInfo,phProfile}));
     }
 
     public static void NvAPI_DRS_SetSetting(Pointer hSession, Pointer hProfile,NVDRS_SETTING.ByReference setting) {
         checkStatus(getFunction(0x577DD202).invokeInt(new Object[]{hSession,hProfile,setting}));
+    }
+
+    public static void NvAPI_DRS_DeleteProfile(Pointer hSession, Pointer hProfile) {
+        checkStatus(getFunction(0x17093206).invokeInt(new Object[]{hSession,hProfile}));
     }
 
 
@@ -126,6 +129,22 @@ public class NVAPIWrapper {
         public static class ByReference extends NVDRS_APPLICATION implements Structure.ByReference {}
     }
 
+    @Structure.FieldOrder({"version", "profileName", "gpuSupport", "isPredefined", "numOfApps", "numOfSettings"})
+    public static class NVDRS_PROFILE extends Structure {
+        public NativeLong version;
+        public short[] profileName = new short[2048];
+        public NativeLong gpuSupport;
+
+        public NativeLong isPredefined;
+        public NativeLong numOfApps;
+        public NativeLong numOfSettings;
+        public NVDRS_PROFILE() {
+            super();
+            version = new NativeLong((size() | ((1)<<16)));
+        }
+        public static class ByReference extends NVDRS_PROFILE implements Structure.ByReference {}
+    }
+
     private static Function getFunction(int id) {
         return Function.getFunction(NVAPI.INSTANCE.nvapi_QueryInterface(id));
     }
@@ -153,5 +172,12 @@ public class NVAPIWrapper {
             sb.append((char)value);
         }
         return sb.toString();
+    }
+
+    public static void writeStringToShortArray(String str,short[] target) {
+        char[] strarr = str.toCharArray();
+        for (int i = 0; i < strarr.length; i++) {
+            target[i] = (short) strarr[i];
+        }
     }
 }

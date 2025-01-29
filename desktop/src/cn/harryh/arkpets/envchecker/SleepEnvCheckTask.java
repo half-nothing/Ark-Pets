@@ -1,7 +1,7 @@
 package cn.harryh.arkpets.envchecker;
 
-public class SleepEnvCheckTask extends EnvCheckTask{
-    private int time;
+public class SleepEnvCheckTask extends EnvCheckTask {
+    private final int time;
 
     public SleepEnvCheckTask(int time) {
         super();
@@ -12,7 +12,8 @@ public class SleepEnvCheckTask extends EnvCheckTask{
     public boolean run() {
         try {
             Thread.sleep(time);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return true;
     }
 

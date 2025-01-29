@@ -41,7 +41,7 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
         super();
         javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
         File launcher = new File("ArkPets.exe");
-        if(launcher.exists()) launcherPath = launcher.getAbsolutePath().replaceAll("\"", "\"\"");
+        if (launcher.exists()) launcherPath = launcher.getAbsolutePath().replaceAll("\"", "\"\"");
         else launcherPath = javaBin;
     }
 
@@ -173,9 +173,10 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
         NVAPIWrapper.NvAPI_DRS_LoadSettings(sess.getValue());
         PointerByReference pro = new PointerByReference();
         try {
-            NVAPIWrapper.NvAPI_DRS_FindProfileByName(sess.getValue(),new WString(NVAPI_PROFILE_NAME),pro);
+            NVAPIWrapper.NvAPI_DRS_FindProfileByName(sess.getValue(), new WString(NVAPI_PROFILE_NAME), pro);
             status = true;
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         NVAPIWrapper.NvAPI_DRS_DestroySession(sess.getValue());
         NVAPIWrapper.NvAPI_Unload();
         return status;
@@ -188,16 +189,16 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
         NVAPIWrapper.NvAPI_DRS_LoadSettings(sess.getValue());
         PointerByReference prof = new PointerByReference();
         NVAPIWrapper.NVDRS_PROFILE.ByReference profile = new NVAPIWrapper.NVDRS_PROFILE.ByReference();
-        NVAPIWrapper.writeStringToShortArray(NVAPI_PROFILE_NAME,profile.profileName);
-        NVAPIWrapper.NvAPI_DRS_CreateProfile(sess.getValue(),profile,prof);
+        NVAPIWrapper.writeStringToShortArray(NVAPI_PROFILE_NAME, profile.profileName);
+        NVAPIWrapper.NvAPI_DRS_CreateProfile(sess.getValue(), profile, prof);
         for (String p : path) {
             NVAPIWrapper.NVDRS_APPLICATION.ByReference app = new NVAPIWrapper.NVDRS_APPLICATION.ByReference();
-            NVAPIWrapper.writeStringToShortArray(p,app.appName);
-            NVAPIWrapper.writeStringToShortArray(p,app.userFriendlyName);
-            NVAPIWrapper.NvAPI_DRS_CreateApplication(sess.getValue(),prof.getValue(),app);
+            NVAPIWrapper.writeStringToShortArray(p, app.appName);
+            NVAPIWrapper.writeStringToShortArray(p, app.userFriendlyName);
+            NVAPIWrapper.NvAPI_DRS_CreateApplication(sess.getValue(), prof.getValue(), app);
         }
         NVAPIWrapper.NVDRS_SETTING.ByReference glSetting = new NVAPIWrapper.NVDRS_SETTING.ByReference();
-        glSetting.settingId=new NativeLong(0x2072C5A3);
+        glSetting.settingId = new NativeLong(0x2072C5A3);
         glSetting.settingType = 0;
         glSetting.currentValue.u32 = new NativeLong(1);
         //NVAPIWrapper.NVDRS_SETTING.ByReference dxgiSetting = new NVAPIWrapper.NVDRS_SETTING.ByReference();
@@ -205,12 +206,12 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
         // todo dxgiSetting.currentValue.u32 =
         //dxgiSetting.settingType = 0;
         NVAPIWrapper.NVDRS_SETTING.ByReference optimusSetting = new NVAPIWrapper.NVDRS_SETTING.ByReference();
-        optimusSetting.settingId=new NativeLong(0x10F9DC81);
+        optimusSetting.settingId = new NativeLong(0x10F9DC81);
         optimusSetting.currentValue.u32 = new NativeLong(1);
         optimusSetting.settingType = 0;
-        NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(),prof.getValue(),glSetting);
+        NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(), prof.getValue(), glSetting);
         //NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(),prof.getValue(),dxgiSetting);
-        NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(),prof.getValue(),optimusSetting);
+        NVAPIWrapper.NvAPI_DRS_SetSetting(sess.getValue(), prof.getValue(), optimusSetting);
         NVAPIWrapper.NvAPI_DRS_SaveSettings(sess.getValue());
         NVAPIWrapper.NvAPI_DRS_DestroySession(sess.getValue());
         NVAPIWrapper.NvAPI_Unload();
@@ -256,13 +257,14 @@ public class WinGraphicsEnvCheckTask extends EnvCheckTask {
                 NVAPIWrapper.NvAPI_DRS_CreateSession(sess);
                 NVAPIWrapper.NvAPI_DRS_LoadSettings(sess.getValue());
                 PointerByReference pro = new PointerByReference();
-                NVAPIWrapper.NvAPI_DRS_FindProfileByName(sess.getValue(),new WString(NVAPI_PROFILE_NAME),pro);
-                NVAPIWrapper.NvAPI_DRS_DeleteProfile(sess.getValue(),pro.getValue());
+                NVAPIWrapper.NvAPI_DRS_FindProfileByName(sess.getValue(), new WString(NVAPI_PROFILE_NAME), pro);
+                NVAPIWrapper.NvAPI_DRS_DeleteProfile(sess.getValue(), pro.getValue());
                 NVAPIWrapper.NvAPI_DRS_SaveSettings(sess.getValue());
                 NVAPIWrapper.NvAPI_DRS_DestroySession(sess.getValue());
                 NVAPIWrapper.NvAPI_Unload();
                 Logger.info("EnvCheck", "Success remove NVIDIA GPU settings");
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 }

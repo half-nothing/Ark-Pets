@@ -38,7 +38,7 @@ public abstract class EnvCheckTask {
     public static List<EnvCheckTask> getAvailableTasks() {
         ArrayList<EnvCheckTask> list = new ArrayList<>();
         list.add(new SleepEnvCheckTask(1500));
-        if(Platform.isWindows()) {
+        if (Platform.isWindows()) {
             list.add(new WinGraphicsEnvCheckTask());
         }
         return list;

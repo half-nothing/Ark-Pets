@@ -290,15 +290,16 @@ public class IOUtils {
          */
         public static String runCommand(String command, String[] env, File workdir) throws IOException {
             Runtime runtime = Runtime.getRuntime();
-            Process process = runtime.exec(command,env,workdir);
+            Process process = runtime.exec(command, env, workdir);
             try {
                 process.waitFor();
-            } catch (InterruptedException ignore) {}
-            if (process.exitValue() == 0){
+            } catch (InterruptedException ignore) {
+            }
+            if (process.exitValue() == 0) {
                 BufferedReader reader = process.inputReader();
                 String line;
                 StringBuilder b = new StringBuilder();
-                while ((line=reader.readLine())!=null) {
+                while ((line = reader.readLine()) != null) {
                     b.append(line);
                 }
                 reader.close();

@@ -38,15 +38,15 @@ public class NVAPIWrapper {
     }
 
     public static void NvAPI_DRS_CreateProfile(Pointer hSession, NVDRS_PROFILE.ByReference pProfileInfo, PointerByReference phProfile) {
-        checkStatus(getFunction(0xCC176068).invokeInt(new Object[]{hSession,pProfileInfo,phProfile}));
+        checkStatus(getFunction(0xCC176068).invokeInt(new Object[]{hSession, pProfileInfo, phProfile}));
     }
 
-    public static void NvAPI_DRS_SetSetting(Pointer hSession, Pointer hProfile,NVDRS_SETTING.ByReference setting) {
-        checkStatus(getFunction(0x577DD202).invokeInt(new Object[]{hSession,hProfile,setting}));
+    public static void NvAPI_DRS_SetSetting(Pointer hSession, Pointer hProfile, NVDRS_SETTING.ByReference setting) {
+        checkStatus(getFunction(0x577DD202).invokeInt(new Object[]{hSession, hProfile, setting}));
     }
 
     public static void NvAPI_DRS_DeleteProfile(Pointer hSession, Pointer hProfile) {
-        checkStatus(getFunction(0x17093206).invokeInt(new Object[]{hSession,hProfile}));
+        checkStatus(getFunction(0x17093206).invokeInt(new Object[]{hSession, hProfile}));
     }
 
 
@@ -61,21 +61,22 @@ public class NVAPIWrapper {
         public NativeLong isPredefinedValid;
         public DrsSettingValue predefinedValue;
         public DrsSettingValue currentValue;
+
         public NVDRS_SETTING() {
             super();
-            version = new NativeLong((size() | ((1)<<16)));
+            version = new NativeLong((size() | ((1) << 16)));
         }
 
         @Override
         public void read() {
             super.read();
-            if (settingType==0) {
+            if (settingType == 0) {
                 predefinedValue.setType(NativeLong.class);
                 currentValue.setType(NativeLong.class);
-            } else if (settingType==1) {
+            } else if (settingType == 1) {
                 predefinedValue.setType(NVDRS_BINARY_SETTING.class);
                 currentValue.setType(NVDRS_BINARY_SETTING.class);
-            } else if (settingType==3 || settingType == 4 ){
+            } else if (settingType == 3 || settingType == 4) {
                 predefinedValue.setType(Short[].class);
                 currentValue.setType(Short[].class);
             }
@@ -86,13 +87,13 @@ public class NVAPIWrapper {
         @Override
         public void write() {
             super.write();
-            if (settingType==0) {
+            if (settingType == 0) {
                 predefinedValue.setType(NativeLong.class);
                 currentValue.setType(NativeLong.class);
-            } else if (settingType==1) {
+            } else if (settingType == 1) {
                 predefinedValue.setType(NVDRS_BINARY_SETTING.class);
                 currentValue.setType(NVDRS_BINARY_SETTING.class);
-            } else if (settingType==3 || settingType == 4 ){
+            } else if (settingType == 3 || settingType == 4) {
                 predefinedValue.setType(Short.class);
                 currentValue.setType(Short.class);
             }
@@ -100,7 +101,8 @@ public class NVAPIWrapper {
             currentValue.write();
         }
 
-        public static class ByReference extends NVDRS_SETTING implements Structure.ByReference {}
+        public static class ByReference extends NVDRS_SETTING implements Structure.ByReference {
+        }
     }
 
     public static class DrsSettingValue extends Union {
@@ -108,11 +110,14 @@ public class NVAPIWrapper {
         public NVDRS_BINARY_SETTING binary;
         public short[] wsz = new short[2048];
     }
-    @Structure.FieldOrder({"valueLength","valueData"})
+
+    @Structure.FieldOrder({"valueLength", "valueData"})
     public static class NVDRS_BINARY_SETTING extends Structure {
         public NativeLong valueLength;
         public byte[] valueData = new byte[4096];
-        public static class ByReference extends NVDRS_BINARY_SETTING implements Structure.ByReference {}
+
+        public static class ByReference extends NVDRS_BINARY_SETTING implements Structure.ByReference {
+        }
     }
 
     @Structure.FieldOrder({"version", "isPredefined", "appName", "userFriendlyName", "launcher"})
@@ -122,11 +127,14 @@ public class NVAPIWrapper {
         public short[] appName = new short[2048];
         public short[] userFriendlyName = new short[2048];
         public short[] launcher = new short[2048];
+
         public NVDRS_APPLICATION() {
             super();
-            version = new NativeLong((size() | ((1)<<16)));
+            version = new NativeLong((size() | ((1) << 16)));
         }
-        public static class ByReference extends NVDRS_APPLICATION implements Structure.ByReference {}
+
+        public static class ByReference extends NVDRS_APPLICATION implements Structure.ByReference {
+        }
     }
 
     @Structure.FieldOrder({"version", "profileName", "gpuSupport", "isPredefined", "numOfApps", "numOfSettings"})
@@ -138,11 +146,14 @@ public class NVAPIWrapper {
         public NativeLong isPredefined;
         public NativeLong numOfApps;
         public NativeLong numOfSettings;
+
         public NVDRS_PROFILE() {
             super();
-            version = new NativeLong((size() | ((1)<<16)));
+            version = new NativeLong((size() | ((1) << 16)));
         }
-        public static class ByReference extends NVDRS_PROFILE implements Structure.ByReference {}
+
+        public static class ByReference extends NVDRS_PROFILE implements Structure.ByReference {
+        }
     }
 
     private static Function getFunction(int id) {
@@ -152,7 +163,7 @@ public class NVAPIWrapper {
     private static void checkStatus(int status) {
         if (status != 0) {
             byte[] errmsg = new byte[64];
-            getFunction(0x6C2D048C).invokeInt(new Object[]{status,errmsg});
+            getFunction(0x6C2D048C).invokeInt(new Object[]{status, errmsg});
             throw new RuntimeException("Failed to execute NVAPI, message: " + Native.toString(errmsg));
         }
     }
@@ -169,12 +180,12 @@ public class NVAPIWrapper {
             if (value == 0) {
                 break;
             }
-            sb.append((char)value);
+            sb.append((char) value);
         }
         return sb.toString();
     }
 
-    public static void writeStringToShortArray(String str,short[] target) {
+    public static void writeStringToShortArray(String str, short[] target) {
         char[] strarr = str.toCharArray();
         for (int i = 0; i < strarr.length; i++) {
             target[i] = (short) strarr[i];

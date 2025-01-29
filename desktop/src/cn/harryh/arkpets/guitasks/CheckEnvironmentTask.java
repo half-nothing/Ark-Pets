@@ -9,7 +9,7 @@ import javafx.scene.layout.StackPane;
 import java.util.List;
 
 
-public class CheckEnvironmentTask extends GuiTask{
+public class CheckEnvironmentTask extends GuiTask {
     private String failureReason;
     private String failureContent;
     private CheckStatus status;
@@ -25,15 +25,15 @@ public class CheckEnvironmentTask extends GuiTask{
         RUNNING
     }
 
-    public CheckEnvironmentTask(StackPane parent,List<EnvCheckTask> list) {
+    public CheckEnvironmentTask(StackPane parent, List<EnvCheckTask> list) {
         super(parent, GuiTaskStyle.STRICT);
         this.parent = parent;
         this.list = list;
     }
 
-    public CheckEnvironmentTask(StackPane parent,List<EnvCheckTask> list,Runnable success) {
-        this(parent,list);
-        this.success=success;
+    public CheckEnvironmentTask(StackPane parent, List<EnvCheckTask> list, Runnable success) {
+        this(parent, list);
+        this.success = success;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class CheckEnvironmentTask extends GuiTask{
         if (style != GuiTaskStyle.HIDDEN) {
             if (status == CheckStatus.FAILED) {
                 GuiPrefabs.Dialogs.createCommonDialog(parent,
-                        GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT,GuiPrefabs.COLOR_WARNING),
+                        GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT, GuiPrefabs.COLOR_WARNING),
                         "环境检查警告",
                         failureReason,
                         failureContent,
@@ -125,7 +125,7 @@ public class CheckEnvironmentTask extends GuiTask{
         boolean fixResult = fixtask.tryFix();
         if (!fixResult) {
             GuiPrefabs.Dialogs.createCommonDialog(parent,
-                    GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT,GuiPrefabs.COLOR_WARNING),
+                    GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT, GuiPrefabs.COLOR_WARNING),
                     "环境检查警告",
                     fixtask.getFailureReason(),
                     fixtask.getFailureDetail(),
@@ -133,6 +133,6 @@ public class CheckEnvironmentTask extends GuiTask{
             return;
         }
         list.remove(0);
-        new CheckEnvironmentTask(parent,list).start();
+        new CheckEnvironmentTask(parent, list).start();
     }
 }

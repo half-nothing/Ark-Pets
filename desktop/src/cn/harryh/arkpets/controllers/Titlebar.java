@@ -28,6 +28,8 @@ public class Titlebar implements Controller<ArkHomeFX> {
     @FXML
     public ImageView titleMacMinimizeImage;
 
+    public static boolean forceMacTitleBar;
+
     private ArkHomeFX app;
     private double xOffset;
     private double yOffset;
@@ -41,7 +43,7 @@ public class Titlebar implements Controller<ArkHomeFX> {
     @Override
     public void initializeWith(ArkHomeFX app) {
         this.app = app;
-        if (System.getProperty("arkpets.mactitlebar", "").equals("true") || com.sun.jna.Platform.isMac())
+        if (forceMacTitleBar || com.sun.jna.Platform.isMac())
             initMacTitlebar();
     }
 

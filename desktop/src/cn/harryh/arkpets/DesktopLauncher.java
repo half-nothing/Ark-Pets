@@ -3,6 +3,7 @@
  */
 package cn.harryh.arkpets;
 
+import cn.harryh.arkpets.controllers.Titlebar;
 import cn.harryh.arkpets.envchecker.WinGraphicsEnvCheckTask;
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.Logger;
@@ -59,6 +60,13 @@ public class DesktopLauncher {
             protected void process(String command, String addition) {
                 EmbeddedLauncher.main(args);
                 System.exit(0);
+            }
+        };
+        // Change ui style
+        new ArgPending("--ui-style", args) {
+            @Override
+            protected void process(String command, String addition) {
+                if (addition.equals("mac")) Titlebar.forceMacTitleBar = true;
             }
         };
         // Remove NVIDIA settings on uninstall

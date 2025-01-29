@@ -209,7 +209,7 @@ public final class RootModule implements Controller<ArkHomeFX> {
         // Set handler for internal start button.
         launchBtn.setOnAction(e -> {
             // When request to launch ArkPets:
-            if (true && !checkEnd) { //todo newcome
+            if (isNewcomer && !checkEnd) {
                 checkEnd = true;
                 dialog.show();
                 return;

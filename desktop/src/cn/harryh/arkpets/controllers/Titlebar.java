@@ -28,7 +28,7 @@ public class Titlebar implements Controller<ArkHomeFX> {
     @FXML
     public ImageView titleMacMinimizeImage;
 
-    public static boolean forceMacTitleBar;
+    public static String forceUiStyle;
 
     private ArkHomeFX app;
     private double xOffset;
@@ -43,8 +43,11 @@ public class Titlebar implements Controller<ArkHomeFX> {
     @Override
     public void initializeWith(ArkHomeFX app) {
         this.app = app;
-        if (forceMacTitleBar || com.sun.jna.Platform.isMac())
+        if (forceUiStyle.equals("mac") || com.sun.jna.Platform.isMac()) {
             initMacTitlebar();
+        } else if (forceUiStyle.equals("win") || com.sun.jna.Platform.isWindows()){
+
+        }
     }
 
     @FXML

@@ -66,7 +66,7 @@ public class DesktopLauncher {
         new ArgPending("--ui-style", args) {
             @Override
             protected void process(String command, String addition) {
-                if (addition.equals("mac")) Titlebar.forceMacTitleBar = true;
+                Titlebar.forceUiStyle = addition.toLowerCase();
             }
         };
         // Remove NVIDIA settings on uninstall

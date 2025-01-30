@@ -523,6 +523,15 @@ ProgressBar:indeterminate>.bar {
     -fx-background-color: #305890;
 }
 
+#Title-minimize-btn-mac,
+#Title-close-btn-mac {
+    -fx-fill: inherit;
+}
+
+#Title-close-btn-mac {
+    -fx-background-radius: 8px 0 0 0;
+}
+
 #Title-close-btn:hover,
 #Title-close-btn:focused {
     -fx-background-color: #CC2211;

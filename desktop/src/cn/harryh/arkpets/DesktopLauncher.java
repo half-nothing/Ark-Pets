@@ -3,6 +3,8 @@
  */
 package cn.harryh.arkpets;
 
+import cn.harryh.arkpets.controllers.Titlebar;
+import cn.harryh.arkpets.envchecker.WinGraphicsEnvCheckTask;
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.Logger;
 import javafx.application.Application;
@@ -58,6 +60,20 @@ public class DesktopLauncher {
             protected void process(String command, String addition) {
                 EmbeddedLauncher.main(args);
                 System.exit(0);
+            }
+        };
+        // Change ui style
+        new ArgPending("--ui-style", args) {
+            @Override
+            protected void process(String command, String addition) {
+                Titlebar.forceUiStyle = addition.toLowerCase();
+            }
+        };
+        // Remove NVIDIA settings on uninstall
+        new ArgPending("--remove-nvidia", args) {
+            @Override
+            protected void process(String command, String addition) {
+                new WinGraphicsEnvCheckTask().removeNvidiaSettings();
             }
         };
         // Disable libdecor to avoid glfw and javafx problem

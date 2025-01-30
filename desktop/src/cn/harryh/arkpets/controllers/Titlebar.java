@@ -28,7 +28,7 @@ public class Titlebar implements Controller<ArkHomeFX> {
     @FXML
     public ImageView titleMacMinimizeImage;
 
-    public static String forceUiStyle;
+    public static String forceUiStyle = "";
 
     private ArkHomeFX app;
     private double xOffset;

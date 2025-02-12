@@ -15,9 +15,8 @@ uniform vec4 u_shadowColor;     // Required
 uniform ivec2 u_textureSize;    // Required
 uniform float u_alpha;          // Required
 
-const float c_alphaLv0 = 0.1;
-const float c_alphaLv1 = 0.4;
-const float c_alphaLv2 = 0.9;
+const float c_alphaLow = 0.1;
+const float c_alphaHigh = 0.9;
 const float c_seamCoef = 0.6;
 const float c_outlineOverstate = 10.0;
 const float c_shadowOffset = 2.0;
@@ -29,21 +28,6 @@ const float gaussianNeighborKernel[25] = float[25] (
 0.0158805, 0.0711714, 0.1173418, 0.0711714, 0.0158805,
 0.0035434, 0.0158805, 0.0261825, 0.0158805, 0.0035434
 );
-
-vec4[24] getSimpleNeighbors(vec2 unitLength) {
-    vec4 neighbors[24];
-    int i = 0;
-    for (int y = -2; y <= 2; y++) {
-        for (int x = -2; x <= 2; x++) {
-            if (!(y == 0 && x == 0)) {
-                vec2 offset = vec2(x, y) * unitLength;
-                neighbors[i] = texture2D(u_texture, v_texCoords + offset);
-                i++;
-            }
-        }
-    }
-    return neighbors;
-}
 
 vec4[24] getGaussianNeighbors(vec2 unitLength) {
     vec4 neighbors[24];
@@ -76,31 +60,10 @@ vec4 getOutlined() {
     if (u_outlineColor.a > 0.0 && u_outlineWidth > 0.0 && u_outlineAlpha > 0.0) {
         vec2 relOutlineWidth = vec2(1.0) / u_textureSize * u_outlineWidth;
         vec4 neighbor = getGaussianNeighborsSum(relOutlineWidth) * c_outlineOverstate;
-        if (neighbor.a > c_alphaLv0) {
+        if (neighbor.a > c_alphaLow) {
             texColor.rgb = u_outlineColor.rgb;
             texColor.a = min(1.0, neighbor.a) * u_outlineColor.a * u_outlineAlpha;
         }
-    }
-    return texColor;
-}
-
-vec4 getSeamed() {
-    vec4 texColor = texture2D(u_texture, v_texCoords);
-    vec2 relPixelSize = vec2(1.0) / u_textureSize;
-    vec4[24] neighbors = getSimpleNeighbors(relPixelSize);
-    vec4 sampleColor = vec4(0.0);
-    int sampleSize = 0;
-    for (int i = 0; i < neighbors.length(); i++) {
-        if (neighbors[i].a > c_alphaLv2) {
-            sampleColor += neighbors[i];
-            sampleSize++;
-        }
-    }
-    if (sampleSize > 0) {
-        texColor.rgb = mix(sampleColor.rgb / sampleSize, texColor.rgb, c_seamCoef);
-        texColor.a = min(1.0, texColor.a * 2.0);
-    } else {
-        texColor.a = c_alphaLv2;
     }
     return texColor;
 }
@@ -117,20 +80,15 @@ vec4 getBoxShadow() {
 void main() {
     vec4 texColor = texture2D(u_texture, v_texCoords);
 
-    if (texColor.a < c_alphaLv2) {
-        if (texColor.a < c_alphaLv0) {
-            // Outline effect apply on transparent areas
+    if (texColor.a < c_alphaHigh) {
+        if (texColor.a < c_alphaLow) {
+            // Outline effect
             texColor = getOutlined();
-        } else if (texColor.a < c_alphaLv1) {
-            // No effect apply on these areas
-        } else {
-            // Seaming apply on gap areas
-            texColor = getSeamed();
         }
-        // Box shadow
+        // Box shadow effect
         texColor = mix(getBoxShadow(), texColor, texColor.a);
     } else {
-        // No effect apply on other areas
+        // No effect
     }
 
     // Ultimate composing

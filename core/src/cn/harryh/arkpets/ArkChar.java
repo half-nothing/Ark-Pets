@@ -69,9 +69,7 @@ public class ArkChar {
         camera.setMinInsert(canvasReserveLength - canvasMaxSize);
         batch = new TwoColorPolygonBatch();
         renderer = new SkeletonRenderer();
-        /* Pre-multiplied alpha shouldn't be applied to models released in Arknights 2.1.41 or later,
-        otherwise you may get a corrupted rendering result. */
-        renderer.setPremultipliedAlpha(false);
+        renderer.setPremultipliedAlpha(true);
         /* Shader pedantic should be disabled to avoid uniform not-found error. */
         ShaderProgram.pedantic = false;
         shader1 = getShader(pass1VShader, pass1FShader);
@@ -256,6 +254,7 @@ public class ArkChar {
         batch.setShader(shader2);
         ScreenUtils.clear(0, 0, 0, 0, true);
         batch.begin();
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         batch.draw(bgTexture, 0, 0);
         batch.draw(passedTexture,
                 0, 0, 0, 0, camera.getWidth(), camera.getHeight(),

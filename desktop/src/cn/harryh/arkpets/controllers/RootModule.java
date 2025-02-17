@@ -9,6 +9,7 @@ import cn.harryh.arkpets.EmbeddedLauncher;
 import cn.harryh.arkpets.concurrent.ProcessPool;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
 import cn.harryh.arkpets.guitasks.CheckEnvironmentTask;
+import cn.harryh.arkpets.guitasks.DeleteTempFilesTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
 import cn.harryh.arkpets.envchecker.EnvCheckTask;
 import cn.harryh.arkpets.utils.ArgPending;
@@ -182,12 +183,26 @@ public final class RootModule implements Controller<ArkHomeFX> {
         new CheckAppUpdateTask(app.body, GuiTask.GuiTaskStyle.HIDDEN, "auto").start();
     }
 
-    /** Plays the exit animation and then invokes {@link Platform#exit()}.
+    /** Plays the exit animation, deletes temp files, then invokes {@link Platform#exit()}.
      */
     public void exit() {
         popSplashScreen(e -> {
             Logger.info("Launcher", "User close request");
-            GuiPrefabs.fadeOutWindow(app.stage, durationNormal, ev -> Platform.exit());
+            GuiPrefabs.fadeOutWindow(
+                    app.stage,
+                    durationNormal,
+                    ev -> new DeleteTempFilesTask(app.body, GuiTask.GuiTaskStyle.HIDDEN, ".+", 24 * 3600000) {
+                        @Override
+                        protected void onFailed(Throwable e) {
+                            Platform.exit();
+                        }
+
+                        @Override
+                        protected void onSucceeded(boolean result) {
+                            Platform.exit();
+                        }
+                    }.start()
+            );
         }, durationFast, durationNormal);
     }
 

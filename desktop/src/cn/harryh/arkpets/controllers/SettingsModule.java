@@ -7,24 +7,32 @@ import cn.harryh.arkpets.ArkConfig;
 import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.Const;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
+import cn.harryh.arkpets.guitasks.CheckEnvironmentTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
-import cn.harryh.arkpets.platform.StartupConfig;
+import cn.harryh.arkpets.startup.StartupConfig;
+import cn.harryh.arkpets.platform.WindowSystem;
+import cn.harryh.arkpets.envchecker.EnvCheckTask;
 import cn.harryh.arkpets.utils.*;
 import cn.harryh.arkpets.utils.GuiComponents.*;
 import com.badlogic.gdx.graphics.Color;
 import com.jfoenix.controls.*;
+import com.sun.jna.Platform;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.apache.log4j.Level;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -97,7 +105,12 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXCheckBox configWindowToolwindow;
     @FXML
     private JFXButton configWindowToolwindowHelp;
-
+    @FXML
+    private JFXComboBox<NamedItem<String>> configWindowSystem;
+    @FXML
+    private JFXButton configWindowSystemHelp;
+    @FXML
+    private Label runEnvCheck;
     @FXML
     private Label aboutQueryUpdate;
     @FXML
@@ -274,13 +287,14 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         configLoggingLevel.getSelectionModel().select(level);
 
         exploreLogDir.setOnMouseClicked(e -> {
-            // Only available in Windows OS
-            try {
-                Logger.debug("Config", "Request to explore the log dir");
-                Runtime.getRuntime().exec("explorer logs");
-            } catch (IOException ex) {
-                Logger.warn("Config", "Exploring log dir failed");
-            }
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Logger.debug("Config", "Request to explore the log dir");
+                    Desktop.getDesktop().open(new File("logs"));
+                } catch (IOException ex) {
+                    Logger.warn("Config", "Exploring log dir failed");
+                }
+            });
         });
 
         configNetworkAgent.setPromptText("示例：0.0.0.0:0");
@@ -367,6 +381,64 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 };
             }
         };
+
+        NamedItem<String>[] items = getWindowSystemItems().toArray(new NamedItem[0]);
+        new ComboBoxSetup<>(configWindowSystem).setItems(items)
+                .selectValue(app.config.window_system, app.config.window_system)
+                .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
+                    app.config.window_system = newValue.value();
+                    app.config.save();
+                });
+        new HelpHandbookEntrance(app.body, configWindowSystemHelp) {
+            @Override
+            public Handbook getHandbook() {
+                return new ControlHelpHandbook((Labeled) configWindowSystem.getParent().getChildrenUnmodifiable().get(0)) {
+                    @Override
+                    public String getContent() {
+                        return getWindowSystemInfo();
+                    }
+                };
+            }
+        };
+
+        runEnvCheck.setOnMouseClicked(e -> new CheckEnvironmentTask(app.body, EnvCheckTask.getAvailableTasks()).start());
+    }
+
+    private static ArrayList<NamedItem<String>> getWindowSystemItems() {
+        ArrayList<NamedItem<String>> windowSystemItems = new ArrayList<>();
+        windowSystemItems.add(new NamedItem<>("自动", WindowSystem.AUTO.name()));
+        if (Platform.isWindows()) {
+            windowSystemItems.add(new NamedItem<>("User32", WindowSystem.USER32.name()));
+        }
+        if (Platform.isLinux()) {
+            windowSystemItems.add(new NamedItem<>("X11", WindowSystem.X11.name()));
+            windowSystemItems.add(new NamedItem<>("Mutter", WindowSystem.MUTTER.name()));
+            windowSystemItems.add(new NamedItem<>("KWin", WindowSystem.KWIN.name()));
+        }
+        if (Platform.isMac()) {
+            windowSystemItems.add(new NamedItem<>("Quartz", WindowSystem.QUARTZ.name()));
+        }
+        windowSystemItems.add(new NamedItem<>("NULL", WindowSystem.NULL.name()));
+        return windowSystemItems;
+    }
+
+    private static String getWindowSystemInfo() {
+        String content = "不同平台对于窗口查询、操作有不同的 API，除非你遇到了桌宠窗口的问题，否则通常不需要更改。以下是对 API 的简单介绍：\n";
+        if (Platform.isWindows()) {
+            content += "User32 —— Windows 窗口系统。\n";
+        }
+        if (Platform.isLinux()) {
+            content += """
+                    Mutter —— GNOME 环境，需要安装集成扩展。
+                    KWin —— KDE 环境，需要安装集成插件。
+                    X11 —— 通用 X11 环境支持，适用于 Xfce,Mate,LXDE 等环境。
+                    """;
+        }
+        if (Platform.isMac()) {
+            content += "Quartz —— MacOS Quartz 窗口系统。\n";
+        }
+        content += "NULL —— 空实现，桌宠不会有任何窗口交互。";
+        return content;
     }
 
     private void initAbout() {
@@ -510,5 +582,8 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         ss.setPeriod(new Duration(5000));
         ss.setRestartOnFailure(true);
         ss.start();
+    }
+
+    private void clearData() {
     }
 }

@@ -141,6 +141,11 @@
                     <JFXCheckBox fx:id="configWindowToolwindow" mnemonicParsing="false" text="桌宠作为后台程序启动"/>
                     <JFXButton fx:id="configWindowToolwindowHelp"/>
                 </HBox>
+                <HBox>
+                    <Label text="窗口系统"/>
+                    <JFXComboBox fx:id="configWindowSystem" prefWidth="100.0"/>
+                    <JFXButton fx:id="configWindowSystemHelp"/>
+                </HBox>
                 <Separator/>
                 <HBox>
                     <Label text="日志级别"/>
@@ -151,6 +156,9 @@
                     <Label text="网络代理（仅本次有效）"/>
                     <JFXTextField fx:id="configNetworkAgent" prefHeight="23.0" prefWidth="100.0"/>
                     <Label fx:id="configNetworkAgentStatus" alignment="TOP_CENTER" text="-"/>
+                </HBox>
+                <HBox spacing="22.5">
+                    <Label fx:id="runEnvCheck" styleClass="config-hyper-link" text="重新运行环境检查"/>
                 </HBox>
                 <Separator/>
                 <Label styleClass="config-group-title" text="关于软件"/>

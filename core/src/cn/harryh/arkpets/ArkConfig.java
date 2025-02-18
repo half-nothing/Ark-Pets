@@ -3,6 +3,7 @@
  */
 package cn.harryh.arkpets;
 
+import cn.harryh.arkpets.platform.WindowSystem;
 import cn.harryh.arkpets.transitions.EasingFunction;
 import cn.harryh.arkpets.utils.IOUtils.FileUtil;
 import cn.harryh.arkpets.utils.Logger;
@@ -102,6 +103,8 @@ public class ArkConfig implements Serializable {
     public boolean      window_style_toolwindow;
     /** @since ArkPets 3.2 */ @JSONField(defaultValue = "true")
     public boolean      window_style_topmost;
+    /** @since ArkPets 4.0 */ @JSONField(defaultValue = "AUTO")
+    public String       window_system;
 
     private ArkConfig() {
     }
@@ -174,6 +177,17 @@ public class ArkConfig implements Serializable {
         } catch (IllegalArgumentException e) {
             Logger.warn("Config", "Invalid easing function, using linear");
             return EasingFunction.LINEAR;
+        }
+    }
+
+    /** @see WindowSystem
+     */
+    public static WindowSystem getWindowSystemFrom(String string) {
+        try {
+            return WindowSystem.valueOf(string);
+        } catch (IllegalArgumentException e) {
+            Logger.warn("Config", "Invalid window system, using auto detect");
+            return WindowSystem.AUTO;
         }
     }
 

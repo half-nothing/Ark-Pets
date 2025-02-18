@@ -8,8 +8,10 @@ import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.EmbeddedLauncher;
 import cn.harryh.arkpets.concurrent.ProcessPool;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
+import cn.harryh.arkpets.guitasks.CheckEnvironmentTask;
 import cn.harryh.arkpets.guitasks.DeleteTempFilesTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
+import cn.harryh.arkpets.envchecker.EnvCheckTask;
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.GuiPrefabs;
 import cn.harryh.arkpets.utils.Logger;
@@ -20,14 +22,13 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public final class RootModule implements Controller<ArkHomeFX> {
     @FXML
     public AnchorPane wrapper3;
     @FXML
+    public Pane wrapper4;
+    @FXML
     private Pane loadingMask;
     @FXML
     private Pane splashScreen;
@@ -76,18 +79,8 @@ public final class RootModule implements Controller<ArkHomeFX> {
     @FXML
     public JFXButton launchBtn;
 
-    @FXML
-    public AnchorPane titleBar;
-    @FXML
-    public Text titleText;
-    @FXML
-    private JFXButton titleMinimizeBtn;
-    @FXML
-    private JFXButton titleCloseBtn;
-
     private ArkHomeFX app;
-    private double xOffset;
-    private double yOffset;
+    private boolean checkEnd;
 
     @Override
     public void initializeWith(ArkHomeFX app) {
@@ -213,59 +206,30 @@ public final class RootModule implements Controller<ArkHomeFX> {
         }, durationFast, durationNormal);
     }
 
-    @FXML
-    public void titleBarPressed(MouseEvent event) {
-        xOffset = event.getSceneX();
-        yOffset = event.getSceneY();
-    }
-
-    @FXML
-    public void titleBarDragged(MouseEvent event) {
-        app.stage.setX(event.getScreenX() - xOffset);
-        app.stage.setY(event.getScreenY() - yOffset);
-    }
-
-    @FXML
-    public void windowMinimize(MouseEvent event) {
-        GuiPrefabs.fadeOutWindow(app.stage, durationFast, e -> {
-            app.stage.hide();
-            app.stage.setIconified(true);
-        });
-    }
-
-    @FXML
-    public void windowClose(MouseEvent event) {
-        String solidExitTip = (app.config != null && app.config.launcher_solid_exit) ?
-            "退出程序将会同时退出已启动的桌宠。" : "退出程序后已启动的桌宠将会保留。";
-        GuiPrefabs.Dialogs.createConfirmDialog(body,
-                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP_ALT, GuiPrefabs.COLOR_INFO),
-                "确认退出",
-                "现在退出 " + appName + " 吗？",
-                "根据您的设置，" + solidExitTip + "\n使用最小化 [-] 按钮可以隐藏窗口到系统托盘。",
-                this::exit).show();
-    }
-
     private void initLaunchButton() {
+        // Build environment check confirm dialog.
+        JFXDialog dialog = GuiPrefabs.Dialogs.createConfirmDialog(body,
+                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP_ALT, GuiPrefabs.COLOR_INFO),
+                "环境检查",
+                "首次运行环境检查",
+                "这似乎是你第一次运行 ArkPets，我们需要对您的系统进行一些基本检查以确保桌宠能够正常运行。\n你也可以跳过检查，但可能会导致使用体验下降。",
+                () -> {
+                    new CheckEnvironmentTask(app.body,EnvCheckTask.getAvailableTasks(),this::launchArkPets).start();
+                });
+        Node cancel = ((JFXDialogLayout)dialog.getContent()).getActions().get(0);
+        ((JFXButton) cancel).setOnAction(e -> {
+            GuiPrefabs.Dialogs.disposeDialog(dialog);
+            launchArkPets();
+        });
         // Set handler for internal start button.
         launchBtn.setOnAction(e -> {
             // When request to launch ArkPets:
-            launchBtn.setDisable(true);
-            app.config.save();
-            if (app.config.character_asset != null && !app.config.character_asset.isEmpty()) {
-                app.popLoading(ev -> {
-                    try {
-                        // Do launch ArkPets core.
-                        startArkPetsCore();
-                        Thread.sleep(1200);
-                        // Show handbook in the first-run.
-                        if (isNewcomer)
-                            trayExitHandbook.showIfNotShownBefore(app.body);
-                    } catch (InterruptedException ignored) {
-                    } finally {
-                        launchBtn.setDisable(false);
-                    }
-                });
+            if (isNewcomer && !checkEnd) {
+                checkEnd = true;
+                dialog.show();
+                return;
             }
+            launchArkPets();
         });
     }
 
@@ -312,6 +276,25 @@ public final class RootModule implements Controller<ArkHomeFX> {
         ss.start();
     }
 
+    private void launchArkPets() {
+        launchBtn.setDisable(true);
+        app.config.save();
+        if (app.config.character_asset != null && !app.config.character_asset.isEmpty()) {
+            app.popLoading(ev -> {
+                try {
+                    // Do launch ArkPets core.
+                    startArkPetsCore();
+                    Thread.sleep(1200);
+                    // Show handbook in the first-run.
+                    if (isNewcomer)
+                        trayExitHandbook.showIfNotShownBefore(app.body);
+                } catch (InterruptedException ignored) {
+                } finally {
+                    launchBtn.setDisable(false);
+                }
+            });
+        }
+    }
     private static class TrayExitHandBook extends Handbook {
         @Override
         public String getTitle() {

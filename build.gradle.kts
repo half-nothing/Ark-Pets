@@ -116,7 +116,7 @@ allprojects {
 gitHooks {
     setHooks(
         mapOf(
-            "pre-commit" to "detekt test"
+            "pre-push" to "detekt test"
         )
     )
 }

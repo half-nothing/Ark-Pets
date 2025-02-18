@@ -8,6 +8,7 @@ import cn.harryh.arkpets.ArkHomeFX;
 import cn.harryh.arkpets.EmbeddedLauncher;
 import cn.harryh.arkpets.concurrent.ProcessPool;
 import cn.harryh.arkpets.guitasks.CheckAppUpdateTask;
+import cn.harryh.arkpets.guitasks.DeleteTempFilesTask;
 import cn.harryh.arkpets.guitasks.GuiTask;
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.GuiPrefabs;
@@ -189,12 +190,26 @@ public final class RootModule implements Controller<ArkHomeFX> {
         new CheckAppUpdateTask(app.body, GuiTask.GuiTaskStyle.HIDDEN, "auto").start();
     }
 
-    /** Plays the exit animation and then invokes {@link Platform#exit()}.
+    /** Plays the exit animation, deletes temp files, then invokes {@link Platform#exit()}.
      */
     public void exit() {
         popSplashScreen(e -> {
             Logger.info("Launcher", "User close request");
-            GuiPrefabs.fadeOutWindow(app.stage, durationNormal, ev -> Platform.exit());
+            GuiPrefabs.fadeOutWindow(
+                    app.stage,
+                    durationNormal,
+                    ev -> new DeleteTempFilesTask(app.body, GuiTask.GuiTaskStyle.HIDDEN, ".+", 24 * 3600000) {
+                        @Override
+                        protected void onFailed(Throwable e) {
+                            Platform.exit();
+                        }
+
+                        @Override
+                        protected void onSucceeded(boolean result) {
+                            Platform.exit();
+                        }
+                    }.start()
+            );
         }, durationFast, durationNormal);
     }
 
@@ -223,7 +238,7 @@ public final class RootModule implements Controller<ArkHomeFX> {
         String solidExitTip = (app.config != null && app.config.launcher_solid_exit) ?
             "退出程序将会同时退出已启动的桌宠。" : "退出程序后已启动的桌宠将会保留。";
         GuiPrefabs.Dialogs.createConfirmDialog(body,
-                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO),
+                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP_ALT, GuiPrefabs.COLOR_INFO),
                 "确认退出",
                 "现在退出 " + appName + " 吗？",
                 "根据您的设置，" + solidExitTip + "\n使用最小化 [-] 按钮可以隐藏窗口到系统托盘。",
@@ -315,7 +330,7 @@ public final class RootModule implements Controller<ArkHomeFX> {
 
         @Override
         protected SVGPath getIcon() {
-            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_HELP_ALT, GuiPrefabs.Colors.COLOR_INFO);
+            return GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_HELP_ALT, GuiPrefabs.COLOR_INFO);
         }
     }
 }

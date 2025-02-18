@@ -72,6 +72,12 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
     private JFXSlider configRenderOpacityDim;
     @FXML
     private Label configRenderOpacityDimValue;
+    @FXML
+    private JFXButton toggleConfigRenderShadow;
+    @FXML
+    private HBox wrapperConfigRenderShadow;
+    @FXML
+    private JFXComboBox<NamedItem<Integer>> configRenderShadowColor;
 
     @FXML
     private JFXCheckBox configWindowTopmost;
@@ -233,6 +239,17 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 });
         setupRenderOpacityDim.setRange(minOpacity, setupRenderOpacityNormal.getValidatedValue());
         setupRenderOpacityDim.setDisable(minOpacity >= setupRenderOpacityNormal.getValidatedValue());
+
+        GuiPrefabs.bindToggleAndWrapper(toggleConfigRenderShadow, wrapperConfigRenderShadow, durationFast);
+        new ComboBoxSetup<>(configRenderShadowColor).setItems(new NamedItem<>("禁用", 0x00000000),
+                        new NamedItem<>("轻微", 0x00000077),
+                        new NamedItem<>("标准", 0x000000BB),
+                        new NamedItem<>("重墨", 0x000000FF))
+                .selectValue(Color.rgba8888(ArkConfig.getGdxColorFrom(app.config.render_shadow_color)), app.config.render_shadow_color + "（自定义）")
+                .setOnNonNullValueUpdated((observable, oldValue, newValue) -> {
+                    app.config.render_shadow_color = String.format("#%08X", newValue.value());
+                    app.config.save();
+                });
     }
 
     private void initConfigAdvanced() {
@@ -270,7 +287,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
         configNetworkAgent.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 configNetworkAgentStatus.setText("未使用代理");
-                configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
+                configNetworkAgentStatus.setTextFill(GuiPrefabs.COLOR_LIGHT_GRAY);
                 Logger.info("Network", "Set proxy to none");
                 NetUtils.setProxy("", "");
             } else {
@@ -278,16 +295,16 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                     String[] ipPort = newValue.split(":");
                     NetUtils.setProxy(ipPort[0], ipPort[1]);
                     configNetworkAgentStatus.setText("代理生效中");
-                    configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_SUCCESS);
+                    configNetworkAgentStatus.setTextFill(GuiPrefabs.COLOR_SUCCESS);
                     Logger.info("Network", "Set proxy to host " + ipPort[0] + ", port " + ipPort[1]);
                 } else {
                     configNetworkAgentStatus.setText("输入不合法");
-                    configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_DANGER);
+                    configNetworkAgentStatus.setTextFill(GuiPrefabs.COLOR_DANGER);
                 }
             }
         });
         configNetworkAgentStatus.setText("未使用代理");
-        configNetworkAgentStatus.setStyle("-fx-text-fill:" + GuiPrefabs.Colors.COLOR_LIGHT_GRAY);
+        configNetworkAgentStatus.setTextFill(GuiPrefabs.COLOR_LIGHT_GRAY);
 
         StartupConfig startup = StartupConfig.getInstance();
         configAutoStartup.setSelected(startup.isSetStartup());
@@ -295,7 +312,7 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             if (configAutoStartup.isSelected()) {
                 if (startup.addStartup()) {
                     GuiPrefabs.Dialogs.createCommonDialog(app.body,
-                            GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_SUCCESS_ALT, GuiPrefabs.Colors.COLOR_SUCCESS),
+                            GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_SUCCESS_ALT, GuiPrefabs.COLOR_SUCCESS),
                             "开机自启动",
                             "开机自启动设置成功。",
                             "下次开机时将会自动生成您最后一次启动的桌宠。",
@@ -303,14 +320,14 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
                 } else {
                     if (!startup.isStartupAvailable())
                         GuiPrefabs.Dialogs.createCommonDialog(app.body,
-                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
+                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT, GuiPrefabs.COLOR_WARNING),
                                 "开机自启动",
                                 "开机自启动设置失败。",
                                 "无法确认目标程序的位置，其原因和相关解决方案如下：",
                                 "为确保自启动服务的稳定性，直接打开的ArkPets的\".jar\"版启动器，是不支持配置自启动的。请使用exe版的安装包安装ArkPets后运行，或使用zip版的压缩包解压程序文件后运行。另外，当您使用错误的工作目录运行启动器时也可能出现此情况。").show();
                     else
                         GuiPrefabs.Dialogs.createCommonDialog(app.body,
-                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.ICON_WARNING_ALT, GuiPrefabs.Colors.COLOR_WARNING),
+                                GuiPrefabs.Icons.getIcon(GuiPrefabs.Icons.SVG_WARNING_ALT, GuiPrefabs.COLOR_WARNING),
                                 "开机自启动",
                                 "开机自启动设置失败。",
                                 "无法写入系统的启动目录，其原因可参见日志文件。",
@@ -370,13 +387,13 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             }
 
             @Override
-            protected String getColorString() {
-                return GuiPrefabs.Colors.COLOR_INFO;
+            protected javafx.scene.paint.Color getColor() {
+                return GuiPrefabs.COLOR_INFO;
             }
 
             @Override
             protected String getIconSVGPath() {
-                return GuiPrefabs.Icons.ICON_UPDATE;
+                return GuiPrefabs.Icons.SVG_UPDATE;
             }
 
             @Override
@@ -397,13 +414,13 @@ public final class SettingsModule implements Controller<ArkHomeFX> {
             }
 
             @Override
-            protected String getColorString() {
-                return GuiPrefabs.Colors.COLOR_WARNING;
+            protected javafx.scene.paint.Color getColor() {
+                return GuiPrefabs.COLOR_WARNING;
             }
 
             @Override
             protected String getIconSVGPath() {
-                return GuiPrefabs.Icons.ICON_WARNING_ALT;
+                return GuiPrefabs.Icons.SVG_WARNING_ALT;
             }
 
             @Override

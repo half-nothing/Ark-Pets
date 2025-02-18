@@ -34,6 +34,10 @@ public class ArkConfig implements Serializable {
     public boolean      behavior_allow_interact;
     /** @since ArkPets 1.0 */ @JSONField(defaultValue = "true")
     public boolean      behavior_allow_sit;
+    /** @since ArkPets 3.6 */ @JSONField(defaultValue = "false")
+    public boolean      behavior_allow_sleep;
+    /** @since ArkPets 3.6 */ @JSONField(defaultValue = "true")
+    public boolean      behavior_allow_special;
     /** @since ArkPets 1.0 */ @JSONField(defaultValue = "true")
     public boolean      behavior_allow_walk;
     /** @since ArkPets 1.6 */ @JSONField(defaultValue = "true")
@@ -64,6 +68,8 @@ public class ArkConfig implements Serializable {
     public String       render_outline_color;
     /** @since ArkPets 3.3 */ @JSONField(defaultValue = "2.0")
     public float        render_outline_width;
+    /** @since ArkPets 3.6 */ @JSONField(defaultValue = "#000000BB")
+    public String       render_shadow_color;
     /** @since ArkPets 1.0 */ @JSONField(defaultValue = "1.0")
     public float        display_scale;
     /** @since ArkPets 3.2 */ @JSONField(defaultValue = "0.2")

@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  */
 public final class Const {
     // App version
-    public static final Version appVersion           = new Version(3, 5, 0);
-    public static final Version datasetLowestVersion = new Version(2, 2, 0);
+    public static final Version appVersion              = new Version(3, 7, 0);
+    public static final Version datasetLowestVersion    = new Version(2, 2, 0);
 
     // App name
     public static final String               appName          = "ArkPets";
@@ -43,10 +43,8 @@ public final class Const {
     public static final float skelBaseScale       = 0.3f;
 
     // Behavior presets
-    public static final int   behaviorBaseWeight = 320;
-    public static final int   behaviorWeightLv1  = 32;
-    public static final int   behaviorWeightLv2  = 64;
-    public static final float droppedThreshold   = 10f;
+    public static final int behaviorBaseWeight      = 320;
+    public static final float droppedThreshold      = 10f;
 
     // Duration presets
     public static final Duration durationFast   = new Duration(150);

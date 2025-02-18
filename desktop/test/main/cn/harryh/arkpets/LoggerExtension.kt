@@ -8,5 +8,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class LoggerExtension : BeforeAllCallback {
     override fun beforeAll(context: ExtensionContext) {
         Logger.initialize(LogConfig.logDesktopPath, LogConfig.logDesktopMaxKeep)
+        Logger.setLevel(Logger.DEBUG)
     }
 }

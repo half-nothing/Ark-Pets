@@ -6,4 +6,6 @@ data class RepositoryConfig(
     val remotePath: String,
     val metadataFileName: String,
     val metadataFilePath: String
-)
+) {
+    var makeCache: Boolean = true
+}

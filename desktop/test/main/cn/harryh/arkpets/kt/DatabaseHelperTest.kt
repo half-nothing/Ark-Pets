@@ -1,6 +1,7 @@
-package cn.harryh.arkpets.kt.database
+package cn.harryh.arkpets.kt
 
 import cn.harryh.arkpets.LoggerExtension
+import cn.harryh.arkpets.kt.database.DatabaseHelper
 import cn.harryh.arkpets.kt.extension.metadata
 import cn.harryh.arkpets.kt.utils.Logger
 import org.junit.jupiter.api.Test

@@ -3,18 +3,11 @@
  */
 package cn.harryh.arkpets;
 
-import cn.harryh.arkpets.kt.model.CharData;
-import cn.harryh.arkpets.kt.query.builders.CharInfoQueryBuilder;
-import cn.harryh.arkpets.kt.query.builders.ModelAssetsQueryBuilder;
-import cn.harryh.arkpets.kt.query.conditions.MatchConditionType;
-import cn.harryh.arkpets.kt.repository.ModelRepository;
-import cn.harryh.arkpets.kt.repository.RepositoryConfig;
 import cn.harryh.arkpets.utils.ArgPending;
 import cn.harryh.arkpets.utils.Logger;
 import javafx.application.Application;
 
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.Objects;
 
 import static cn.harryh.arkpets.Const.LogConfig;
@@ -66,40 +59,6 @@ public class DesktopLauncher {
                 System.exit(0);
             }
         };
-
-        if (System.getenv("VCS_DEBUG") != null) {
-            Logger.setLevel(Logger.DEBUG);
-            RepositoryConfig modelRepositoryConfig = new RepositoryConfig(
-                    Const.RepositoryConfig.ModelRepository.repoName,
-                    Const.RepositoryConfig.ModelRepository.localPath,
-                    Const.RepositoryConfig.ModelRepository.remotePath,
-                    Const.RepositoryConfig.ModelRepository.metadataFileName,
-                    Const.RepositoryConfig.ModelRepository.metadataFileName
-            );
-            Long startTime = System.currentTimeMillis();
-            ModelRepository.INSTANCE.initRepository(modelRepositoryConfig);
-//            VoiceRepository.INSTANCE.initRepository();
-            Long endTime = System.currentTimeMillis();
-            Logger.info("System", "VCS_DEBUG: " + (endTime - startTime) + " ms");
-            List<CharData> dataList;
-            dataList = new CharInfoQueryBuilder()
-                    .addSearchCondition("缪", MatchConditionType.FUZZY_MATCH)
-                    .addTagCondition("Operator", "Rarity_6")
-                    .addTypeCondition("Operator")
-                    .buildAndGetResult();
-            dataList.forEach(System.out::println);
-            dataList = new CharInfoQueryBuilder()
-                    .addSearchCondition("mou", MatchConditionType.FUZZY_MATCH)
-                    .addTagCondition("Operator", "Rarity_6")
-                    .addTypeCondition("Operator")
-                    .buildAndGetResult();
-            dataList.forEach(System.out::println);
-            var assetMap = new ModelAssetsQueryBuilder("char_249_mlyss").buildAndGetResult();
-            assetMap.forEach((k, v) -> {System.out.printf("%s: %s\n", k, v);});
-            if (Objects.equals(System.getenv("VCS_DEBUG"), "TRUE")) {
-                return;
-            }
-        }
 
         // Java FX bootstrap
         Application.launch(ArkHomeFX.class, args);

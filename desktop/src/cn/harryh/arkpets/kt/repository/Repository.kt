@@ -31,6 +31,9 @@ abstract class Repository<T> {
     fun initRepository(config: RepositoryConfig) {
         setRepositoryConfig(config)
         initRepository()
+        if (config.makeCache) {
+            getAllEntities()
+        }
     }
 
     protected fun isConfigInitialized() = ::config.isInitialized

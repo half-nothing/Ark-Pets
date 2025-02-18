@@ -7,6 +7,11 @@ sourceSets {
             srcDirs("../assets")
         }
     }
+    test {
+        java {
+            srcDirs("test/main")
+        }
+    }
 }
 
 detekt {
@@ -32,16 +37,31 @@ dependencies {
 tasks {
     val mainClassName = "cn.harryh.arkpets.DesktopLauncher"
     val assetsDir = File("../assets")
+    val excludeFiles = arrayOf(
+        "**/models_enemies/**",
+        "**/models_illust/**",
+        "**/models/**",
+        "**/logs/**",
+        "**/data/**",
+        "**/temp/**",
+        "ArkPetsConfig.json",
+        "voice_data.json",
+        "models_data.json"
+    )
 
     processResources {
         includeEmptyDirs = false
-        exclude(
-            "**/models_enemies/**",
-            "**/models/**",
-            "**/logs/**",
-            "**/data/**",
-            "models_data.json"
-        )
+        exclude(*excludeFiles)
+    }
+
+    processTestResources {
+        includeEmptyDirs = false
+        exclude(*excludeFiles)
+    }
+
+    test {
+        workingDir = assetsDir
+        classpath = sourceSets.test.get().runtimeClasspath
     }
 
     // Runs the app without debug.

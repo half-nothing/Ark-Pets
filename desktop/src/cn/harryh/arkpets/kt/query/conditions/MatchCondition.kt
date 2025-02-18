@@ -4,12 +4,11 @@ import org.ktorm.dsl.eq
 import org.ktorm.dsl.like
 import org.ktorm.schema.ColumnDeclaring
 
-abstract class MatchCondition(
-    private val value: String,
+open class MatchCondition(
+    property: ColumnDeclaring<String>,
+    value: String,
     private val type: MatchConditionType = MatchConditionType.PRECISE_MATCH
-) : Condition {
-    protected abstract val property: ColumnDeclaring<String>
-
+) : Condition<String>(property, value) {
     override fun applyCondition(): ColumnDeclaring<Boolean> {
         return when (type) {
             MatchConditionType.PRECISE_MATCH -> {
@@ -21,12 +20,13 @@ abstract class MatchCondition(
             }
 
             MatchConditionType.FULL_FUZZY_MATCH -> {
-                val pattern = StringBuilder()
-                value.chars().forEach {
-                    pattern.append("%").append(it.toChar())
+                val pattern = buildString {
+                    append("%")
+                    value.forEach {
+                        append(it).append("%")
+                    }
                 }
-                pattern.append("%")
-                property like pattern.toString()
+                property like pattern
             }
         }
     }
